@@ -44,7 +44,7 @@ function PrayerTimeRow({ name, time, icon: Icon, isActive, offset }: { name: str
                 <span className="font-bold text-black text-lg">{time}</span>
             </div>
             <div className="w-1/3 text-right">
-                <span className={cn("text-lg font-bold text-primary text-right", isActive ? "text-primary" : "text-primary")}>{offset}</span>
+                <span className={cn("text-lg font-bold text-custom-blue text-right")}>{offset}</span>
             </div>
         </div>
     )
@@ -52,7 +52,7 @@ function PrayerTimeRow({ name, time, icon: Icon, isActive, offset }: { name: str
 
 export function PrayerTimesCard({ prayerTimes, nextPrayer, currentPrayerName, date, now, locationDenied, jumuahTime, prayerOffsets }: PrayerTimesCardProps) {
   return (
-    <Card className="w-full max-w-md mx-auto shadow-2xl shadow-primary/10 border-primary/20 bg-card/30 animate-in fade-in-50 duration-500">
+    <Card className="w-full max-w-md mx-auto shadow-2xl shadow-primary/10 border-primary/20 bg-card/30 backdrop-blur-sm animate-in fade-in-50 duration-500">
       <CardHeader className="text-center pb-4">
         <div className="flex flex-col items-center space-y-2 mb-4">
             <Countdown nextPrayerName={nextPrayer.name} nextPrayerTime={nextPrayer.time} />
