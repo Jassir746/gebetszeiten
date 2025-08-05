@@ -3,7 +3,9 @@
 @tailwind utilities;
 
 body {
-  font-family: 'Alegreya', serif;
+  font-family: 'Roboto Mono', monospace;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 @layer base {
