@@ -36,7 +36,7 @@ function PrayerTimeRow({ name, time, icon: Icon, isActive }: { name: string, tim
                 <Icon className={cn("w-6 h-6 transition-colors", isActive ? "text-accent" : "text-primary/70")} />
                 <span className={cn("text-lg font-bold transition-colors", isActive ? "text-accent-foreground" : "text-black")}>{name}</span>
             </div>
-            <span className={cn("text-lg font-mono font-bold transition-colors", isActive ? "text-accent" : "text-black")}>{time}</span>
+            <span className={cn("text-lg font-bold transition-colors", isActive ? "text-accent" : "text-black")}>{time}</span>
         </div>
     )
 }
@@ -47,10 +47,10 @@ export function PrayerTimesCard({ prayerTimes, nextPrayer, currentPrayerName, da
       <CardHeader className="text-center pb-4">
         <div className="flex flex-col items-center space-y-2 mb-4">
             <Countdown nextPrayerName={nextPrayer.name} nextPrayerTime={nextPrayer.time} />
-            <CardTitle className="text-xl pt-2">
+            <CardTitle className="pt-2 text-xl">
               {date.toLocaleDateString('de-DE', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Europe/Berlin' })}
             </CardTitle>
-            <CardDescription className="text-xl font-bold text-foreground/80 font-mono tracking-wider">
+            <CardDescription className="text-xl font-bold font-mono tracking-wider">
               {now.toLocaleDateString('de-DE', {day: '2-digit', month: '2-digit', year: 'numeric'})} &nbsp;
               {now.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit', second: '2-digit'})}
             </CardDescription>
@@ -72,12 +72,12 @@ export function PrayerTimesCard({ prayerTimes, nextPrayer, currentPrayerName, da
             ))}
         </div>
         <Separator />
-        <div className="grid grid-cols-2 gap-4">
-            <div className="text-center bg-primary text-primary-foreground rounded-lg p-3 border border-black space-y-1">
+        <div className="flex justify-between gap-4">
+            <div className="text-center bg-primary text-primary-foreground rounded-lg p-3 border border-black space-y-1 w-[48%]">
                 <div className="font-bold">Shuruk</div>
                 <div className="font-mono">{prayerTimes.Shuruk}</div>
             </div>
-            <div className="text-center bg-primary text-primary-foreground rounded-lg p-3 border border-black space-y-1">
+            <div className="text-center bg-primary text-primary-foreground rounded-lg p-3 border border-black space-y-1 w-[48%]">
                 <div className="font-bold">Jumuah</div>
                 <div className="font-mono">14:00</div>
             </div>
