@@ -56,8 +56,8 @@ export function PrayerTimesCard({ prayerTimes, nextPrayer, currentPrayerName, da
       <CardHeader className="text-center pb-4">
         <div className="flex flex-col items-center space-y-2 mb-4">
             <Countdown nextPrayerName={nextPrayer.name} nextPrayerTime={nextPrayer.time} />
-            <div className="w-full text-left">
-                <p className="font-normal text-custom-blue text-base">Nächstes Gebet:</p>
+             <div className="w-full text-left">
+                <p className="font-bold text-custom-blue text-base">Gebetszeiten Dortmund</p>
             </div>
             <CardTitle className="pt-2 text-xl">
               {date.toLocaleDateString('de-DE', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Europe/Berlin' })}
