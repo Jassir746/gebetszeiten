@@ -43,7 +43,7 @@ function PrayerTimeRow({ name, time, icon: Icon, isActive, offset }: { name: str
             isActive ? "border-2 border-destructive" : "hover:bg-primary/5"
         )}>
             <div className="flex items-center gap-4 w-1/3">
-                <Icon className={cn("w-6 h-6 transition-colors", isActive ? "text-primary" : "text-primary/70")} />
+                <Icon className={cn("w-6 h-6 transition-colors text-custom-blue", isActive ? "opacity-100" : "opacity-70")} />
                 <span className="font-bold text-black text-lg">{name}</span>
             </div>
             <div className="w-1/3 text-center">
