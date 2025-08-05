@@ -34,16 +34,16 @@ function PrayerTimeRow({ name, time, icon: Icon, isActive, offset }: { name: str
     return (
         <div className={cn(
             "flex items-center justify-between p-3 rounded-lg transition-all duration-500 ease-in-out",
-            isActive ? "bg-primary/20 scale-105 shadow-lg shadow-primary/10" : "hover:bg-primary/5"
+            isActive ? "bg-primary/30 scale-105 shadow-lg shadow-primary/10" : "hover:bg-primary/5"
         )}>
             <div className="flex items-center gap-4 w-1/3">
                 <Icon className={cn("w-6 h-6 transition-colors", isActive ? "text-primary" : "text-primary/70")} />
                 <span className={cn("text-lg font-bold transition-colors", isActive ? "text-primary-foreground" : "font-bold text-black")}>{name}</span>
             </div>
             <div className="w-1/3 text-center">
-                <span className={cn("text-lg font-bold transition-colors", isActive ? "text-primary-foreground" : "font-bold text-black")}>{time}</span>
+                <span className={cn("text-lg font-bold transition-colors", isActive ? "text-primary" : "font-bold text-black")}>{time}</span>
             </div>
-            <div className="flex items-center justify-end gap-4 w-1/3">
+            <div className="w-1/3 text-right">
                 <span className={cn("text-lg font-bold text-primary text-right", isActive ? "text-primary" : "text-primary")}>{offset}</span>
             </div>
         </div>
