@@ -5,7 +5,6 @@ import { Countdown } from "./countdown";
 import { Separator } from "@/components/ui/separator";
 import { Sunrise, Sun, SunDim, Sunset, Moon } from 'lucide-react';
 import { cn } from "@/lib/utils";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
 interface PrayerTimesCardProps {
   prayerTimes: PrayerTimes;
@@ -67,20 +66,20 @@ export function PrayerTimesCard({ prayerTimes, nextPrayer, currentPrayerName, da
             ))}
         </div>
         <Separator />
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead className="text-left">Shuruk</TableHead>
-              <TableHead className="text-right">Jumuah</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            <TableRow>
-              <TableCell className="text-left font-mono font-semibold text-primary">{prayerTimes.Shuruk}</TableCell>
-              <TableCell className="text-right font-mono font-semibold text-primary">14:00</TableCell>
-            </TableRow>
-          </TableBody>
-        </Table>
+        <div className="grid grid-cols-2 gap-2">
+            <div className="text-center bg-primary text-primary-foreground rounded-md p-2 border border-black">
+                <div className="font-bold">Shuruk</div>
+            </div>
+            <div className="text-center bg-primary text-primary-foreground rounded-md p-2 border border-black">
+                <div className="font-bold">Jumuah</div>
+            </div>
+            <div className="text-center bg-primary text-primary-foreground rounded-md p-2 border border-black">
+                <div className="font-mono">{prayerTimes.Shuruk}</div>
+            </div>
+            <div className="text-center bg-primary text-primary-foreground rounded-md p-2 border border-black">
+                <div className="font-mono">14:00</div>
+            </div>
+        </div>
       </CardContent>
     </Card>
   );
