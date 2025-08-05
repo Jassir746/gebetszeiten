@@ -16,6 +16,7 @@ export default {
       },
       colors: {
         'custom-blue': '#006699',
+        'mint-green': '#ccffe5',
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',
         card: {
