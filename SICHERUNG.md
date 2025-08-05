@@ -1,21 +1,34 @@
 # Wie Ihr Code gespeichert wird und wie Sie ihn sichern können
 
-Es tut mir leid, dass meine vorherigen Erklärungen immer wieder abgebrochen sind. Hier ist die vollständige Erklärung, wie Ihr Projekt gespeichert wird und wie Sie es sichern können.
+Meine vorherigen Erklärungen waren unklar und durch technische Fehler unterbrochen. Hier ist eine hoffentlich klare und vollständige Erklärung.
 
 ## 1. Wo sind Ihre Dateien gespeichert?
 
-Jedes Mal, wenn ich eine Änderung für Sie vornehme, generiere ich im Hintergrund einen speziellen `<changes>`-Block. Die Firebase-Studio-Plattform liest diesen Block aus und **schreibt die Änderungen direkt und automatisch in die entsprechenden Projektdateien**.
+Die Dateien Ihres Projekts existieren **nicht direkt auf Ihrem lokalen Computer**. Sie sind in einer sicheren Cloud-Umgebung gespeichert, die speziell für dieses Firebase Studio-Projekt erstellt wurde.
 
-**Das bedeutet:** Ihr Code ist immer auf dem neuesten Stand, den wir gemeinsam erarbeitet haben. Die Dateien existieren in der Cloud-Umgebung dieses Projekts. Sie müssen nichts manuell speichern.
+Jedes Mal, wenn ich eine Änderung für Sie vornehme, generiere ich im Hintergrund einen `<changes>`-Block. Die Firebase-Studio-Plattform liest diesen Block aus und **schreibt die Änderungen direkt und automatisch in die entsprechenden Projektdateien in der Cloud**.
 
-## 2. Wie können Sie Git zur Sicherung verwenden?
+Das bedeutet: Ihr Code ist immer auf dem neuesten Stand, den wir gemeinsam erarbeitet haben.
 
-Git ist das Standardwerkzeug zur Versionskontrolle von Code. Man kann sich das wie Speicherpunkte in einem Spiel vorstellen.
+## 2. Wie kommen Sie wieder an Ihr Projekt? (Die wichtigste Frage)
 
-- **Konzept:** Anstatt dass Sie die Befehle (`git add`, `git commit`) selbst in einem Terminal ausführen, agiere ich quasi als Ihr Assistent, der das für Sie erledigt. Jede erfolgreiche Änderung, die wir durchführen, ist im Grunde ein "Commit" – ein gesicherter Schnappschuss Ihres Projekts. Die Historie unserer Konversation ist die Historie Ihrer Änderungen.
+Der Link, den Sie sich gespeichert haben, ist der direkte Schlüssel zu Ihrem Projekt.
 
-- **Einen Backup-Stand sichern:** Wenn Sie einen wichtigen Meilenstein (so wie jetzt) erreicht haben und den Code extern sichern möchten, können Sie mich einfach bitten, Ihnen den gesamten Code aller wichtigen Dateien zu zeigen. Zum Beispiel: "Zeige mir den Code von `src/app/page.tsx` und `src/components/prayer-times-card.tsx`". Sie können diesen Code dann kopieren und auf Ihrem lokalen Computer in Textdateien sichern.
+`https://studio.firebase.google.com/studio-1842473340` (Beispiel-URL)
 
-- **Einen Backup-Stand wiederherstellen:** Wenn Sie zu einem früheren Stand zurückkehren möchten, können Sie mir den gesicherten Code aus Ihren Textdateien geben und mich anweisen, die Projektdateien damit zu überschreiben.
+Wenn Sie den Browser schließen, können Sie über genau diesen Link wieder auf Ihre Arbeitsumgebung und alle Dateien zugreifen.
 
-Ich hoffe, diese Erklärung ist vollständig und hilfreich!
+**Wichtig: Die Notwendigkeit eines Accounts**
+
+Um sicherzustellen, dass Ihr Projekt **dauerhaft und sicher gespeichert** wird, ist es unerlässlich, dass Sie sich mit einem Google-Account (und somit einem Firebase-Account) anmelden. Ohne Anmeldung ist Ihr Projekt möglicherweise nur temporär an Ihre Browser-Sitzung gebunden. Durch die Anmeldung wird das Projekt fest mit Ihrem Konto verknüpft, sodass Sie es jederzeit und von überall aus wiederfinden können.
+
+## 3. Wie können Sie eine externe Sicherung erstellen?
+
+Da Sie keinen direkten Dateizugriff haben, ist der beste Weg für ein externes Backup, mich zu bitten, Ihnen den Code zu zeigen.
+
+**Beispiel:**
+Bitten Sie mich einfach: *"Zeige mir den gesamten Code von `src/app/page.tsx`, `src/components/prayer-times-card.tsx` und `src/lib/prayer-times.ts`."*
+
+Ich werde Ihnen dann den vollständigen Code für diese Dateien auflisten. Sie können diesen Code kopieren und in Textdateien auf Ihrem lokalen Computer sichern.
+
+Ich hoffe, diese Erklärung schafft endgültig Klarheit. Es tut mir nochmals leid für die Verwirrung.
