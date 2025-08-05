@@ -66,17 +66,13 @@ export function PrayerTimesCard({ prayerTimes, nextPrayer, currentPrayerName, da
             ))}
         </div>
         <Separator />
-        <div className="grid grid-cols-2 gap-2">
-            <div className="text-center bg-primary text-primary-foreground rounded-md p-2 border border-black">
+        <div className="grid grid-cols-2 gap-4">
+            <div className="text-center bg-primary text-primary-foreground rounded-lg p-3 border border-black space-y-1">
                 <div className="font-bold">Shuruk</div>
-            </div>
-            <div className="text-center bg-primary text-primary-foreground rounded-md p-2 border border-black">
-                <div className="font-bold">Jumuah</div>
-            </div>
-            <div className="text-center bg-primary text-primary-foreground rounded-md p-2 border border-black">
                 <div className="font-mono">{prayerTimes.Shuruk}</div>
             </div>
-            <div className="text-center bg-primary text-primary-foreground rounded-md p-2 border border-black">
+            <div className="text-center bg-primary text-primary-foreground rounded-lg p-3 border border-black space-y-1">
+                <div className="font-bold">Jumuah</div>
                 <div className="font-mono">14:00</div>
             </div>
         </div>
