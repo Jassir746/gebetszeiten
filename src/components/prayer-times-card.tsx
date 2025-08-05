@@ -3,7 +3,6 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { PrayerTimes, PrayerName } from "@/lib/prayer-times";
 import { Countdown } from "./countdown";
 import { Separator } from "@/components/ui/separator";
-import { Sunrise, Sun, SunDim, Sunset, Moon } from 'lucide-react';
 import { cn } from "@/lib/utils";
 import { PrayerOffsets } from "./options-menu";
 
@@ -18,15 +17,6 @@ interface PrayerTimesCardProps {
   prayerOffsets: PrayerOffsets;
 }
 
-const prayerIcons: Record<PrayerName, ComponentType<{className?: string}>> = {
-    Fadjr: Sunrise,
-    Shuruk: Sunrise,
-    Duhr: Sun,
-    Assr: SunDim,
-    Maghrib: Sunset,
-    Ishaa: Moon,
-};
-
 const prayerOrder: PrayerName[] = ['Fadjr', 'Duhr', 'Assr', 'Maghrib', 'Ishaa'];
 
 function getOffsetDisplay(offsetValue: string): string {
@@ -36,14 +26,13 @@ function getOffsetDisplay(offsetValue: string): string {
     return String(num);
 }
 
-function PrayerTimeRow({ name, time, icon: Icon, isActive, offset }: { name: string, time: string, icon: ComponentType<{className?: string}>, isActive: boolean, offset: string }) {
+function PrayerTimeRow({ name, time, isActive, offset }: { name: string, time: string, isActive: boolean, offset: string }) {
     return (
         <div className={cn(
             "flex items-center justify-between rounded-lg transition-all duration-500 ease-in-out py-1 px-4",
             isActive ? "border-2 border-destructive" : "hover:bg-primary/5"
         )}>
             <div className="flex items-center gap-4 w-1/3">
-                <Icon className={cn("w-6 h-6 transition-colors text-custom-blue", isActive ? "opacity-100" : "opacity-70")} />
                 <span className="font-bold text-black text-lg">{name}</span>
             </div>
             <div className="w-1/3 text-center">
@@ -84,7 +73,6 @@ export function PrayerTimesCard({ prayerTimes, nextPrayer, currentPrayerName, da
                     key={name}
                     name={name}
                     time={prayerTimes[name]}
-                    icon={prayerIcons[name]}
                     isActive={currentPrayerName === name}
                     offset={getOffsetDisplay(prayerOffsets[name])}
                 />
