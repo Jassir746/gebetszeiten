@@ -7,7 +7,6 @@ import { Sunrise, Sun, SunDim, Sunset, Moon } from 'lucide-react';
 import { cn } from "@/lib/utils";
 import { PrayerOffsets } from "./options-menu";
 
-
 interface PrayerTimesCardProps {
   prayerTimes: PrayerTimes;
   nextPrayer: { name: PrayerName, time: Date };
@@ -30,10 +29,17 @@ const prayerIcons: Record<PrayerName, ComponentType<{className?: string}>> = {
 
 const prayerOrder: PrayerName[] = ['Fadjr', 'Duhr', 'Assr', 'Maghrib', 'Ishaa'];
 
+function getOffsetDisplay(offsetValue: string): string {
+    const num = parseInt(offsetValue, 10);
+    if (isNaN(num) || num === 0) return '';
+    if (num > 0) return `+${num}`;
+    return String(num);
+}
+
 function PrayerTimeRow({ name, time, icon: Icon, isActive, offset }: { name: string, time: string, icon: ComponentType<{className?: string}>, isActive: boolean, offset: string }) {
     return (
         <div className={cn(
-            "flex items-center justify-between p-3 rounded-lg transition-all duration-500 ease-in-out",
+            "flex items-center justify-between p-2 rounded-lg transition-all duration-500 ease-in-out",
             isActive ? "border-2 border-destructive" : "hover:bg-primary/5"
         )}>
             <div className="flex items-center gap-4 w-1/3">
@@ -44,7 +50,7 @@ function PrayerTimeRow({ name, time, icon: Icon, isActive, offset }: { name: str
                 <span className="font-bold text-black text-lg">{time}</span>
             </div>
             <div className="w-1/3 text-right">
-                <span className={cn("text-lg font-bold text-custom-blue text-right")}>{offset}</span>
+                <span className={cn("text-lg font-bold text-right text-custom-blue")}>{offset}</span>
             </div>
         </div>
     )
@@ -69,10 +75,10 @@ export function PrayerTimesCard({ prayerTimes, nextPrayer, currentPrayerName, da
         </div>
         <CardDescription>{locationDenied ? "Es werden die Zeiten für den Standardstandort angezeigt" : ""}</CardDescription>
       </CardHeader>
-      <CardContent className="space-y-6 pt-0">
+      <CardContent className="space-y-4 pt-0">
         <Separator />
         
-        <div className="space-y-1">
+        <div className="space-y-0">
             {prayerOrder.map((name) => (
                 <PrayerTimeRow
                     key={name}
@@ -80,7 +86,7 @@ export function PrayerTimesCard({ prayerTimes, nextPrayer, currentPrayerName, da
                     time={prayerTimes[name]}
                     icon={prayerIcons[name]}
                     isActive={currentPrayerName === name}
-                    offset={prayerOffsets[name]}
+                    offset={getOffsetDisplay(prayerOffsets[name])}
                 />
             ))}
         </div>
