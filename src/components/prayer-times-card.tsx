@@ -52,7 +52,7 @@ export function PrayerTimesCard({ prayerTimes, nextPrayer, currentPrayerName, da
          <button onClick={() => setIsOptionsOpen(true)} className="absolute top-4 right-4 p-2 text-primary hover:text-accent transition-colors">
             <Settings className="w-6 h-6" />
         </button>
-        <div className="flex flex-col items-center space-y-2">
+        <div className="flex flex-col items-center space-y-2 pt-2">
             <Countdown nextPrayerName={nextPrayer.name} nextPrayerTime={nextPrayer.time} />
              <div className="w-full text-left">
                 <p className="font-bold text-custom-blue text-lg">Gebetszeiten Dortmund</p>
