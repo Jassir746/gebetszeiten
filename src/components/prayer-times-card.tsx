@@ -46,8 +46,8 @@ function PrayerTimeRow({ name, time, isActive, offset }: { name: string, time: s
 export function PrayerTimesCard({ prayerTimes, nextPrayer, currentPrayerName, date, now, locationDenied, jumuahTime, prayerOffsets }: PrayerTimesCardProps) {
   return (
     <Card className="w-full w-[20.8rem] mx-auto shadow-2xl shadow-primary/10 bg-card/40 border-primary/20">
-      <CardHeader className="text-center pb-4">
-        <div className="flex flex-col items-center space-y-2 mb-4">
+      <CardHeader className="text-center pb-2">
+        <div className="flex flex-col items-center space-y-2">
             <Countdown nextPrayerName={nextPrayer.name} nextPrayerTime={nextPrayer.time} />
              <div className="w-full text-left">
                 <p className="font-bold text-custom-blue text-lg">Gebetszeiten Dortmund</p>
@@ -62,7 +62,7 @@ export function PrayerTimesCard({ prayerTimes, nextPrayer, currentPrayerName, da
         </div>
         <CardDescription>{locationDenied ? "Es werden die Zeiten für den Standardstandort angezeigt" : ""}</CardDescription>
       </CardHeader>
-      <CardContent className="space-y-2 pt-0">
+      <CardContent className="pt-0">
         <div className="space-y-2 py-2">
             {prayerOrder.map((name) => (
                 <PrayerTimeRow
