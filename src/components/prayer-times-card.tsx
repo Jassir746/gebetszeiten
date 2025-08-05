@@ -72,7 +72,7 @@ export function PrayerTimesCard({ prayerTimes, nextPrayer, currentPrayerName, da
       <CardContent className="space-y-6 pt-0">
         <Separator />
         
-        <div className="space-y-2">
+        <div className="space-y-1">
             {prayerOrder.map((name) => (
                 <PrayerTimeRow
                     key={name}
