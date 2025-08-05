@@ -29,7 +29,7 @@ export default function Home() {
     if (error) {
       toast({
         variant: "destructive",
-        title: "Notice",
+        title: "Hinweis",
         description: error,
       });
     }
@@ -45,12 +45,12 @@ export default function Home() {
           });
         },
         () => {
-          setError("Location access denied. Showing times for a default location.");
+          setError("Standortzugriff verweigert. Es werden Zeiten für einen Standardstandort angezeigt.");
           setLocation({ latitude: 51.5136, longitude: 7.4653 }); // Dortmund
         }
       );
     } else {
-      setError("Geolocation is not supported. Showing times for a default location.");
+      setError("Geolocation wird nicht unterstützt. Es werden Zeiten für einen Standardstandort angezeigt.");
       setLocation({ latitude: 51.5136, longitude: 7.4653 }); // Dortmund
     }
   }, []);
@@ -63,11 +63,11 @@ export default function Home() {
           const times = await getPrayerTimes(date, location.latitude, location.longitude);
           setPrayerTimes(times);
           // Clear previous errors on successful fetch
-          if (!error?.includes('denied')) {
+          if (!error?.includes('verweigert')) {
             setError(null);
           }
         } catch (err) {
-          setError("Could not fetch prayer times. Please try again later.");
+          setError("Gebetszeiten konnten nicht abgerufen werden. Bitte versuchen Sie es später noch einmal.");
         }
       };
       fetchTimes();
@@ -108,7 +108,7 @@ export default function Home() {
           nextPrayer={prayerInfo.nextPrayer}
           currentPrayerName={prayerInfo.currentPrayer?.name}
           date={date}
-          locationDenied={!!error?.includes('denied')}
+          locationDenied={!!error?.includes('verweigert')}
         />
       );
     }

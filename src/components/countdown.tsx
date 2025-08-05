@@ -39,7 +39,7 @@ export function Countdown({ nextPrayerName, nextPrayerTime }: CountdownProps) {
 
   return (
     <div className="text-center space-y-1">
-      <p className="text-lg text-foreground/80 font-headline">Time until {nextPrayerName}</p>
+      <p className="text-lg text-foreground/80 font-headline">Zeit bis {nextPrayerName}</p>
       <p className="text-5xl font-bold font-headline text-primary tracking-tighter">{timeLeft}</p>
     </div>
   );
