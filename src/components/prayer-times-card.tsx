@@ -11,6 +11,7 @@ interface PrayerTimesCardProps {
   nextPrayer: { name: PrayerName, time: Date };
   currentPrayerName?: PrayerName;
   date: Date;
+  now: Date;
   locationDenied?: boolean;
 }
 
@@ -40,15 +41,19 @@ function PrayerTimeRow({ name, time, icon: Icon, isActive }: { name: string, tim
     )
 }
 
-export function PrayerTimesCard({ prayerTimes, nextPrayer, currentPrayerName, date, locationDenied }: PrayerTimesCardProps) {
+export function PrayerTimesCard({ prayerTimes, nextPrayer, currentPrayerName, date, now, locationDenied }: PrayerTimesCardProps) {
   return (
     <Card className="w-full max-w-md mx-auto shadow-2xl shadow-primary/10 border-primary/20 bg-card/80 backdrop-blur-sm animate-in fade-in-50 duration-500">
       <CardHeader className="text-center pb-4">
         <div className="flex flex-col items-center space-y-2 mb-4">
             <Countdown nextPrayerName={nextPrayer.name} nextPrayerTime={nextPrayer.time} />
-            <CardTitle className="text-2xl font-headline">
+            <CardTitle className="text-2xl font-headline pt-2">
               {date.toLocaleDateString('de-DE', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Europe/Berlin' })}
             </CardTitle>
+            <CardDescription className="text-foreground/80 font-mono tracking-wider">
+              {now.toLocaleDateString('de-DE', {day: '2-digit', month: '2-digit', year: 'numeric'})} &nbsp;
+              {now.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit', second: '2-digit'})}
+            </CardDescription>
         </div>
         <CardDescription>{locationDenied ? "Es werden die Zeiten für den Standardstandort angezeigt" : ""}</CardDescription>
       </CardHeader>

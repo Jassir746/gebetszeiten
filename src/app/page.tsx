@@ -23,6 +23,7 @@ export default function Home() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [date, setDate] = useState(new Date());
+  const [now, setNow] = useState(new Date());
   const { toast } = useToast();
 
   useEffect(() => {
@@ -80,11 +81,12 @@ export default function Home() {
           setLoading(false);
 
           const timer = setInterval(() => {
+              const currentDate = new Date();
+              setNow(currentDate);
               setPrayerInfo(getNextPrayerInfo(prayerTimes));
               
-              const now = new Date();
-              if(now.getDate() !== date.getDate()) {
-                  setDate(now);
+              if(currentDate.getDate() !== date.getDate()) {
+                  setDate(currentDate);
               }
           }, 1000);
 
@@ -108,6 +110,7 @@ export default function Home() {
           nextPrayer={prayerInfo.nextPrayer}
           currentPrayerName={prayerInfo.currentPrayer?.name}
           date={date}
+          now={now}
           locationDenied={!!error?.includes('verweigert')}
         />
       );
