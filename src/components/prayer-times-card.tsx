@@ -5,6 +5,7 @@ import { Countdown } from "./countdown";
 import { Separator } from "@/components/ui/separator";
 import { Sunrise, Sun, SunDim, Sunset, Moon } from 'lucide-react';
 import { cn } from "@/lib/utils";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
 interface PrayerTimesCardProps {
   prayerTimes: PrayerTimes;
@@ -23,7 +24,7 @@ const prayerIcons: Record<PrayerName, ComponentType<{className?: string}>> = {
     Ishaa: Moon,
 };
 
-const prayerOrder: PrayerName[] = ['Fadjr', 'Shuruk', 'Duhr', 'Assr', 'Maghrib', 'Ishaa'];
+const prayerOrder: PrayerName[] = ['Fadjr', 'Duhr', 'Assr', 'Maghrib', 'Ishaa'];
 
 function PrayerTimeRow({ name, time, icon: Icon, isActive }: { name: string, time: string, icon: ComponentType<{className?: string}>, isActive: boolean }) {
     return (
@@ -65,6 +66,21 @@ export function PrayerTimesCard({ prayerTimes, nextPrayer, currentPrayerName, da
                 />
             ))}
         </div>
+        <Separator />
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead className="text-left">Shuruk</TableHead>
+              <TableHead className="text-right">Jumuah</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            <TableRow>
+              <TableCell className="text-left font-mono font-semibold text-primary">{prayerTimes.Shuruk}</TableCell>
+              <TableCell className="text-right font-mono font-semibold text-primary">14:00</TableCell>
+            </TableRow>
+          </TableBody>
+        </Table>
       </CardContent>
     </Card>
   );
