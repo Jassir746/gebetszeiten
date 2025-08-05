@@ -42,11 +42,11 @@ function PrayerTimeRow({ name, time, icon: Icon, isActive, offset }: { name: str
         )}>
             <div className="flex items-center gap-4">
                 <Icon className={cn("w-6 h-6 transition-colors", isActive ? "text-accent" : "text-primary/70")} />
-                <span className={cn("text-lg font-bold transition-colors", isActive ? "text-accent-foreground" : "font-bold text-black")}>{name}</span>
+                <span className={cn("text-lg font-bold transition-colors w-20", isActive ? "text-accent-foreground" : "font-bold text-black")}>{name}</span>
+                <span className={cn("text-lg font-bold transition-colors w-16", isActive ? "text-accent-foreground" : "font-bold text-black")}>{time}</span>
             </div>
             <div className="flex items-center gap-4">
-                <span className={cn("text-lg font-bold transition-colors w-20 text-right", isActive ? "text-accent" : "font-bold text-black")}>{time}</span>
-                <span className={cn("text-lg font-bold transition-colors w-12 text-right", isActive ? "text-accent" : "font-bold text-black")}>{offset}</span>
+                <span className={cn("text-lg font-bold text-primary w-12 text-right", isActive ? "text-accent" : "text-primary")}>{offset}</span>
             </div>
         </div>
     )
