@@ -39,7 +39,7 @@ function getOffsetDisplay(offsetValue: string): string {
 function PrayerTimeRow({ name, time, icon: Icon, isActive, offset }: { name: string, time: string, icon: ComponentType<{className?: string}>, isActive: boolean, offset: string }) {
     return (
         <div className={cn(
-            "flex items-center justify-between p-2 rounded-lg transition-all duration-500 ease-in-out",
+            "flex items-center justify-between p-1 rounded-lg transition-all duration-500 ease-in-out",
             isActive ? "border-2 border-destructive" : "hover:bg-primary/5"
         )}>
             <div className="flex items-center gap-4 w-1/3">
@@ -58,7 +58,7 @@ function PrayerTimeRow({ name, time, icon: Icon, isActive, offset }: { name: str
 
 export function PrayerTimesCard({ prayerTimes, nextPrayer, currentPrayerName, date, now, locationDenied, jumuahTime, prayerOffsets }: PrayerTimesCardProps) {
   return (
-    <Card className="w-full max-w-md mx-auto shadow-2xl shadow-primary/10 border-primary/20 bg-card/30">
+    <Card className="w-full max-w-xs mx-auto shadow-2xl shadow-primary/10 border-primary/20">
       <CardHeader className="text-center pb-4">
         <div className="flex flex-col items-center space-y-2 mb-4">
             <Countdown nextPrayerName={nextPrayer.name} nextPrayerTime={nextPrayer.time} />
