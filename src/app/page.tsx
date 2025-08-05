@@ -123,7 +123,7 @@ export default function Home() {
     <main className="flex min-h-screen w-full flex-col items-center justify-center bg-background p-4 sm:p-8 font-body">
       <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-primary/10 via-background to-background -z-10"></div>
       <div className="text-center mb-8">
-        <h1 className="text-[0.9em] font-bold text-primary">
+        <h1 className="text-2xl font-bold text-primary">
           Gebetszeiten Dortmund
         </h1>
       </div>
