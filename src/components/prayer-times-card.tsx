@@ -26,7 +26,15 @@ const prayerIcons: Record<PrayerName, ComponentType<{className?: string}>> = {
 
 const prayerOrder: PrayerName[] = ['Fadjr', 'Duhr', 'Assr', 'Maghrib', 'Ishaa'];
 
-function PrayerTimeRow({ name, time, icon: Icon, isActive }: { name: string, time: string, icon: ComponentType<{className?: string}>, isActive: boolean }) {
+const prayerOffsets = {
+    Fadjr: '+30',
+    Duhr: '+10',
+    Assr: '+10',
+    Maghrib: '+5',
+    Ishaa: '+10',
+};
+
+function PrayerTimeRow({ name, time, icon: Icon, isActive, offset }: { name: string, time: string, icon: ComponentType<{className?: string}>, isActive: boolean, offset: string }) {
     return (
         <div className={cn(
             "flex items-center justify-between p-3 rounded-lg transition-all duration-500 ease-in-out",
@@ -36,7 +44,10 @@ function PrayerTimeRow({ name, time, icon: Icon, isActive }: { name: string, tim
                 <Icon className={cn("w-6 h-6 transition-colors", isActive ? "text-accent" : "text-primary/70")} />
                 <span className={cn("text-lg font-bold transition-colors", isActive ? "text-accent-foreground" : "font-bold text-black")}>{name}</span>
             </div>
-            <span className={cn("text-lg font-bold transition-colors", isActive ? "text-accent" : "font-bold text-black")}>{time}</span>
+            <div className="flex items-center gap-4">
+                <span className={cn("text-lg font-bold transition-colors w-20 text-right", isActive ? "text-accent" : "font-bold text-black")}>{time}</span>
+                <span className={cn("text-lg font-bold transition-colors w-12 text-right", isActive ? "text-accent" : "font-bold text-black")}>{offset}</span>
+            </div>
         </div>
     )
 }
@@ -68,6 +79,7 @@ export function PrayerTimesCard({ prayerTimes, nextPrayer, currentPrayerName, da
                     time={prayerTimes[name]}
                     icon={prayerIcons[name]}
                     isActive={currentPrayerName === name}
+                    offset={prayerOffsets[name]}
                 />
             ))}
         </div>
