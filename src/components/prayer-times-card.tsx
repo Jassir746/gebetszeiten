@@ -1,8 +1,6 @@
-import type { ComponentType } from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { PrayerTimes, PrayerName } from "@/lib/prayer-times";
 import { Countdown } from "./countdown";
-import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
 import { PrayerOffsets } from "./options-menu";
 
@@ -65,9 +63,7 @@ export function PrayerTimesCard({ prayerTimes, nextPrayer, currentPrayerName, da
         <CardDescription>{locationDenied ? "Es werden die Zeiten für den Standardstandort angezeigt" : ""}</CardDescription>
       </CardHeader>
       <CardContent className="space-y-2 pt-0">
-        <Separator />
-        
-        <div className="space-y-2">
+        <div className="space-y-2 py-2">
             {prayerOrder.map((name) => (
                 <PrayerTimeRow
                     key={name}
@@ -78,7 +74,6 @@ export function PrayerTimesCard({ prayerTimes, nextPrayer, currentPrayerName, da
                 />
             ))}
         </div>
-        <Separator />
         <div className="flex justify-between gap-4 mx-4 pt-2">
             <div className="text-center bg-mint-green/30 text-primary-foreground rounded-lg p-3 border border-black space-y-1 w-[45%]">
                 <div className="font-bold text-black">Shuruk</div>
