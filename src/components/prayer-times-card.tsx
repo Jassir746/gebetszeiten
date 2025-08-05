@@ -72,12 +72,12 @@ export function PrayerTimesCard({ prayerTimes, nextPrayer, currentPrayerName, da
             ))}
         </div>
         <Separator />
-        <div className="flex justify-between gap-4">
-            <div className="text-center bg-primary text-primary-foreground rounded-lg p-3 border border-black space-y-1 w-[48%]">
+        <div className="flex justify-between gap-4 mx-6">
+            <div className="text-center bg-primary text-primary-foreground rounded-lg p-3 border border-black space-y-1 w-[45%]">
                 <div className="font-bold">Shuruk</div>
                 <div className="font-mono">{prayerTimes.Shuruk}</div>
             </div>
-            <div className="text-center bg-primary text-primary-foreground rounded-lg p-3 border border-black space-y-1 w-[48%]">
+            <div className="text-center bg-primary text-primary-foreground rounded-lg p-3 border border-black space-y-1 w-[45%]">
                 <div className="font-bold">Jumuah</div>
                 <div className="font-mono">14:00</div>
             </div>
