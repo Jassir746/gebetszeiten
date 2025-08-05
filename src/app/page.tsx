@@ -46,12 +46,12 @@ export default function Home() {
         },
         () => {
           setError("Location access denied. Showing times for a default location.");
-          setLocation({ latitude: 21.4225, longitude: 39.8262 }); // Mecca
+          setLocation({ latitude: 51.5136, longitude: 7.4653 }); // Dortmund
         }
       );
     } else {
       setError("Geolocation is not supported. Showing times for a default location.");
-      setLocation({ latitude: 21.4225, longitude: 39.8262 }); // Mecca
+      setLocation({ latitude: 51.5136, longitude: 7.4653 }); // Dortmund
     }
   }, []);
 
@@ -121,7 +121,7 @@ export default function Home() {
       <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-primary/10 via-background to-background -z-10"></div>
       <div className="text-center">
         <h1 className="text-4xl sm:text-5xl font-bold font-headline text-primary mb-2">
-          PrayerTime Pal
+          Gebetszeiten Dortmund
         </h1>
         <p className="text-muted-foreground mb-8">Your companion for timely prayers.</p>
       </div>
