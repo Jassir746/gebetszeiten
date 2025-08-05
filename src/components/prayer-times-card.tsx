@@ -91,8 +91,8 @@ export function PrayerTimesCard({ prayerTimes, nextPrayer, currentPrayerName, da
             </div>
         </div>
         <div className="flex justify-end items-center gap-2 mt-4 mx-4">
-            <span className="text-2xl">☪</span>
-            <a href="https://app.izaachen.de" target="_blank" rel="noopener noreferrer" className="text-black font-bold text-lg hover:text-accent transition-colors">
+            <span className="text-lg">☪</span>
+            <a href="https://app.izaachen.de" target="_blank" rel="noopener noreferrer" className="text-muted-foreground text-sm hover:text-accent transition-colors">
                 app.izaachen.de
             </a>
         </div>
