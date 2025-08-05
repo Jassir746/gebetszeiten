@@ -44,14 +44,15 @@ export function PrayerTimesCard({ prayerTimes, nextPrayer, currentPrayerName, da
   return (
     <Card className="w-full max-w-md mx-auto shadow-2xl shadow-primary/10 border-primary/20 bg-card/80 backdrop-blur-sm animate-in fade-in-50 duration-500">
       <CardHeader className="text-center pb-4">
-        <CardTitle className="text-2xl font-headline">
-          {date.toLocaleDateString('de-DE', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Europe/Berlin' })}
-        </CardTitle>
+        <div className="flex flex-col items-center space-y-2 mb-4">
+            <Countdown nextPrayerName={nextPrayer.name} nextPrayerTime={nextPrayer.time} />
+            <CardTitle className="text-2xl font-headline">
+              {date.toLocaleDateString('de-DE', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Europe/Berlin' })}
+            </CardTitle>
+        </div>
         <CardDescription>{locationDenied ? "Es werden die Zeiten für den Standardstandort angezeigt" : ""}</CardDescription>
       </CardHeader>
-      <CardContent className="space-y-6">
-        <Countdown nextPrayerName={nextPrayer.name} nextPrayerTime={nextPrayer.time} />
-
+      <CardContent className="space-y-6 pt-0">
         <Separator />
         
         <div className="space-y-2">
