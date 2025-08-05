@@ -39,7 +39,7 @@ function getOffsetDisplay(offsetValue: string): string {
 function PrayerTimeRow({ name, time, icon: Icon, isActive, offset }: { name: string, time: string, icon: ComponentType<{className?: string}>, isActive: boolean, offset: string }) {
     return (
         <div className={cn(
-            "flex items-center justify-between p-1 rounded-lg transition-all duration-500 ease-in-out",
+            "flex items-center justify-between p-0 rounded-lg transition-all duration-500 ease-in-out",
             isActive ? "border-2 border-destructive" : "hover:bg-primary/5"
         )}>
             <div className="flex items-center gap-4 w-1/3">
@@ -65,10 +65,10 @@ export function PrayerTimesCard({ prayerTimes, nextPrayer, currentPrayerName, da
              <div className="w-full text-left">
                 <p className="font-bold text-custom-blue text-lg">Gebetszeiten Dortmund</p>
             </div>
-            <CardTitle className="pt-2 text-xl text-black">
+            <CardTitle className="pt-2 text-lg text-black">
               {date.toLocaleDateString('de-DE', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Europe/Berlin' })}
             </CardTitle>
-            <CardDescription className="text-xl font-bold font-mono tracking-wider text-black">
+            <CardDescription className="text-lg font-bold font-mono tracking-wider text-black">
               {now.toLocaleDateString('de-DE', {day: '2-digit', month: '2-digit', year: 'numeric'})} &nbsp;
               {now.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit', second: '2-digit'})}
             </CardDescription>
