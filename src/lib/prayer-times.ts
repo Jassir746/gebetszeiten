@@ -12,15 +12,14 @@ export type PrayerTimes = Record<PrayerName, string>;
 export async function getPrayerTimes(date: Date, latitude: number, longitude: number): Promise<PrayerTimes> {
   console.log(`Fetching prayer times for ${date.toDateString()} at lat: ${latitude}, long: ${longitude}`);
   
-  // In a real app, you would use these parameters to call a prayer times API.
-  // We will replace this URL with your actual API endpoint.
-  const API_URL = 'https://example.com/api/prayer-times'; 
+  // This is the placeholder for your actual API endpoint.
+  // We will uncomment and use this block once your API is ready.
+  /*
+  const API_URL = 'https://YOUR_WEBSPACE_URL/api/prayer-times.php'; 
 
   try {
-    // We can add parameters like date, lat, long to the URL if needed
-    // const response = await fetch(`${API_URL}?date=${date.toISOString()}`);
-    const response = await fetch(API_URL);
-
+    const response = await fetch(`${API_URL}?lat=${latitude}&lng=${longitude}&date=${date.toISOString().split('T')[0]}`);
+    
     if (!response.ok) {
       throw new Error(`API call failed with status: ${response.status}`);
     }
@@ -30,9 +29,20 @@ export async function getPrayerTimes(date: Date, latitude: number, longitude: nu
 
   } catch (error) {
     console.error("Failed to fetch prayer times:", error);
-    // Return mock data or handle the error as needed
     throw new Error("Could not fetch prayer times from the server.");
   }
+  */
+
+  // Using mock data until the API is connected.
+  console.log("Using mock data for development.");
+  return Promise.resolve({
+    Fadjr: '05:30',
+    Shuruk: '07:00',
+    Duhr: '13:30',
+    Assr: '17:30',
+    Maghrib: '20:30',
+    Ishaa: '22:00',
+  });
 }
 
 /**
