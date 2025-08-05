@@ -58,7 +58,7 @@ function PrayerTimeRow({ name, time, icon: Icon, isActive, offset }: { name: str
 
 export function PrayerTimesCard({ prayerTimes, nextPrayer, currentPrayerName, date, now, locationDenied, jumuahTime, prayerOffsets }: PrayerTimesCardProps) {
   return (
-    <Card className="w-full w-[20.8rem] mx-auto shadow-2xl shadow-primary/10 bg-card/30 border-primary/20">
+    <Card className="w-full w-[20.8rem] mx-auto shadow-2xl shadow-primary/10 bg-card/40 border-primary/20">
       <CardHeader className="text-center pb-4">
         <div className="flex flex-col items-center space-y-2 mb-4">
             <Countdown nextPrayerName={nextPrayer.name} nextPrayerTime={nextPrayer.time} />
@@ -75,7 +75,7 @@ export function PrayerTimesCard({ prayerTimes, nextPrayer, currentPrayerName, da
         </div>
         <CardDescription>{locationDenied ? "Es werden die Zeiten für den Standardstandort angezeigt" : ""}</CardDescription>
       </CardHeader>
-      <CardContent className="space-y-4 pt-0">
+      <CardContent className="space-y-0 pt-0">
         <Separator />
         
         <div className="space-y-0">
