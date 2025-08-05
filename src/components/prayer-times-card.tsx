@@ -1,3 +1,4 @@
+
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { PrayerTimes, PrayerName } from "@/lib/prayer-times";
 import { Countdown } from "./countdown";
@@ -88,6 +89,12 @@ export function PrayerTimesCard({ prayerTimes, nextPrayer, currentPrayerName, da
                 <div className="font-bold text-black">Jumuah</div>
                 <div className="font-mono font-bold text-black">{jumuahTime}</div>
             </div>
+        </div>
+        <div className="flex justify-end items-center gap-2 mt-4 mx-4">
+            <span className="text-2xl">☪</span>
+            <a href="https://app.izaachen.de" target="_blank" rel="noopener noreferrer" className="text-black font-bold text-lg hover:text-accent transition-colors">
+                app.izaachen.de
+            </a>
         </div>
       </CardContent>
     </Card>
