@@ -2,18 +2,8 @@ export type PrayerName = 'Fadjr' | 'Shuruk' | 'Duhr' | 'Assr' | 'Maghrib' | 'Ish
 
 export type PrayerTimes = Record<PrayerName, string>;
 
-// Hardcoded data for demonstration. In a real application, this would come from an API.
-const MOCK_PRAYER_TIMES: PrayerTimes = {
-  Fadjr: '04:33',
-  Shuruk: '06:01',
-  Duhr: '12:48',
-  Assr: '16:29',
-  Maghrib: '19:35',
-  Ishaa: '21:03',
-};
-
 /**
- * Simulates fetching prayer times from an API.
+ * Fetches prayer times from the API.
  * @param date The date for which to fetch prayer times.
  * @param latitude The user's latitude.
  * @param longitude The user's longitude.
@@ -21,12 +11,28 @@ const MOCK_PRAYER_TIMES: PrayerTimes = {
  */
 export async function getPrayerTimes(date: Date, latitude: number, longitude: number): Promise<PrayerTimes> {
   console.log(`Fetching prayer times for ${date.toDateString()} at lat: ${latitude}, long: ${longitude}`);
+  
   // In a real app, you would use these parameters to call a prayer times API.
-  return new Promise(resolve => {
-    setTimeout(() => {
-      resolve(MOCK_PRAYER_TIMES);
-    }, 1000);
-  });
+  // We will replace this URL with your actual API endpoint.
+  const API_URL = 'https://example.com/api/prayer-times'; 
+
+  try {
+    // We can add parameters like date, lat, long to the URL if needed
+    // const response = await fetch(`${API_URL}?date=${date.toISOString()}`);
+    const response = await fetch(API_URL);
+
+    if (!response.ok) {
+      throw new Error(`API call failed with status: ${response.status}`);
+    }
+
+    const data: PrayerTimes = await response.json();
+    return data;
+
+  } catch (error) {
+    console.error("Failed to fetch prayer times:", error);
+    // Return mock data or handle the error as needed
+    throw new Error("Could not fetch prayer times from the server.");
+  }
 }
 
 /**
