@@ -50,7 +50,7 @@ export function PrayerTimesCard({ prayerTimes, nextPrayer, currentPrayerName, da
             <CardTitle className="text-xl font-headline pt-2">
               {date.toLocaleDateString('de-DE', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Europe/Berlin' })}
             </CardTitle>
-            <CardDescription className="text-foreground/80 font-mono tracking-wider">
+            <CardDescription className="text-xl font-bold text-foreground/80 font-mono tracking-wider">
               {now.toLocaleDateString('de-DE', {day: '2-digit', month: '2-digit', year: 'numeric'})} &nbsp;
               {now.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit', second: '2-digit'})}
             </CardDescription>
