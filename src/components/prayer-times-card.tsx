@@ -39,7 +39,7 @@ function getOffsetDisplay(offsetValue: string): string {
 function PrayerTimeRow({ name, time, icon: Icon, isActive, offset }: { name: string, time: string, icon: ComponentType<{className?: string}>, isActive: boolean, offset: string }) {
     return (
         <div className={cn(
-            "flex items-center justify-between p-0 rounded-lg transition-all duration-500 ease-in-out",
+            "flex items-center justify-between p-0 rounded-lg transition-all duration-500 ease-in-out py-1",
             isActive ? "border-2 border-destructive" : "hover:bg-primary/5"
         )}>
             <div className="flex items-center gap-4 w-1/3">
@@ -75,10 +75,10 @@ export function PrayerTimesCard({ prayerTimes, nextPrayer, currentPrayerName, da
         </div>
         <CardDescription>{locationDenied ? "Es werden die Zeiten für den Standardstandort angezeigt" : ""}</CardDescription>
       </CardHeader>
-      <CardContent className="space-y-0 pt-0">
+      <CardContent className="space-y-2 pt-0">
         <Separator />
         
-        <div className="space-y-0">
+        <div className="space-y-2">
             {prayerOrder.map((name) => (
                 <PrayerTimeRow
                     key={name}
@@ -91,7 +91,7 @@ export function PrayerTimesCard({ prayerTimes, nextPrayer, currentPrayerName, da
             ))}
         </div>
         <Separator />
-        <div className="flex justify-between gap-4 mx-4">
+        <div className="flex justify-between gap-4 mx-4 pt-2">
             <div className="text-center bg-primary text-primary-foreground rounded-lg p-3 border border-black space-y-1 w-[45%]">
                 <div className="font-bold">Shuruk</div>
                 <div className="font-mono font-bold">{prayerTimes.Shuruk}</div>
