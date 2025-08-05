@@ -34,9 +34,9 @@ function PrayerTimeRow({ name, time, icon: Icon, isActive }: { name: string, tim
         )}>
             <div className="flex items-center gap-4">
                 <Icon className={cn("w-6 h-6 transition-colors", isActive ? "text-accent" : "text-primary/70")} />
-                <span className={cn("text-lg font-bold transition-colors", isActive ? "text-accent-foreground" : "text-black")}>{name}</span>
+                <span className={cn("text-lg font-bold transition-colors", isActive ? "text-accent-foreground" : "font-bold text-black")}>{name}</span>
             </div>
-            <span className={cn("text-lg font-bold transition-colors", isActive ? "text-accent" : "text-black")}>{time}</span>
+            <span className={cn("text-lg font-bold transition-colors", isActive ? "text-accent" : "font-bold text-black")}>{time}</span>
         </div>
     )
 }
@@ -72,7 +72,7 @@ export function PrayerTimesCard({ prayerTimes, nextPrayer, currentPrayerName, da
             ))}
         </div>
         <Separator />
-        <div className="flex justify-between gap-4 mx-6">
+        <div className="flex justify-between gap-4 mx-4">
             <div className="text-center bg-primary text-primary-foreground rounded-lg p-3 border border-black space-y-1 w-[45%]">
                 <div className="font-bold">Shuruk</div>
                 <div className="font-mono">{prayerTimes.Shuruk}</div>
