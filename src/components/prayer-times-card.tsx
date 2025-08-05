@@ -15,15 +15,15 @@ interface PrayerTimesCardProps {
 }
 
 const prayerIcons: Record<PrayerName, ComponentType<{className?: string}>> = {
-    Fajr: Sunrise,
-    Sunrise: Sunrise,
-    Dhuhr: Sun,
-    Asr: SunDim,
+    Fadjr: Sunrise,
+    Shuruk: Sunrise,
+    Duhr: Sun,
+    Assr: SunDim,
     Maghrib: Sunset,
-    Isha: Moon,
+    Ishaa: Moon,
 };
 
-const prayerOrder: PrayerName[] = ['Fajr', 'Sunrise', 'Dhuhr', 'Asr', 'Maghrib', 'Isha'];
+const prayerOrder: PrayerName[] = ['Fadjr', 'Shuruk', 'Duhr', 'Assr', 'Maghrib', 'Ishaa'];
 
 function PrayerTimeRow({ name, time, icon: Icon, isActive }: { name: string, time: string, icon: ComponentType<{className?: string}>, isActive: boolean }) {
     return (

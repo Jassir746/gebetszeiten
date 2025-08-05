@@ -1,15 +1,15 @@
-export type PrayerName = 'Fajr' | 'Sunrise' | 'Dhuhr' | 'Asr' | 'Maghrib' | 'Isha';
+export type PrayerName = 'Fadjr' | 'Shuruk' | 'Duhr' | 'Assr' | 'Maghrib' | 'Ishaa';
 
 export type PrayerTimes = Record<PrayerName, string>;
 
 // Hardcoded data for demonstration. In a real application, this would come from an API.
 const MOCK_PRAYER_TIMES: PrayerTimes = {
-  Fajr: '04:33',
-  Sunrise: '06:01',
-  Dhuhr: '12:48',
-  Asr: '16:29',
+  Fadjr: '04:33',
+  Shuruk: '06:01',
+  Duhr: '12:48',
+  Assr: '16:29',
   Maghrib: '19:35',
-  Isha: '21:03',
+  Ishaa: '21:03',
 };
 
 /**
@@ -66,9 +66,9 @@ export function getNextPrayerInfo(prayerTimes: PrayerTimes) {
 
   // If it's before Fajr, the current prayer is Isha of the previous day.
   if (!currentPrayer) {
-      const ishaTime = prayerSchedule.find(p => p.name === 'Isha')?.time;
+      const ishaTime = prayerSchedule.find(p => p.name === 'Ishaa')?.time;
       if (ishaTime) {
-          currentPrayer = { name: 'Isha', time: new Date(ishaTime.getTime() - 24 * 60 * 60 * 1000) };
+          currentPrayer = { name: 'Ishaa', time: new Date(ishaTime.getTime() - 24 * 60 * 60 * 1000) };
       }
   }
 
