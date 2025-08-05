@@ -40,13 +40,15 @@ function PrayerTimeRow({ name, time, icon: Icon, isActive, offset }: { name: str
             "flex items-center justify-between p-3 rounded-lg transition-all duration-500 ease-in-out",
             isActive ? "bg-accent/20 scale-105 shadow-lg shadow-accent/10" : "hover:bg-primary/5"
         )}>
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-4 w-1/3">
                 <Icon className={cn("w-6 h-6 transition-colors", isActive ? "text-accent" : "text-primary/70")} />
-                <span className={cn("text-lg font-bold transition-colors w-20", isActive ? "text-accent-foreground" : "font-bold text-black")}>{name}</span>
-                <span className={cn("text-lg font-bold transition-colors w-16", isActive ? "text-accent-foreground" : "font-bold text-black")}>{time}</span>
+                <span className={cn("text-lg font-bold transition-colors", isActive ? "text-accent-foreground" : "font-bold text-black")}>{name}</span>
             </div>
-            <div className="flex items-center gap-4">
-                <span className={cn("text-lg font-bold text-primary w-12 text-right", isActive ? "text-accent" : "text-primary")}>{offset}</span>
+            <div className="w-1/3 text-center">
+                <span className={cn("text-lg font-bold transition-colors", isActive ? "text-accent-foreground" : "font-bold text-black")}>{time}</span>
+            </div>
+            <div className="flex items-center justify-end gap-4 w-1/3">
+                <span className={cn("text-lg font-bold text-primary text-right", isActive ? "text-accent" : "text-primary")}>{offset}</span>
             </div>
         </div>
     )
