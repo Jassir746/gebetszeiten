@@ -59,10 +59,10 @@ export function PrayerTimesCard({ prayerTimes, nextPrayer, currentPrayerName, da
              <div className="w-full text-left">
                 <p className="font-bold text-custom-blue text-lg">Gebetszeiten Dortmund</p>
             </div>
-            <CardTitle className="pt-2 text-xl">
+            <CardTitle className="pt-2 text-xl text-black">
               {date.toLocaleDateString('de-DE', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Europe/Berlin' })}
             </CardTitle>
-            <CardDescription className="text-xl font-bold font-mono tracking-wider">
+            <CardDescription className="text-xl font-bold font-mono tracking-wider text-black">
               {now.toLocaleDateString('de-DE', {day: '2-digit', month: '2-digit', year: 'numeric'})} &nbsp;
               {now.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit', second: '2-digit'})}
             </CardDescription>
