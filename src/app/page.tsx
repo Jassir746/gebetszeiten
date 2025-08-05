@@ -119,11 +119,10 @@ export default function Home() {
   return (
     <main className="flex min-h-screen w-full flex-col items-center justify-center bg-background p-4 sm:p-8 font-body">
       <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-primary/10 via-background to-background -z-10"></div>
-      <div className="text-center">
-        <h1 className="text-4xl sm:text-5xl font-bold font-headline text-primary mb-2">
+      <div className="text-center mb-8">
+        <h1 className="text-4xl sm:text-5xl font-bold font-headline text-primary">
           Gebetszeiten Dortmund
         </h1>
-        <p className="text-muted-foreground mb-8">Your companion for timely prayers.</p>
       </div>
       
       {renderContent()}

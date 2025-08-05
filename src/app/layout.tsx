@@ -4,7 +4,7 @@ import { Toaster } from "@/components/ui/toaster";
 
 export const metadata: Metadata = {
   title: 'Gebetszeiten Dortmund',
-  description: 'Your companion for timely prayers.',
+  description: '',
 };
 
 export default function RootLayout({
