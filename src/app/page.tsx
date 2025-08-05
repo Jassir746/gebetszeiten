@@ -6,7 +6,6 @@ import { PrayerTimesCard } from '@/components/prayer-times-card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useToast } from "@/hooks/use-toast";
 import { OptionsMenu, PrayerOffsets } from '@/components/options-menu';
-import { Settings } from 'lucide-react';
 
 interface Location {
   latitude: number;
@@ -126,6 +125,7 @@ export default function Home() {
           locationDenied={!!error?.includes('verweigert')}
           jumuahTime={jumuahTime}
           prayerOffsets={prayerOffsets}
+          setIsOptionsOpen={setIsOptionsOpen}
         />
       );
     }
@@ -143,15 +143,6 @@ export default function Home() {
         prayerOffsets={prayerOffsets}
         setPrayerOffsets={setPrayerOffsets}
       />
-      <div className="text-center mb-8 relative w-full w-[20.8rem]">
-        <h1 className="text-2xl font-bold text-primary">
-          Gebetszeiten Dortmund
-        </h1>
-        <button onClick={() => setIsOptionsOpen(true)} className="absolute top-0 right-0 p-2 text-primary hover:text-accent transition-colors">
-            <Settings className="w-6 h-6" />
-        </button>
-      </div>
-      
       {renderContent()}
     </main>
   );

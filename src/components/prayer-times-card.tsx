@@ -3,6 +3,7 @@ import { PrayerTimes, PrayerName } from "@/lib/prayer-times";
 import { Countdown } from "./countdown";
 import { cn } from "@/lib/utils";
 import { PrayerOffsets } from "./options-menu";
+import { Settings } from "lucide-react";
 
 interface PrayerTimesCardProps {
   prayerTimes: PrayerTimes;
@@ -13,6 +14,7 @@ interface PrayerTimesCardProps {
   locationDenied?: boolean;
   jumuahTime: string;
   prayerOffsets: PrayerOffsets;
+  setIsOptionsOpen: (isOpen: boolean) => void;
 }
 
 const prayerOrder: PrayerName[] = ['Fadjr', 'Duhr', 'Assr', 'Maghrib', 'Ishaa'];
@@ -43,10 +45,13 @@ function PrayerTimeRow({ name, time, isActive, offset }: { name: string, time: s
     )
 }
 
-export function PrayerTimesCard({ prayerTimes, nextPrayer, currentPrayerName, date, now, locationDenied, jumuahTime, prayerOffsets }: PrayerTimesCardProps) {
+export function PrayerTimesCard({ prayerTimes, nextPrayer, currentPrayerName, date, now, locationDenied, jumuahTime, prayerOffsets, setIsOptionsOpen }: PrayerTimesCardProps) {
   return (
     <Card className="w-full w-[20.8rem] mx-auto shadow-2xl shadow-primary/10 bg-card/40 border-primary/20">
-      <CardHeader className="text-center pb-2">
+      <CardHeader className="text-center pb-2 relative">
+         <button onClick={() => setIsOptionsOpen(true)} className="absolute top-4 right-4 p-2 text-primary hover:text-accent transition-colors">
+            <Settings className="w-6 h-6" />
+        </button>
         <div className="flex flex-col items-center space-y-2">
             <Countdown nextPrayerName={nextPrayer.name} nextPrayerTime={nextPrayer.time} />
              <div className="w-full text-left">
