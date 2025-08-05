@@ -5,6 +5,8 @@ import { Countdown } from "./countdown";
 import { Separator } from "@/components/ui/separator";
 import { Sunrise, Sun, SunDim, Sunset, Moon } from 'lucide-react';
 import { cn } from "@/lib/utils";
+import { PrayerOffsets } from "./options-menu";
+
 
 interface PrayerTimesCardProps {
   prayerTimes: PrayerTimes;
@@ -13,6 +15,8 @@ interface PrayerTimesCardProps {
   date: Date;
   now: Date;
   locationDenied?: boolean;
+  jumuahTime: string;
+  prayerOffsets: PrayerOffsets;
 }
 
 const prayerIcons: Record<PrayerName, ComponentType<{className?: string}>> = {
@@ -25,14 +29,6 @@ const prayerIcons: Record<PrayerName, ComponentType<{className?: string}>> = {
 };
 
 const prayerOrder: PrayerName[] = ['Fadjr', 'Duhr', 'Assr', 'Maghrib', 'Ishaa'];
-
-const prayerOffsets = {
-    Fadjr: '+30',
-    Duhr: '+10',
-    Assr: '+10',
-    Maghrib: '+5',
-    Ishaa: '+10',
-};
 
 function PrayerTimeRow({ name, time, icon: Icon, isActive, offset }: { name: string, time: string, icon: ComponentType<{className?: string}>, isActive: boolean, offset: string }) {
     return (
@@ -54,7 +50,7 @@ function PrayerTimeRow({ name, time, icon: Icon, isActive, offset }: { name: str
     )
 }
 
-export function PrayerTimesCard({ prayerTimes, nextPrayer, currentPrayerName, date, now, locationDenied }: PrayerTimesCardProps) {
+export function PrayerTimesCard({ prayerTimes, nextPrayer, currentPrayerName, date, now, locationDenied, jumuahTime, prayerOffsets }: PrayerTimesCardProps) {
   return (
     <Card className="w-full max-w-md mx-auto shadow-2xl shadow-primary/10 border-primary/20 bg-card/80 backdrop-blur-sm animate-in fade-in-50 duration-500">
       <CardHeader className="text-center pb-4">
@@ -93,7 +89,7 @@ export function PrayerTimesCard({ prayerTimes, nextPrayer, currentPrayerName, da
             </div>
             <div className="text-center bg-primary text-primary-foreground rounded-lg p-3 border border-black space-y-1 w-[45%]">
                 <div className="font-bold">Jumuah</div>
-                <div className="font-mono font-bold">14:00</div>
+                <div className="font-mono font-bold">{jumuahTime}</div>
             </div>
         </div>
       </CardContent>
