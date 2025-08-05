@@ -34,9 +34,9 @@ function PrayerTimeRow({ name, time, icon: Icon, isActive }: { name: string, tim
         )}>
             <div className="flex items-center gap-4">
                 <Icon className={cn("w-6 h-6 transition-colors", isActive ? "text-accent" : "text-primary/70")} />
-                <span className={cn("text-lg font-headline transition-colors", isActive ? "font-bold text-accent-foreground" : "text-foreground")}>{name}</span>
+                <span className={cn("text-lg font-bold transition-colors", isActive ? "text-accent-foreground" : "text-black")}>{name}</span>
             </div>
-            <span className={cn("text-lg font-mono font-semibold transition-colors", isActive ? "text-accent" : "text-primary")}>{time}</span>
+            <span className={cn("text-lg font-mono font-bold transition-colors", isActive ? "text-accent" : "text-black")}>{time}</span>
         </div>
     )
 }
@@ -47,7 +47,7 @@ export function PrayerTimesCard({ prayerTimes, nextPrayer, currentPrayerName, da
       <CardHeader className="text-center pb-4">
         <div className="flex flex-col items-center space-y-2 mb-4">
             <Countdown nextPrayerName={nextPrayer.name} nextPrayerTime={nextPrayer.time} />
-            <CardTitle className="text-xl font-headline pt-2">
+            <CardTitle className="text-xl pt-2">
               {date.toLocaleDateString('de-DE', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Europe/Berlin' })}
             </CardTitle>
             <CardDescription className="text-xl font-bold text-foreground/80 font-mono tracking-wider">
