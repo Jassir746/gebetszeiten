@@ -109,7 +109,7 @@ export default function Home() {
   const renderContent = () => {
     if (loading) {
       return (
-        <div className="w-full max-w-xs mx-auto">
+        <div className="w-full w-[22.4rem] mx-auto">
           <Skeleton className="h-[550px] w-full rounded-xl bg-primary/10" />
         </div>
       );
@@ -143,7 +143,7 @@ export default function Home() {
         prayerOffsets={prayerOffsets}
         setPrayerOffsets={setPrayerOffsets}
       />
-      <div className="text-center mb-8 relative w-full max-w-xs">
+      <div className="text-center mb-8 relative w-full w-[22.4rem]">
         <h1 className="text-2xl font-bold text-primary">
           Gebetszeiten Dortmund
         </h1>
