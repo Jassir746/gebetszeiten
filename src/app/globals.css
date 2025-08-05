@@ -6,6 +6,11 @@ body {
   font-family: 'Roboto Mono', monospace;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-image: url("/background.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
 }
 
 @layer base {
