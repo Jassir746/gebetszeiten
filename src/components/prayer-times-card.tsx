@@ -39,7 +39,7 @@ function getOffsetDisplay(offsetValue: string): string {
 function PrayerTimeRow({ name, time, icon: Icon, isActive, offset }: { name: string, time: string, icon: ComponentType<{className?: string}>, isActive: boolean, offset: string }) {
     return (
         <div className={cn(
-            "flex items-center justify-between p-0 rounded-lg transition-all duration-500 ease-in-out py-1",
+            "flex items-center justify-between rounded-lg transition-all duration-500 ease-in-out py-1 px-4",
             isActive ? "border-2 border-destructive" : "hover:bg-primary/5"
         )}>
             <div className="flex items-center gap-4 w-1/3">
