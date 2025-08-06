@@ -81,13 +81,13 @@ export function PrayerTimesCard({ prayerTimes, nextPrayer, currentPrayerName, da
             ))}
         </div>
         <div className="flex justify-between gap-4 mx-4 pt-2">
-            <div className="text-center bg-mint-green/30 text-primary-foreground rounded-lg p-3 border border-black space-y-1 w-[45%]">
-                <div className="font-bold text-black text-xl">Shuruk</div>
-                <div className="font-body font-bold text-black text-xl">{prayerTimes.Shuruk}</div>
+            <div className="text-center bg-mint-green/30 text-primary-foreground rounded-lg p-2 border border-black space-y-1 w-[45%]">
+                <div className="font-bold text-black text-lg">Shuruk</div>
+                <div className="font-body font-bold text-black text-lg">{prayerTimes.Shuruk}</div>
             </div>
-            <div className="text-center bg-mint-green/30 text-primary-foreground rounded-lg p-3 border border-black space-y-1 w-[45%]">
-                <div className="font-bold text-black text-xl">Jumuah</div>
-                <div className="font-body font-bold text-black text-xl">{jumuahTime}</div>
+            <div className="text-center bg-mint-green/30 text-primary-foreground rounded-lg p-2 border border-black space-y-1 w-[45%]">
+                <div className="font-bold text-black text-lg">Jumuah</div>
+                <div className="font-body font-bold text-black text-lg">{jumuahTime}</div>
             </div>
         </div>
         <div className="flex justify-end items-center gap-2 mt-4 mx-4">
