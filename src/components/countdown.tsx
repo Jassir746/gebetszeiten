@@ -35,7 +35,7 @@ export function Countdown({ nextPrayerName, nextPrayerTime }: CountdownProps) {
 
     // Cleanup interval on component unmount
     return () => clearInterval(timer);
-  }, [nextPrayerTime]);
+  }, [nextPrayerTime.getTime()]); // Use getTime() to prevent re-renders
 
   return (
     <div className="text-right w-full">
