@@ -68,7 +68,7 @@ export function OptionsMenu({ isOpen, setIsOpen, jumuahTime, setJumuahTime, pray
                         </div>
                     ))}
                 </div>
-                <SheetFooter>
+                <SheetFooter className="pr-6">
                     <Button onClick={() => setIsOpen(false)}>Speichern & Schließen</Button>
                 </SheetFooter>
             </SheetContent>
