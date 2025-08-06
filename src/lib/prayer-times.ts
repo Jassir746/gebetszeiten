@@ -84,7 +84,8 @@ export function getNextPrayerInfo(
       if (prayerStartTime > now) continue;
 
       let prayerEndTime: Date;
-      const nextPrayerInSchedule = prayerSchedule[prayerSchedule.findIndex(p => p.name === prayer.name) + 1];
+      const prayerIndex = prayerSchedule.findIndex(p => p.name === prayer.name);
+      const nextPrayerInSchedule = prayerSchedule[prayerIndex + 1];
 
       switch(prayer.name) {
           case 'Fadjr':
@@ -108,12 +109,12 @@ export function getNextPrayerInfo(
               const tomorrowFajrDate = new Date(now);
               tomorrowFajrDate.setDate(now.getDate() + 1);
               const fajrTomorrowTime = parseTime(options.tomorrowFadjr, tomorrowFajrDate);
-              const maghribTodayTime = prayerSchedule.find(p => p.name === 'Maghrib')?.time;
-
+              
               if (options.deactivateIshaaAtMidnight) {
+                  const maghribTodayTime = prayerSchedule.find(p => p.name === 'Maghrib')?.time;
                   prayerEndTime = getIslamicMidnight(maghribTodayTime!, fajrTomorrowTime);
               } else {
-                   // Default: End 10 mins before Fajr tomorrow
+                   // End 10 mins before Fajr tomorrow
                   prayerEndTime = new Date(fajrTomorrowTime.getTime() - 10 * 60 * 1000);
               }
               break;
@@ -128,19 +129,6 @@ export function getNextPrayerInfo(
       if (now >= prayerStartTime && now < prayerEndTime) {
           currentPrayer = prayer;
           break; // Found the active prayer, no need to check further
-      }
-  }
-
-  // Handle case where it's after Isha and before midnight/Fajr
-  if (!currentPrayer && now > (prayersOnly.find(p => p.name === 'Ishaa')?.time ?? new Date(0))) {
-      // Check if it's still within Isha's active time if it's after midnight rule is off
-      const tomorrowFajrDate = new Date(now);
-      tomorrowFajrDate.setDate(now.getDate() + 1);
-      const fajrTomorrowTime = parseTime(options.tomorrowFadjr, tomorrowFajrDate);
-      const ishaaEndTime = new Date(fajrTomorrowTime.getTime() - 10 * 60 * 1000);
-
-      if (!options.deactivateIshaaAtMidnight && now < ishaaEndTime) {
-          currentPrayer = prayersOnly.find(p => p.name === 'Ishaa');
       }
   }
   
