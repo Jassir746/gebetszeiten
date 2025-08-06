@@ -19,7 +19,7 @@ export async function fetchPrayerTimesAPI(date: Date): Promise<PrayerTimes> {
     const response = await fetch(apiUrl, {
       method: 'GET',
       headers: headers,
-      cache: 'no-store',
+      cache: 'no-store', // Explizit Caching deaktivieren
     });
 
     if (!response.ok) {
