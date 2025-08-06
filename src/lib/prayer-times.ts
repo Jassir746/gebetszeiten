@@ -122,7 +122,14 @@ export function getNextPrayerInfo(
           default:
               // Default for Duhr, Maghrib
               // End 10 minutes before the next prayer
-              prayerEndTime = new Date(nextPrayerInSchedule.time.getTime() - 10 * 60 * 1000);
+              const nextPrayerTime = prayerSchedule[prayerIndex + 1]?.time;
+              if (nextPrayerTime) {
+                prayerEndTime = new Date(nextPrayerTime.getTime() - 10 * 60 * 1000);
+              } else {
+                // Fallback for Maghrib if it's the last prayer before Ishaa in the schedule
+                const ishaaTime = prayerSchedule.find(p => p.name === 'Ishaa')?.time;
+                prayerEndTime = new Date(ishaaTime!.getTime() - 10 * 60 * 1000);
+              }
               break;
       }
       
