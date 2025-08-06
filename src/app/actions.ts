@@ -4,21 +4,25 @@
 import type { PrayerTimes } from "@/lib/prayer-times";
 
 export async function fetchPrayerTimesAPI(date: Date): Promise<PrayerTimes> {
-  const timezone = 'Europe/Berlin';
-  const dateString = new Intl.DateTimeFormat('fr-CA', { year: 'numeric', month: '2-digit', day: '2-digit', timeZone: timezone }).format(date);
+  // Die neue, korrekte API-URL
+  const baseUrl = 'https://zero-clue.de/as-salah/api/load_prayer_times.php';
+  
+  // Formatieren des Datums in die benötigten Teile
+  const year = date.getFullYear();
+  const month = date.getMonth() + 1; // Monate sind 0-basiert
+  const day = date.getDate();
 
+  // Erstellen der URL mit den richtigen Query-Parametern für einen GET-Request
+  const apiUrl = `${baseUrl}?year=${year}&month=${month}&day=${day}`;
+  
   try {
-    const response = await fetch('https://app.izaachen.de/prayer_times_beta.php', {
-      method: 'POST',
+    // Die Anfrage wird zu einem GET-Request geändert
+    const response = await fetch(apiUrl, {
+      method: 'GET',
       headers: {
-        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+        // Der API-Schlüssel bleibt im Header
         'X-API-KEY': '9~8tj>dtgirtgW-Z§$%&'
       },
-      body: new URLSearchParams({
-        date: dateString,
-        timezone: timezone,
-        method: '12'
-      }),
       cache: 'no-store',
     });
 
@@ -34,7 +38,7 @@ export async function fetchPrayerTimesAPI(date: Date): Promise<PrayerTimes> {
         throw new Error(`API-Fehler: ${data.error}`);
     }
 
-    // Map API response to our PrayerTimes type
+    // Die API-Antwort wird auf unseren PrayerTimes-Typ gemappt
     const prayerTimes: PrayerTimes = {
         Fadjr: data.Fajr,
         Shuruk: data.Sunrise,
