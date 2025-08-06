@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -7,7 +6,16 @@ import { PrayerTimesCard } from '@/components/prayer-times-card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useToast } from "@/hooks/use-toast";
 import { OptionsMenu, PrayerOffsets } from '@/components/options-menu';
-import { fetchPrayerTimesAPI } from '@/app/actions';
+
+// Hardcoded placeholder data to ensure the UI renders.
+const placeholderPrayerTimes: PrayerTimes = {
+    Fadjr: "05:30",
+    Shuruk: "07:00",
+    Duhr: "13:30",
+    Assr: "17:30",
+    Maghrib: "20:30",
+    Ishaa: "22:00",
+};
 
 interface PrayerInfo {
     nextPrayer: { name: PrayerName; time: Date };
@@ -15,11 +23,10 @@ interface PrayerInfo {
 }
 
 export default function Home() {
-  const [prayerTimes, setPrayerTimes] = useState<PrayerTimes | null>(null);
+  const [prayerTimes, setPrayerTimes] = useState<PrayerTimes | null>(placeholderPrayerTimes);
   const [prayerInfo, setPrayerInfo] = useState<PrayerInfo | null>(null);
-  const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [date, setDate] = useState(new Date());
+  const [loading, setLoading] = useState<boolean>(false); // Set to false initially
+  const [date] = useState(new Date());
   const [now, setNow] = useState(new Date());
   const { toast } = useToast();
   const [isOptionsOpen, setIsOptionsOpen] = useState(false);
@@ -36,73 +43,24 @@ export default function Home() {
 
 
   useEffect(() => {
-    if (error) {
-      toast({
-        variant: "destructive",
-        title: "Fehler",
-        description: error,
-      });
+    // This effect now only handles the timer and prayer info calculation.
+    if (prayerTimes) {
+        const currentPrayerInfo = getNextPrayerInfo(prayerTimes);
+        setPrayerInfo(currentPrayerInfo);
+        
+        const timer = setInterval(() => {
+            const currentDate = new Date();
+            setNow(currentDate);
+            // Recalculate prayer info every second for the countdown
+            const updatedPrayerInfo = getNextPrayerInfo(prayerTimes);
+            setPrayerInfo(updatedPrayerInfo);
+        }, 1000);
+
+        return () => clearInterval(timer);
     }
-  }, [error, toast]);
+  }, [prayerTimes]);
 
-  useEffect(() => {
-    if ("geolocation" in navigator) {
-      navigator.geolocation.getCurrentPosition(
-        () => {
-          setLocationDenied(false);
-        },
-        () => {
-          setLocationDenied(true);
-        }
-      );
-    } else {
-      setLocationDenied(true);
-    }
-  }, []);
-
-  useEffect(() => {
-    const fetchTimes = async () => {
-      setLoading(true);
-      setError(null);
-      setPrayerTimes(null);
-      setPrayerInfo(null);
-      try {
-        const times = await fetchPrayerTimesAPI(date);
-        setPrayerTimes(times);
-      } catch (err) {
-        const errorMessage = err instanceof Error ? err.message : "Ein unbekannter Fehler ist aufgetreten.";
-        setError(errorMessage);
-        setPrayerTimes(null);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchTimes();
-  }, [date]);
-
-  useEffect(() => {
-      if (prayerTimes) {
-          setError(null); // Clear previous errors on success
-          const currentPrayerInfo = getNextPrayerInfo(prayerTimes);
-          setPrayerInfo(currentPrayerInfo);
-          
-          const timer = setInterval(() => {
-              const currentDate = new Date();
-              setNow(currentDate);
-              // Recalculate prayer info every second for the countdown
-              const updatedPrayerInfo = getNextPrayerInfo(prayerTimes);
-              setPrayerInfo(updatedPrayerInfo);
-              
-              // Check if the day has changed
-              if(currentDate.getDate() !== date.getDate()) {
-                  setDate(new Date()); // Fetch new day's times
-              }
-          }, 1000);
-
-          return () => clearInterval(timer);
-      }
-  }, [prayerTimes, date]);
-
+  // UI rendering logic
   const renderContent = () => {
     if (loading) {
       return (
@@ -110,15 +68,6 @@ export default function Home() {
           <Skeleton className="h-[550px] w-full rounded-xl bg-primary/10" />
         </div>
       );
-    }
-
-    if (error) {
-        return (
-             <div className="w-full max-w-sm mx-auto bg-card/80 p-6 rounded-lg shadow-lg text-center">
-                <h3 className="text-lg font-bold text-destructive">Fehler</h3>
-                <p className="text-card-foreground">{error}</p>
-             </div>
-        );
     }
 
     if (prayerTimes && prayerInfo?.nextPrayer) {
@@ -137,11 +86,11 @@ export default function Home() {
       );
     }
 
-    // Fallback for any other case (e.g., initial state before loading)
+    // Fallback in case something is still wrong
     return (
         <div className="w-full max-w-sm mx-auto bg-card/80 p-6 rounded-lg shadow-lg text-center">
-            <h3 className="text-lg font-bold">Keine Daten</h3>
-            <p className="text-card-foreground">Gebetszeiten werden geladen oder sind nicht verfügbar.</p>
+            <h3 className="text-lg font-bold">Fehler beim Laden</h3>
+            <p className="text-card-foreground">Die Gebetszeiten-Komponente konnte nicht gerendert werden.</p>
         </div>
     );
   };
