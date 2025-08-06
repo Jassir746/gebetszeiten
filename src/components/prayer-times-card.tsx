@@ -60,8 +60,12 @@ const formatGermanDate = (dateString: string) => {
 
 const formatHijriDate = (hijriDate: string): string => {
     if (!hijriDate) return 'Lädt...';
-    const parts = hijriDate.split('/');
-    if (parts.length !== 3) return hijriDate;
+    
+    // Alte Logik zum Trimmen von ' H' beibehalten, falls die API es doch mal mitschickt
+    const cleanedDate = hijriDate.replace(' H', '').trim();
+    
+    const parts = cleanedDate.split('/');
+    if (parts.length !== 3) return cleanedDate;
     
     const [year, month, day] = parts;
     const hijriMonths: { [key: number]: string } = {
@@ -71,8 +75,9 @@ const formatHijriDate = (hijriDate: string): string => {
     };
     
     const monthName = hijriMonths[parseInt(month, 10)];
-    if (!monthName) return hijriDate;
+    if (!monthName) return cleanedDate;
 
+    // Kein ' H' am Ende mehr
     return `${parseInt(day, 10)}. ${monthName} ${year}`;
 };
 
@@ -120,7 +125,7 @@ function DateFader({ gregorian, hijri }: { gregorian: string, hijri: string }) {
 
     return (
         <CardTitle 
-            className="pt-2 text-lg text-black font-body h-14 flex items-center justify-center text-center"
+            className="pt-2 text-base text-black font-body h-12 flex items-center justify-center text-center"
             style={{ 
                 opacity: opacity,
                 transition: `opacity ${opacity === 1 ? FADE_IN_DURATION : FADE_OUT_DURATION}ms ease-in-out`
@@ -144,9 +149,9 @@ export function PrayerTimesCard({ prayerTimes, nextPrayer, currentPrayerName, gr
                 <p className="font-bold text-custom-blue text-lg">Gebetszeiten Dortmund</p>
             </div>
 
-            <div className="w-full bg-mint-green/30 text-primary-foreground rounded-lg p-1 border border-black space-y-0">
+            <div className="w-full bg-mint-green/30 text-primary-foreground rounded-lg p-1 border border-black space-y-0 mx-4">
                 <DateFader gregorian={gregorianDate} hijri={prayerTimes.Hijri_Date} />
-                <CardDescription className="text-base font-bold font-body tracking-wider text-black -mt-4 pb-2">
+                <CardDescription className="text-sm font-bold font-body tracking-wider text-black -mt-4 pb-2">
                   {now.toLocaleDateString('de-DE', {day: '2-digit', month: '2-digit', year: 'numeric'})} &nbsp;
                   {now.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit'})}
                 </CardDescription>
