@@ -108,7 +108,7 @@ export default function Home() {
   const renderContent = () => {
     if (loading) {
       return (
-        <div className="w-full w-[20.8rem] mx-auto">
+        <div className="w-full w-[20rem] mx-auto">
           <Skeleton className="h-[550px] w-full rounded-xl bg-primary/10" />
         </div>
       );

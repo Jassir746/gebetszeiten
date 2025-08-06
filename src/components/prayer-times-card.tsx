@@ -34,13 +34,13 @@ function PrayerTimeRow({ name, time, isActive, offset }: { name: string, time: s
             isActive ? "border-2 border-destructive" : "hover:bg-primary/5"
         )}>
             <div className="w-1/3 text-right">
-                <span className="font-bold text-black text-xl">{name}</span>
+                <span className="font-bold text-black text-lg">{name}</span>
             </div>
             <div className="w-1/3 text-center">
-                <span className="font-bold text-black text-xl">{time}</span>
+                <span className="font-bold text-black text-lg">{time}</span>
             </div>
             <div className="w-1/3 text-right">
-                <span className={cn("text-xl font-bold text-right text-custom-blue")}>{offset}</span>
+                <span className={cn("text-lg font-bold text-right text-custom-blue")}>{offset}</span>
             </div>
         </div>
     )
@@ -48,7 +48,7 @@ function PrayerTimeRow({ name, time, isActive, offset }: { name: string, time: s
 
 export function PrayerTimesCard({ prayerTimes, nextPrayer, currentPrayerName, date, now, locationDenied, jumuahTime, prayerOffsets, setIsOptionsOpen }: PrayerTimesCardProps) {
   return (
-    <Card className="w-full w-[20.8rem] mx-auto shadow-2xl shadow-primary/10 bg-card/40 border-primary/20">
+    <Card className="w-full w-[20rem] mx-auto shadow-2xl shadow-primary/10 bg-card/40 border-primary/20">
       <CardHeader className="text-center pb-2 relative">
          <button onClick={() => setIsOptionsOpen(true)} className="absolute top-4 right-4 p-2 text-primary hover:text-accent transition-colors">
             <Settings className="w-6 h-6" />
