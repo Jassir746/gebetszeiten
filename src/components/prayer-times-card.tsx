@@ -140,6 +140,7 @@ export function PrayerTimesCard({ prayerTimes, nextPrayer, currentPrayerName, gr
   const prevPrayerName = useRef(currentPrayerName);
 
   useEffect(() => {
+    // Only trigger blink if the prayer name actually changes
     if (currentPrayerName && currentPrayerName !== prevPrayerName.current) {
       setBlinkingPrayer(currentPrayerName);
       const timer = setTimeout(() => {
