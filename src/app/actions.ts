@@ -20,8 +20,8 @@ export async function fetchPrayerTimesAPI(date: Date): Promise<PrayerTimes> {
     const response = await fetch(apiUrl, {
       method: 'GET',
       headers: {
-        // Der korrigierte API-Schlüssel
-        'X-API-KEY': '9~8tj>dtgirtgW-Z'
+        // Umstellung auf den Standard 'Authorization' Header
+        'Authorization': 'Bearer 9~8tj>dtgirtgW-Z'
       },
       cache: 'no-store',
     });
