@@ -103,7 +103,7 @@ function DateFader({ gregorian, hijri }: { gregorian: string, hijri: string }) {
             }, FADE_IN_DURATION + HOLD_DURATION);
 
             switchTextTimer = setTimeout(() => {
-                setDisplayIndex(prevIndex => (prevIndex + 1) % 2);
+                setDisplayIndex(prevIndex => (prevIndex + 1) % texts.length);
             }, FADE_IN_DURATION + HOLD_DURATION + FADE_OUT_DURATION);
         };
         
@@ -115,11 +115,11 @@ function DateFader({ gregorian, hijri }: { gregorian: string, hijri: string }) {
             clearTimeout(switchTextTimer);
         };
 
-    }, [displayIndex, gregorian, hijri]);
+    }, [displayIndex, gregorian, hijri, texts.length]);
 
     return (
         <CardTitle 
-            className="text-sm font-body h-8 flex items-center justify-center text-center rounded-md bg-primary text-white p-2"
+            className="text-sm font-body h-8 flex items-center justify-center text-center rounded-md bg-[#5aa1a8] text-white p-2 min-w-[200px]"
             style={{ 
                 opacity: opacity,
                 transition: `opacity ${opacity === 1 ? FADE_IN_DURATION : FADE_OUT_DURATION}ms ease-in-out`
