@@ -21,12 +21,21 @@ export async function fetchPrayerTimesAPI(date: Date): Promise<PrayerTimes> {
       method: 'GET',
       headers: {
         'X-API-KEY': apiKey,
-      }
+        'Accept': '*/*',
+        'User-Agent': 'Firebase-Studio-Client'
+      },
+      cache: 'no-store' // Wichtig, um Caching-Probleme zu vermeiden
     });
 
     if (!response.ok) {
         const errorText = await response.text();
-        throw new Error(`API-Fehler: Status ${response.status} - ${errorText}`);
+        // Wir versuchen, die JSON-Fehlermeldung zu parsen, falls vorhanden
+        try {
+            const errorJson = JSON.parse(errorText);
+            throw new Error(`API-Fehler: Status ${response.status} - ${errorJson.error || errorText}`);
+        } catch (e) {
+            throw new Error(`API-Fehler: Status ${response.status} - ${errorText}`);
+        }
     }
 
     const data = await response.json();
