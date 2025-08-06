@@ -7,6 +7,7 @@ import { PrayerTimesCard } from '@/components/prayer-times-card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useToast } from "@/hooks/use-toast";
 import { OptionsMenu, PrayerOffsets } from '@/components/options-menu';
+import { InfoDialog } from '@/components/info-dialog';
 import { fetchPrayerTimesAPI, YearPrayerTimes } from './actions';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { AlertTriangle } from 'lucide-react';
@@ -27,6 +28,7 @@ export default function Home() {
   const [now, setNow] = useState(new Date());
   const { toast } = useToast();
   const [isOptionsOpen, setIsOptionsOpen] = useState(false);
+  const [isInfoOpen, setIsInfoOpen] = useState(false);
   
   const [jumuahTime, setJumuahTime] = useState('14:00');
   const [prayerOffsets, setPrayerOffsets] = useState<PrayerOffsets>({
@@ -159,6 +161,7 @@ export default function Home() {
           jumuahTime={jumuahTime}
           prayerOffsets={prayerOffsets}
           setIsOptionsOpen={setIsOptionsOpen}
+          setIsInfoOpen={setIsInfoOpen}
         />
       );
     }
@@ -176,6 +179,7 @@ export default function Home() {
         prayerOffsets={prayerOffsets}
         setPrayerOffsets={setPrayerOffsets}
       />
+      <InfoDialog isOpen={isInfoOpen} setIsOpen={setIsInfoOpen} />
       {renderContent()}
     </main>
   );

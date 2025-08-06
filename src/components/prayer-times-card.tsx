@@ -5,7 +5,7 @@ import { PrayerTimes, PrayerName } from "@/lib/prayer-times";
 import { Countdown } from "./countdown";
 import { cn } from "@/lib/utils";
 import { PrayerOffsets } from "./options-menu";
-import { Settings } from "lucide-react";
+import { Settings, Info } from "lucide-react";
 
 interface PrayerTimesCardProps {
   prayerTimes: PrayerTimes;
@@ -17,6 +17,7 @@ interface PrayerTimesCardProps {
   jumuahTime: string;
   prayerOffsets: PrayerOffsets;
   setIsOptionsOpen: (isOpen: boolean) => void;
+  setIsInfoOpen: (isOpen: boolean) => void;
 }
 
 const prayerOrder: PrayerName[] = ['Fadjr', 'Duhr', 'Assr', 'Maghrib', 'Ishaa'];
@@ -131,10 +132,13 @@ function DateFader({ gregorian, hijri }: { gregorian: string, hijri: string }) {
     );
 }
 
-export function PrayerTimesCard({ prayerTimes, nextPrayer, currentPrayerName, gregorianDate, now, locationDenied, jumuahTime, prayerOffsets, setIsOptionsOpen }: PrayerTimesCardProps) {
+export function PrayerTimesCard({ prayerTimes, nextPrayer, currentPrayerName, gregorianDate, now, locationDenied, jumuahTime, prayerOffsets, setIsOptionsOpen, setIsInfoOpen }: PrayerTimesCardProps) {
   return (
     <Card className="w-full w-[20rem] mx-auto shadow-2xl shadow-primary/10 bg-card/40 border-primary/20">
       <CardHeader className="text-center pb-2 relative">
+         <button onClick={() => setIsInfoOpen(true)} className="absolute top-4 left-4 p-2 text-primary hover:text-accent transition-colors">
+            <Info className="w-6 h-6" />
+        </button>
          <button onClick={() => setIsOptionsOpen(true)} className="absolute top-4 right-4 p-2 text-primary hover:text-accent transition-colors">
             <Settings className="w-6 h-6" />
         </button>
