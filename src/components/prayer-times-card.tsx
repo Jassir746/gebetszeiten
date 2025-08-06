@@ -61,7 +61,7 @@ export function PrayerTimesCard({ prayerTimes, nextPrayer, currentPrayerName, da
             <CardTitle className="pt-2 text-lg text-black">
               {date.toLocaleDateString('de-DE', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Europe/Berlin' })}
             </CardTitle>
-            <CardDescription className="text-lg font-bold font-mono tracking-wider text-black">
+            <CardDescription className="text-lg font-bold font-body tracking-wider text-black">
               {now.toLocaleDateString('de-DE', {day: '2-digit', month: '2-digit', year: 'numeric'})} &nbsp;
               {now.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit', second: '2-digit'})}
             </CardDescription>
@@ -83,11 +83,11 @@ export function PrayerTimesCard({ prayerTimes, nextPrayer, currentPrayerName, da
         <div className="flex justify-between gap-4 mx-4 pt-2">
             <div className="text-center bg-mint-green/30 text-primary-foreground rounded-lg p-3 border border-black space-y-1 w-[45%]">
                 <div className="font-bold text-black text-xl">Shuruk</div>
-                <div className="font-mono font-bold text-black text-xl">{prayerTimes.Shuruk}</div>
+                <div className="font-body font-bold text-black text-xl">{prayerTimes.Shuruk}</div>
             </div>
             <div className="text-center bg-mint-green/30 text-primary-foreground rounded-lg p-3 border border-black space-y-1 w-[45%]">
                 <div className="font-bold text-black text-xl">Jumuah</div>
-                <div className="font-mono font-bold text-black text-xl">{jumuahTime}</div>
+                <div className="font-body font-bold text-black text-xl">{jumuahTime}</div>
             </div>
         </div>
         <div className="flex justify-end items-center gap-2 mt-4 mx-4">

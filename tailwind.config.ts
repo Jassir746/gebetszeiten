@@ -12,7 +12,6 @@ export default {
       fontFamily: {
         body: ['Roboto Mono', 'monospace'],
         headline: ['Roboto Mono', 'monospace'],
-        code: ['monospace'],
       },
       colors: {
         'custom-blue': '#006699',
