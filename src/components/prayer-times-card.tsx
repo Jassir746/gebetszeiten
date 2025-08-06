@@ -107,7 +107,7 @@ export function PrayerTimesCard({ prayerTimes, nextPrayer, currentPrayerName, gr
             <DateFader gregorian={gregorianDate} hijri={prayerTimes.Hijri_Date} />
             <CardDescription className="text-lg font-bold font-body tracking-wider text-black">
               {now.toLocaleDateString('de-DE', {day: '2-digit', month: '2-digit', year: 'numeric'})} &nbsp;
-              {now.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit', second: '2-digit'})}
+              {now.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit'})}
             </CardDescription>
         </div>
         <CardDescription>{locationDenied ? "Es werden die Zeiten für den Standardstandort angezeigt" : ""}</CardDescription>
