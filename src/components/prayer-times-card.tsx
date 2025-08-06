@@ -57,7 +57,6 @@ const formatGermanDate = (dateString: string) => {
     try {
         const [year, month, day] = dateString.split('-').map(Number);
         const date = new Date(year, month - 1, day);
-        // Hinzufügen von year: 'numeric' zur Anzeige des Jahres
         return date.toLocaleDateString('de-DE', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Europe/Berlin' });
     } catch {
         return dateString;
@@ -141,24 +140,21 @@ export function PrayerTimesCard({ prayerTimes, nextPrayer, currentPrayerName, gr
   const prevPrayerName = useRef(currentPrayerName);
 
   useEffect(() => {
-      // Check if the prayer has changed and is not undefined (i.e., a prayer is active)
-      if (currentPrayerName && prevPrayerName.current !== currentPrayerName) {
-          setBlinkingPrayer(currentPrayerName);
-          const timer = setTimeout(() => {
-              setBlinkingPrayer(undefined);
-          }, PRAYER_START_BLINK_DURATION_MS);
-
-          // Store the new prayer name for the next comparison
-          prevPrayerName.current = currentPrayerName;
-
-          return () => clearTimeout(timer);
-      }
+    if (currentPrayerName && currentPrayerName !== prevPrayerName.current) {
+      setBlinkingPrayer(currentPrayerName);
+      const timer = setTimeout(() => {
+        setBlinkingPrayer(undefined);
+      }, PRAYER_START_BLINK_DURATION_MS);
       
-      // Also update ref if current prayer becomes undefined
-      if (!currentPrayerName) {
-        prevPrayerName.current = undefined;
-      }
-
+      prevPrayerName.current = currentPrayerName;
+      
+      return () => clearTimeout(timer);
+    }
+    
+    // Update ref if prayer becomes inactive or changes for other reasons, to prevent false triggers
+    if (currentPrayerName !== prevPrayerName.current) {
+        prevPrayerName.current = currentPrayerName;
+    }
   }, [currentPrayerName]);
 
 
