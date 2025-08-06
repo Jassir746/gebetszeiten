@@ -36,9 +36,8 @@ async function fetchYearlyPrayerTimes(year: number): Promise<DailyPrayerTimes> {
       headers: {
         'X-API-KEY': API_KEY,
       },
-      // Next.js automatically caches fetch requests.
-      // We can be explicit about it if needed.
-      // cache: 'force-cache'
+      // This setting helps to mitigate potential CORS issues when fetching from the server side.
+      cache: 'no-store'
     });
 
     if (!response.ok) {
