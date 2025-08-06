@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -7,18 +8,12 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { useToast } from "@/hooks/use-toast";
 import { OptionsMenu, PrayerOffsets } from '@/components/options-menu';
 
-interface Location {
-  latitude: number;
-  longitude: number;
-}
-
 interface PrayerInfo {
     nextPrayer: { name: PrayerName; time: Date };
     currentPrayer?: { name: PrayerName; time: Date };
 }
 
 export default function Home() {
-  const [location, setLocation] = useState<Location | null>(null);
   const [prayerTimes, setPrayerTimes] = useState<PrayerTimes | null>(null);
   const [prayerInfo, setPrayerInfo] = useState<PrayerInfo | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -36,6 +31,8 @@ export default function Home() {
     Maghrib: '+5',
     Ishaa: '+10',
   });
+  const [locationDenied, setLocationDenied] = useState(false);
+
 
   useEffect(() => {
     if (error) {
@@ -48,43 +45,38 @@ export default function Home() {
   }, [error, toast]);
 
   useEffect(() => {
+    // Geolocation is not strictly needed for the API call anymore,
+    // but we can keep it to show a message if access was denied.
     if ("geolocation" in navigator) {
       navigator.geolocation.getCurrentPosition(
-        (position) => {
-          setLocation({
-            latitude: position.coords.latitude,
-            longitude: position.coords.longitude,
-          });
+        () => {
+          setLocationDenied(false);
         },
         () => {
-          setError("Standortzugriff verweigert. Es werden Zeiten für einen Standardstandort angezeigt.");
-          setLocation({ latitude: 51.5136, longitude: 7.4653 }); // Dortmund
+          setError("Standortzugriff verweigert. Gebetszeiten für Dortmund werden angezeigt.");
+          setLocationDenied(true);
         }
       );
     } else {
-      setError("Geolocation wird nicht unterstützt. Es werden Zeiten für einen Standardstandort angezeigt.");
-      setLocation({ latitude: 51.5136, longitude: 7.4653 }); // Dortmund
+      // Geolocation is not supported
+      setLocationDenied(true);
     }
   }, []);
 
   useEffect(() => {
-    if (location) {
-      const fetchTimes = async () => {
-        setLoading(true);
-        try {
-          const times = await getPrayerTimes(date, location.latitude, location.longitude);
-          setPrayerTimes(times);
-          // Clear previous errors on successful fetch
-          if (!error?.includes('verweigert')) {
-            setError(null);
-          }
-        } catch (err) {
-          setError("Gebetszeiten konnten nicht abgerufen werden. Bitte versuchen Sie es später noch einmal.");
-        }
-      };
-      fetchTimes();
-    }
-  }, [location, date]);
+    const fetchTimes = async () => {
+      setLoading(true);
+      try {
+        // Call the server action to get prayer times
+        const times = await getPrayerTimes(date);
+        setPrayerTimes(times);
+        setError(null); // Clear previous errors
+      } catch (err) {
+        setError("Gebetszeiten konnten nicht abgerufen werden. Bitte versuchen Sie es später noch einmal.");
+      }
+    };
+    fetchTimes();
+  }, [date]);
 
   useEffect(() => {
       if (prayerTimes) {
@@ -122,7 +114,7 @@ export default function Home() {
           currentPrayerName={prayerInfo.currentPrayer?.name}
           date={date}
           now={now}
-          locationDenied={!!error?.includes('verweigert')}
+          locationDenied={locationDenied}
           jumuahTime={jumuahTime}
           prayerOffsets={prayerOffsets}
           setIsOptionsOpen={setIsOptionsOpen}
@@ -147,3 +139,4 @@ export default function Home() {
     </main>
   );
 }
+

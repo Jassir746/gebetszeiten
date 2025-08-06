@@ -1,4 +1,6 @@
 
+'use server';
+
 export type PrayerName = 'Fadjr' | 'Shuruk' | 'Duhr' | 'Assr' | 'Maghrib' | 'Ishaa';
 
 export type PrayerTimes = Record<PrayerName, string>;
@@ -16,7 +18,7 @@ let yearlyDataCache: { year: number | null, data: DailyPrayerTimes | null } = { 
 
 
 /**
- * Fetches prayer times for a whole year from the API.
+ * Fetches prayer times for a whole year from the API. This function is a server action and only runs on the server.
  * @param year The year for which to fetch prayer times.
  * @returns A promise that resolves with the prayer times for the entire year.
  */
@@ -36,7 +38,7 @@ async function fetchYearlyPrayerTimes(year: number): Promise<DailyPrayerTimes> {
       headers: {
         'X-API-KEY': API_KEY,
       },
-      // This setting helps to mitigate potential CORS issues when fetching from the server side.
+       // This setting is crucial for server-to-server requests to avoid certain caching issues.
       cache: 'no-store'
     });
 
@@ -46,7 +48,7 @@ async function fetchYearlyPrayerTimes(year: number): Promise<DailyPrayerTimes> {
     }
 
     const data: YearlyPrayerTimes = await response.json();
-    const yearData = data[year];
+    const yearData = data[String(year)];
 
     if (!yearData) {
         throw new Error(`Year ${year} not found in API response.`);
@@ -67,12 +69,11 @@ async function fetchYearlyPrayerTimes(year: number): Promise<DailyPrayerTimes> {
 
 /**
  * Gets prayer times for a specific date by fetching the whole year if not already cached.
+ * This is a server action, ensuring it runs on the server.
  * @param date The date for which to get prayer times.
- * @param latitude The user's latitude (no longer needed for API call but kept for interface consistency).
- * @param longitude The user's longitude (no longer needed for API call but kept for interface consistency).
  * @returns A promise that resolves with the prayer times for the given date.
  */
-export async function getPrayerTimes(date: Date, latitude: number, longitude: number): Promise<PrayerTimes> {
+export async function getPrayerTimes(date: Date): Promise<PrayerTimes> {
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, '0'); // '01', '02', ..., '12'
   const day = String(date.getDate()).padStart(2, '0'); // '01', '02', ...
