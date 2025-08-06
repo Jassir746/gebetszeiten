@@ -37,13 +37,13 @@ function PrayerTimeRow({ name, time, isActive, offset }: { name: string, time: s
             isActive ? "border-2 border-destructive" : "hover:bg-primary/5"
         )}>
             <div className="w-1/3 text-right">
-                <span className="font-bold text-black text-lg">{name}</span>
+                <span className="font-bold text-black text-base">{name}</span>
             </div>
             <div className="w-1/3 text-center">
-                <span className="font-bold text-black text-lg">{formattedTime}</span>
+                <span className="font-bold text-black text-base">{formattedTime}</span>
             </div>
             <div className="w-1/3 text-right">
-                <span className={cn("text-lg font-bold text-right text-custom-blue")}>{offset}</span>
+                <span className={cn("text-base font-bold text-right text-custom-blue")}>{offset}</span>
             </div>
         </div>
     )
