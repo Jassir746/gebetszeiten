@@ -52,8 +52,6 @@ export default function Home() {
           setLocationDenied(false);
         },
         () => {
-          // No need to set an error here, as the API call doesn't depend on it.
-          // We can just note that access was denied.
           setLocationDenied(true);
         }
       );
@@ -66,12 +64,14 @@ export default function Home() {
     const fetchTimes = async () => {
       setLoading(true);
       setError(null);
+      setPrayerTimes(null);
+      setPrayerInfo(null);
       try {
         const times = await fetchPrayerTimesAPI(date);
         setPrayerTimes(times);
       } catch (err) {
         const errorMessage = err instanceof Error ? err.message : "Ein unbekannter Fehler ist aufgetreten.";
-        setError(errorMessage); // Set the specific error message
+        setError(errorMessage);
         setPrayerTimes(null);
       } finally {
         setLoading(false);
@@ -82,17 +82,20 @@ export default function Home() {
 
   useEffect(() => {
       if (prayerTimes) {
-          setError(null);
-          setPrayerInfo(getNextPrayerInfo(prayerTimes));
+          setError(null); // Clear previous errors on success
+          const currentPrayerInfo = getNextPrayerInfo(prayerTimes);
+          setPrayerInfo(currentPrayerInfo);
           
           const timer = setInterval(() => {
               const currentDate = new Date();
               setNow(currentDate);
-              const currentPrayerInfo = getNextPrayerInfo(prayerTimes);
-              setPrayerInfo(currentPrayerInfo);
+              // Recalculate prayer info every second for the countdown
+              const updatedPrayerInfo = getNextPrayerInfo(prayerTimes);
+              setPrayerInfo(updatedPrayerInfo);
               
+              // Check if the day has changed
               if(currentDate.getDate() !== date.getDate()) {
-                  setDate(currentDate);
+                  setDate(new Date()); // Fetch new day's times
               }
           }, 1000);
 
@@ -103,7 +106,7 @@ export default function Home() {
   const renderContent = () => {
     if (loading) {
       return (
-        <div className="w-full w-[20rem] mx-auto">
+        <div className="w-full max-w-sm mx-auto">
           <Skeleton className="h-[550px] w-full rounded-xl bg-primary/10" />
         </div>
       );
@@ -111,7 +114,7 @@ export default function Home() {
 
     if (error) {
         return (
-             <div className="w-full w-[20rem] mx-auto bg-card/80 p-6 rounded-lg shadow-lg text-center">
+             <div className="w-full max-w-sm mx-auto bg-card/80 p-6 rounded-lg shadow-lg text-center">
                 <h3 className="text-lg font-bold text-destructive">Fehler</h3>
                 <p className="text-card-foreground">{error}</p>
              </div>
@@ -134,12 +137,11 @@ export default function Home() {
       );
     }
 
-    // Fallback for the case where there's no loading, no error, but also no data.
-    // This prevents the UI from crashing.
+    // Fallback for any other case (e.g., initial state before loading)
     return (
-        <div className="w-full w-[20rem] mx-auto bg-card/80 p-6 rounded-lg shadow-lg text-center">
+        <div className="w-full max-w-sm mx-auto bg-card/80 p-6 rounded-lg shadow-lg text-center">
             <h3 className="text-lg font-bold">Keine Daten</h3>
-            <p className="text-card-foreground">Es konnten keine Gebetszeiten geladen werden.</p>
+            <p className="text-card-foreground">Gebetszeiten werden geladen oder sind nicht verfügbar.</p>
         </div>
     );
   };
