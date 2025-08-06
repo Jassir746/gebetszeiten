@@ -67,14 +67,16 @@ export default function Home() {
   useEffect(() => {
     const fetchTimes = async () => {
       setLoading(true);
+      setError(null); // Reset error state before fetching
       try {
         const times = await fetchPrayerTimesAPI(date);
         setPrayerTimes(times);
-        setError(null);
       } catch (err) {
         const errorMessage = err instanceof Error ? err.message : "Ein unbekannter Fehler ist aufgetreten.";
         setError(`Gebetszeiten konnten nicht abgerufen werden: ${errorMessage}`);
         setPrayerTimes(null); // Ensure we clear old data on error
+      } finally {
+        setLoading(false);
       }
     };
     fetchTimes();
@@ -82,27 +84,13 @@ export default function Home() {
 
   useEffect(() => {
       if (prayerTimes) {
-          // A special case to check if we received the fallback data
-          if (prayerTimes.Fadjr === '05:30') {
-              // This means the server-side fetch failed and returned the fallback.
-              // We might want to keep the error message visible.
-              // If an error hasn't been set, we can set a generic one.
-              if (!error) {
-                setError("Gebetszeiten konnten nicht vom Server geladen werden.");
-              }
-          } else {
-              // We got real data, clear any previous errors.
-              setError(null);
-          }
-
+          setError(null); // We got data, so clear any previous errors.
           setPrayerInfo(getNextPrayerInfo(prayerTimes));
-          setLoading(false);
-
+          
           const timer = setInterval(() => {
               const currentDate = new Date();
               setNow(currentDate);
               // We need to get the info based on the latest prayer times
-              // This will automatically handle the day change logic as well
               const currentPrayerInfo = getNextPrayerInfo(prayerTimes);
               setPrayerInfo(currentPrayerInfo);
               
@@ -113,7 +101,7 @@ export default function Home() {
 
           return () => clearInterval(timer);
       }
-  }, [prayerTimes, date, error]);
+  }, [prayerTimes, date]);
 
   const renderContent = () => {
     if (loading) {
@@ -122,6 +110,15 @@ export default function Home() {
           <Skeleton className="h-[550px] w-full rounded-xl bg-primary/10" />
         </div>
       );
+    }
+
+    if (error) {
+        return (
+             <div className="w-full w-[20rem] mx-auto bg-card/80 p-6 rounded-lg shadow-lg text-center">
+                <h3 className="text-lg font-bold text-destructive">Fehler</h3>
+                <p className="text-card-foreground">{error}</p>
+             </div>
+        )
     }
 
     if (prayerTimes && prayerInfo?.nextPrayer) {
@@ -140,17 +137,7 @@ export default function Home() {
       );
     }
 
-    // This will render if there's an error and loading is false
-    if (!prayerTimes) {
-        return (
-             <div className="w-full w-[20rem] mx-auto bg-card/80 p-6 rounded-lg shadow-lg text-center">
-                <h3 className="text-lg font-bold text-destructive">Fehler</h3>
-                <p className="text-card-foreground">Die Gebetszeiten konnten nicht geladen werden. Bitte versuchen Sie es später erneut.</p>
-             </div>
-        )
-    }
-
-    return null;
+    return null; // Should not be reached if logic is correct
   };
 
   return (
