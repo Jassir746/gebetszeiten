@@ -44,6 +44,7 @@ export default function Home() {
       const today = new Date();
       const year = today.getFullYear().toString();
       const todayFormatted = getFormattedDate(today);
+      let loadedFromStorage = false;
 
       // 1. Try to load from localStorage first
       try {
@@ -54,6 +55,7 @@ export default function Home() {
           if (yearData && yearData[todayFormatted]) {
             setPrayerTimes(yearData[todayFormatted]);
             setLoading(false); // We have data, so stop initial loading
+            loadedFromStorage = true;
           }
         }
       } catch (e) {
@@ -83,7 +85,7 @@ export default function Home() {
       } catch (err) {
         const errorMessage = err instanceof Error ? err.message : "Ein unbekannter Fehler ist aufgetreten.";
         // Only show error if we don't have ANY data to show
-        if (!prayerTimes) {
+        if (!loadedFromStorage) {
             setError(errorMessage);
             toast({
                 variant: "destructive",
@@ -98,7 +100,8 @@ export default function Home() {
     };
 
     fetchAndStoreTimes();
-  }, [toast, prayerTimes]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Run only once on mount
   
 
   useEffect(() => {
@@ -114,12 +117,15 @@ export default function Home() {
         // Recalculate prayer info every second for the countdown if times are available
         if (prayerTimes) {
             const updatedPrayerInfo = getNextPrayerInfo(prayerTimes);
-            setPrayerInfo(updatedPrayerInfo);
+            // Only update state if the prayer has actually changed to prevent re-renders
+            if (updatedPrayerInfo.nextPrayer.name !== prayerInfo?.nextPrayer.name) {
+                setPrayerInfo(updatedPrayerInfo);
+            }
         }
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [prayerTimes]);
+  }, [prayerTimes, prayerInfo]);
 
   const renderContent = () => {
     if (loading) {
