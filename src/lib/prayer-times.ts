@@ -3,6 +3,16 @@ export type PrayerName = 'Fadjr' | 'Shuruk' | 'Duhr' | 'Assr' | 'Maghrib' | 'Ish
 
 export type PrayerTimes = Record<PrayerName, string>;
 
+export const mockPrayerTimes: PrayerTimes = {
+    Fadjr: "05:30",
+    Shuruk: "07:00",
+    Duhr: "13:30",
+    Assr: "17:30",
+    Maghrib: "20:30",
+    Ishaa: "22:00",
+};
+
+
 /**
  * Parses a "HH:mm" time string into a Date object for the current day.
  * This function runs on the client.
