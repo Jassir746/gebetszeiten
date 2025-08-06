@@ -214,7 +214,7 @@ export default function Home() {
         <PrayerTimesCard
           prayerTimes={prayerTimes}
           nextPrayer={prayerInfo.nextPrayer}
-          currentPrayerName={prayerInfo.currentPrayer?.name}
+          currentPrayer={prayerInfo.currentPrayer}
           gregorianDate={getFormattedDate(date)}
           now={now}
           locationDenied={locationDenied}

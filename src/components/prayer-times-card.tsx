@@ -10,7 +10,7 @@ import { Settings, Info } from "lucide-react";
 interface PrayerTimesCardProps {
   prayerTimes: PrayerTimes;
   nextPrayer: { name: PrayerName, time: Date };
-  currentPrayerName?: PrayerName;
+  currentPrayer?: { name: PrayerName, time: Date };
   gregorianDate: string;
   now: Date;
   locationDenied?: boolean;
@@ -135,28 +135,32 @@ function DateFader({ gregorian, hijri }: { gregorian: string, hijri: string }) {
     );
 }
 
-export function PrayerTimesCard({ prayerTimes, nextPrayer, currentPrayerName, gregorianDate, now, locationDenied, jumuahTime, prayerOffsets, setIsOptionsOpen, setIsInfoOpen }: PrayerTimesCardProps) {
+export function PrayerTimesCard({ prayerTimes, nextPrayer, currentPrayer, gregorianDate, now, locationDenied, jumuahTime, prayerOffsets, setIsOptionsOpen, setIsInfoOpen }: PrayerTimesCardProps) {
   const [blinkingPrayer, setBlinkingPrayer] = useState<PrayerName | undefined>(undefined);
-  const prevPrayerName = useRef(currentPrayerName);
+  const prevPrayerName = useRef(currentPrayer?.name);
+  const currentPrayerName = currentPrayer?.name;
 
   useEffect(() => {
-    // Only trigger blink if the prayer name actually changes
-    if (currentPrayerName && currentPrayerName !== prevPrayerName.current) {
-      setBlinkingPrayer(currentPrayerName);
-      const timer = setTimeout(() => {
-        setBlinkingPrayer(undefined);
-      }, PRAYER_START_BLINK_DURATION_MS);
+    // Only trigger blink if the prayer name actually changes AND its start time is recent
+    if (currentPrayer && currentPrayer.name !== prevPrayerName.current) {
+      const timeSincePrayerStart = now.getTime() - currentPrayer.time.getTime();
       
-      prevPrayerName.current = currentPrayerName;
-      
-      return () => clearTimeout(timer);
+      // Check if the prayer just started (within the blink duration)
+      if (timeSincePrayerStart >= 0 && timeSincePrayerStart < PRAYER_START_BLINK_DURATION_MS) {
+        setBlinkingPrayer(currentPrayer.name);
+        
+        const timer = setTimeout(() => {
+          setBlinkingPrayer(undefined);
+        }, PRAYER_START_BLINK_DURATION_MS - timeSincePrayerStart); // Adjust timer for already elapsed time
+        
+        return () => clearTimeout(timer);
+      }
     }
     
-    // Update ref if prayer becomes inactive or changes for other reasons, to prevent false triggers
-    if (currentPrayerName !== prevPrayerName.current) {
-        prevPrayerName.current = currentPrayerName;
-    }
-  }, [currentPrayerName]);
+    // Always update the ref to the current prayer name to track changes correctly
+    prevPrayerName.current = currentPrayer?.name;
+
+  }, [currentPrayer, now]);
 
 
   return (
