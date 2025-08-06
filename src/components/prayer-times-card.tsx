@@ -1,5 +1,5 @@
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { PrayerTimes, PrayerName } from "@/lib/prayer-times";
 import { Countdown } from "./countdown";
@@ -19,6 +19,8 @@ interface PrayerTimesCardProps {
   setIsOptionsOpen: (isOpen: boolean) => void;
   setIsInfoOpen: (isOpen: boolean) => void;
 }
+
+const PRAYER_START_BLINK_DURATION_MS = 2 * 60 * 1000; // 2 minutes
 
 const prayerOrder: PrayerName[] = ['Fadjr', 'Duhr', 'Assr', 'Maghrib', 'Ishaa'];
 
@@ -133,6 +135,31 @@ function DateFader({ gregorian, hijri }: { gregorian: string, hijri: string }) {
 }
 
 export function PrayerTimesCard({ prayerTimes, nextPrayer, currentPrayerName, gregorianDate, now, locationDenied, jumuahTime, prayerOffsets, setIsOptionsOpen, setIsInfoOpen }: PrayerTimesCardProps) {
+  const [isBlinking, setIsBlinking] = useState(false);
+  const prevPrayerName = useRef(currentPrayerName);
+
+  useEffect(() => {
+      // Check if the prayer has changed and is not undefined (i.e., a prayer is active)
+      if (currentPrayerName && prevPrayerName.current !== currentPrayerName) {
+          setIsBlinking(true);
+          const timer = setTimeout(() => {
+              setIsBlinking(false);
+          }, PRAYER_START_BLINK_DURATION_MS);
+
+          // Store the new prayer name for the next comparison
+          prevPrayerName.current = currentPrayerName;
+
+          return () => clearTimeout(timer);
+      }
+      
+      // Also update ref if current prayer becomes undefined
+      if (!currentPrayerName) {
+        prevPrayerName.current = undefined;
+      }
+
+  }, [currentPrayerName]);
+
+
   return (
     <Card className="w-full w-[20rem] mx-auto shadow-2xl shadow-primary/10 bg-card/40 border-primary/20">
       <CardHeader className="text-center pb-2 relative">
@@ -150,7 +177,10 @@ export function PrayerTimesCard({ prayerTimes, nextPrayer, currentPrayerName, gr
                 <p className="font-bold text-base text-custom-blue pb-2">Gebetszeiten Dortmund</p>
             </div>
 
-            <div className="bg-mint-green/30 text-primary-foreground rounded-lg px-2 pt-2 pb-1 border border-black flex flex-col items-center space-y-1 w-[90%]">
+            <div className={cn(
+                "bg-mint-green/30 text-primary-foreground rounded-lg px-2 pt-2 pb-1 border border-black flex flex-col items-center space-y-1 w-[90%]",
+                 isBlinking && "animate-blink-bg"
+            )}>
                 <DateFader gregorian={gregorianDate} hijri={prayerTimes.Hijri_Date} />
                 <CardDescription className="text-sm font-body tracking-wider text-black font-bold">
                   {now.toLocaleDateString('de-DE', {day: '2-digit', month: '2-digit', year: 'numeric'})} &nbsp;
