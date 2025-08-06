@@ -115,7 +115,7 @@ function DateFader({ gregorian, hijri }: { gregorian: string, hijri: string }) {
             clearTimeout(switchTextTimer);
         };
 
-    }, [displayIndex, gregorian, hijri, texts.length]);
+    }, [displayIndex, texts.length]);
 
     return (
         <CardTitle 
