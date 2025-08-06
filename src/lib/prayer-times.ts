@@ -1,120 +1,11 @@
 
-'use server';
-
 export type PrayerName = 'Fadjr' | 'Shuruk' | 'Duhr' | 'Assr' | 'Maghrib' | 'Ishaa';
 
 export type PrayerTimes = Record<PrayerName, string>;
 
-interface DailyPrayerTimes {
-    [date: string]: PrayerTimes;
-}
-
-interface YearlyPrayerTimes {
-  [year: string]: DailyPrayerTimes;
-}
-
-// Cache for yearly prayer times to avoid repeated API calls within the same session.
-let yearlyDataCache: { year: number | null, data: DailyPrayerTimes | null } = { year: null, data: null };
-
-
-/**
- * Fetches prayer times for a whole year from the API. This function is a server action and only runs on the server.
- * @param year The year for which to fetch prayer times.
- * @returns A promise that resolves with the prayer times for the entire year.
- */
-async function fetchYearlyPrayerTimes(year: number): Promise<DailyPrayerTimes> {
-  // Return from cache if available for the same year
-  if (yearlyDataCache.year === year && yearlyDataCache.data) {
-    return yearlyDataCache.data;
-  }
-
-  const API_URL = `https://zero-clue.de/as-salah/api/load_prayer_times.php?year=${year}`;
-  const API_KEY = '9~8tj>dtgirtgW-Z§$%&';
-
-  console.log(`Fetching yearly prayer times for ${year} from API...`);
-
-  try {
-    const response = await fetch(API_URL, {
-      headers: {
-        'X-API-KEY': API_KEY,
-      },
-       // This setting is crucial for server-to-server requests to avoid certain caching issues.
-      cache: 'no-store'
-    });
-
-    if (!response.ok) {
-      const errorText = await response.text();
-      throw new Error(`API call failed with status: ${response.status}. Details: ${errorText}`);
-    }
-
-    const data: YearlyPrayerTimes = await response.json();
-    const yearData = data[String(year)];
-
-    if (!yearData) {
-        throw new Error(`Year ${year} not found in API response.`);
-    }
-
-    // Store in cache
-    yearlyDataCache = { year, data: yearData };
-
-    console.log(`Successfully fetched and cached prayer times for ${year}.`);
-    return yearData;
-
-  } catch (error) {
-    console.error("Failed to fetch yearly prayer times:", error);
-    throw new Error("Could not fetch prayer times from the server.");
-  }
-}
-
-
-/**
- * Gets prayer times for a specific date by fetching the whole year if not already cached.
- * This is a server action, ensuring it runs on the server.
- * @param date The date for which to get prayer times.
- * @returns A promise that resolves with the prayer times for the given date.
- */
-export async function getPrayerTimes(date: Date): Promise<PrayerTimes> {
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, '0'); // '01', '02', ..., '12'
-  const day = String(date.getDate()).padStart(2, '0'); // '01', '02', ...
-  const dateKey = `${year}-${month}-${day}`;
-
-  try {
-    const yearlyTimes = await fetchYearlyPrayerTimes(year);
-    const dayTimes = yearlyTimes[dateKey];
-
-    if (!dayTimes) {
-      throw new Error(`Prayer times not found for ${dateKey}`);
-    }
-
-    // The API provides Fadjr, Shuruk, Duhr, Assr, Maghrib, Ishaa
-    // and times might have seconds, so we trim them.
-    return {
-      Fadjr: dayTimes.Fadjr.slice(0, 5),
-      Shuruk: dayTimes.Shuruk.slice(0, 5),
-      Duhr: dayTimes.Duhr.slice(0, 5),
-      Assr: dayTimes.Assr.slice(0, 5),
-      Maghrib: dayTimes.Maghrib.slice(0, 5),
-      Ishaa: dayTimes.Ishaa.slice(0, 5),
-    };
-
-  } catch (error) {
-    console.error(`Error getting prayer times for ${date.toDateString()}:`, error);
-    // Fallback to mock data in case of error
-    console.warn("API fetch failed. Using mock data as a fallback.");
-    return {
-      Fadjr: '05:30',
-      Shuruk: '07:00',
-      Duhr: '13:30',
-      Assr: '17:30',
-      Maghrib: '20:30',
-      Ishaa: '22:00',
-    };
-  }
-}
-
 /**
  * Parses a "HH:mm" time string into a Date object for the current day.
+ * This function runs on the client.
  * @param time The time string to parse.
  * @returns A Date object.
  */
@@ -127,6 +18,7 @@ const parseTime = (time: string): Date => {
 
 /**
  * Determines the current prayer, the next prayer, and the time for the next prayer.
+ * This function runs on the client.
  * @param prayerTimes An object containing the prayer times for the day.
  * @returns An object with information about the current and next prayer.
  */

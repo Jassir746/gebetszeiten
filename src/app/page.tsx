@@ -2,11 +2,12 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { getPrayerTimes, getNextPrayerInfo, PrayerTimes, PrayerName } from '@/lib/prayer-times';
+import { PrayerTimes, PrayerName, getNextPrayerInfo } from '@/lib/prayer-times';
 import { PrayerTimesCard } from '@/components/prayer-times-card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useToast } from "@/hooks/use-toast";
 import { OptionsMenu, PrayerOffsets } from '@/components/options-menu';
+import { fetchPrayerTimesAPI } from '@/app/actions';
 
 interface PrayerInfo {
     nextPrayer: { name: PrayerName; time: Date };
@@ -67,12 +68,13 @@ export default function Home() {
     const fetchTimes = async () => {
       setLoading(true);
       try {
-        // Call the server action to get prayer times
-        const times = await getPrayerTimes(date);
+        const times = await fetchPrayerTimesAPI(date);
         setPrayerTimes(times);
-        setError(null); // Clear previous errors
+        setError(null);
       } catch (err) {
-        setError("Gebetszeiten konnten nicht abgerufen werden. Bitte versuchen Sie es später noch einmal.");
+        const errorMessage = err instanceof Error ? err.message : "Ein unbekannter Fehler ist aufgetreten.";
+        setError(`Gebetszeiten konnten nicht abgerufen werden: ${errorMessage}`);
+        setPrayerTimes(null); // Ensure we clear old data on error
       }
     };
     fetchTimes();
@@ -86,7 +88,10 @@ export default function Home() {
           const timer = setInterval(() => {
               const currentDate = new Date();
               setNow(currentDate);
-              setPrayerInfo(getNextPrayerInfo(prayerTimes));
+              // We need to get the info based on the latest prayer times
+              // This will automatically handle the day change logic as well
+              const currentPrayerInfo = getNextPrayerInfo(prayerTimes);
+              setPrayerInfo(currentPrayerInfo);
               
               if(currentDate.getDate() !== date.getDate()) {
                   setDate(currentDate);
@@ -122,6 +127,16 @@ export default function Home() {
       );
     }
 
+    // This will render if there's an error and loading is false
+    if (!prayerTimes) {
+        return (
+             <div className="w-full w-[20rem] mx-auto bg-card/80 p-6 rounded-lg shadow-lg text-center">
+                <h3 className="text-lg font-bold text-destructive">Fehler</h3>
+                <p className="text-card-foreground">Die Gebetszeiten konnten nicht geladen werden. Bitte versuchen Sie es später erneut.</p>
+             </div>
+        )
+    }
+
     return null;
   };
 
@@ -139,4 +154,3 @@ export default function Home() {
     </main>
   );
 }
-
