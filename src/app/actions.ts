@@ -13,7 +13,8 @@ function getFormattedDate(date: Date): string {
 
 export async function fetchPrayerTimesAPI(date: Date): Promise<PrayerTimes> {
   const year = date.getFullYear();
-  const apiKey = "9~8tj>dtgirtgW-Z§$%&";
+  // Angepasst an den exakten Wert aus dem funktionierenden curl-Befehl
+  const apiKey = "9~8tj>dtgirtgW-ZÂ§$%&";
   const url = `https://zero-clue.de/as-salah/api/load_prayer_times.php?year=${year}`;
 
   try {
@@ -24,7 +25,7 @@ export async function fetchPrayerTimesAPI(date: Date): Promise<PrayerTimes> {
         'Accept': '*/*',
         'User-Agent': 'Firebase-Studio-Client'
       },
-      cache: 'no-store' // Wichtig, um Caching-Probleme zu vermeiden
+      cache: 'no-store'
     });
 
     if (!response.ok) {
@@ -41,10 +42,11 @@ export async function fetchPrayerTimesAPI(date: Date): Promise<PrayerTimes> {
     const data = await response.json();
     
     // Die API liefert ein verschachteltes Objekt. Wir müssen den heutigen Tag finden.
-    // z.B. data['2024']['2024-08-07']
-    const yearData = data[year];
+    const yearString = String(year);
+    const yearData = data[yearString];
+
     if (!yearData) {
-        throw new Error(`Keine Gebetszeiten für das Jahr ${year} gefunden.`);
+        throw new Error(`Keine Gebetszeiten für das Jahr ${yearString} gefunden.`);
     }
 
     const todayString = getFormattedDate(date);
