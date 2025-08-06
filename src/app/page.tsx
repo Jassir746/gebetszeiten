@@ -113,12 +113,13 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    // This effect recalculates prayer info when times are loaded or the time changes.
+    // This effect recalculates prayer info ONLY when prayer times are loaded/changed.
+    // It is now decoupled from the 'now' state to prevent re-renders every second.
     if (prayerTimes) {
-        const currentPrayerInfo = getNextPrayerInfo(prayerTimes, now);
+        const currentPrayerInfo = getNextPrayerInfo(prayerTimes, new Date()); // Use a fresh Date here
         setPrayerInfo(currentPrayerInfo);
     }
-  }, [prayerTimes, now]);
+  }, [prayerTimes]); // This hook depends ONLY on prayerTimes.
 
   const renderContent = () => {
     if (loading) {
