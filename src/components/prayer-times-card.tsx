@@ -30,6 +30,7 @@ function getOffsetDisplay(offsetValue: string): string {
 }
 
 function PrayerTimeRow({ name, time, isActive, offset }: { name: string, time: string, isActive: boolean, offset: string }) {
+    const formattedTime = time.substring(0, 5); // Schneidet "hh:mm:ss" zu "hh:mm"
     return (
         <div className={cn(
             "flex items-center justify-between rounded-lg transition-all duration-500 ease-in-out py-1 px-4",
@@ -39,7 +40,7 @@ function PrayerTimeRow({ name, time, isActive, offset }: { name: string, time: s
                 <span className="font-bold text-black text-lg">{name}</span>
             </div>
             <div className="w-1/3 text-center">
-                <span className="font-bold text-black text-lg">{time}</span>
+                <span className="font-bold text-black text-lg">{formattedTime}</span>
             </div>
             <div className="w-1/3 text-right">
                 <span className={cn("text-lg font-bold text-right text-custom-blue")}>{offset}</span>
@@ -127,7 +128,7 @@ export function PrayerTimesCard({ prayerTimes, nextPrayer, currentPrayerName, gr
         <div className="flex justify-between gap-4 mx-4 pt-2">
             <div className="text-center bg-mint-green/30 text-primary-foreground rounded-lg p-2 border border-black space-y-1 w-[45%]">
                 <div className="font-bold text-black text-lg">Shuruk</div>
-                <div className="font-body font-bold text-black text-lg">{prayerTimes.Shuruk}</div>
+                <div className="font-body font-bold text-black text-lg">{prayerTimes.Shuruk.substring(0, 5)}</div>
             </div>
             <div className="text-center bg-mint-green/30 text-primary-foreground rounded-lg p-2 border border-black space-y-1 w-[45%]">
                 <div className="font-bold text-black text-lg">Jumuah</div>
