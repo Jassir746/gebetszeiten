@@ -105,27 +105,20 @@ export default function Home() {
   
 
   useEffect(() => {
-    // This effect handles the timer and prayer info calculation.
+    // This effect handles the timer to update the current time.
+    const timer = setInterval(() => {
+        setNow(new Date());
+    }, 1000);
+    return () => clearInterval(timer);
+  }, []);
+
+  useEffect(() => {
+    // This effect recalculates prayer info when times are loaded or the day changes.
     if (prayerTimes) {
-        const currentPrayerInfo = getNextPrayerInfo(prayerTimes);
+        const currentPrayerInfo = getNextPrayerInfo(prayerTimes, now);
         setPrayerInfo(currentPrayerInfo);
     }
-    // This runs regardless of prayer times being available to keep the clock ticking
-    const timer = setInterval(() => {
-        const currentDate = new Date();
-        setNow(currentDate);
-        // Recalculate prayer info every second for the countdown if times are available
-        if (prayerTimes) {
-            const updatedPrayerInfo = getNextPrayerInfo(prayerTimes);
-            // Only update state if the prayer has actually changed to prevent re-renders
-            if (updatedPrayerInfo.nextPrayer.name !== prayerInfo?.nextPrayer.name) {
-                setPrayerInfo(updatedPrayerInfo);
-            }
-        }
-    }, 1000);
-
-    return () => clearInterval(timer);
-  }, [prayerTimes, prayerInfo]);
+  }, [prayerTimes, now]);
 
   const renderContent = () => {
     if (loading) {

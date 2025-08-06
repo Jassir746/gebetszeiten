@@ -50,8 +50,7 @@ const parseTime = (time: string): Date => {
  * @param prayerTimes An object containing the prayer times for the day.
  * @returns An object with information about the current and next prayer.
  */
-export function getNextPrayerInfo(prayerTimes: PrayerTimes) {
-  const now = new Date();
+export function getNextPrayerInfo(prayerTimes: PrayerTimes, now: Date) {
   const prayerSchedule: { name: PrayerName; time: Date }[] = (Object.keys(prayerTimes) as (keyof PrayerTimes)[])
     .filter(name => name !== 'Shuruk' && name !== 'Hijri_Date') // Shuruk is not a prayer time for this logic
     .map(name => ({
