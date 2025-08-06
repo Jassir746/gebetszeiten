@@ -61,7 +61,6 @@ const formatGermanDate = (dateString: string) => {
 const formatHijriDate = (hijriDate: string): string => {
     if (!hijriDate) return 'Lädt...';
     
-    // Alte Logik zum Trimmen von ' H' beibehalten, falls die API es doch mal mitschickt
     const cleanedDate = hijriDate.replace(' H', '').trim();
     
     const parts = cleanedDate.split('/');
@@ -77,7 +76,6 @@ const formatHijriDate = (hijriDate: string): string => {
     const monthName = hijriMonths[parseInt(month, 10)];
     if (!monthName) return cleanedDate;
 
-    // Kein ' H' am Ende mehr
     return `${parseInt(day, 10)}. ${monthName} ${year}`;
 };
 
@@ -94,38 +92,34 @@ function DateFader({ gregorian, hijri }: { gregorian: string, hijri: string }) {
     const FADE_OUT_DURATION = FADE_IN_DURATION * FADE_OUT_MULTIPLIER;
 
     useEffect(() => {
+        let fadeOutTimer: NodeJS.Timeout;
+        let switchTextTimer: NodeJS.Timeout;
+
         const cycle = () => {
-            // Fade-In
             setOpacity(1);
 
-            // After hold duration, start Fade-Out
-            const fadeOutTimer = setTimeout(() => {
+            fadeOutTimer = setTimeout(() => {
                 setOpacity(0);
             }, FADE_IN_DURATION + HOLD_DURATION);
 
-            // After fade-out, switch text and restart cycle
-            const switchTextTimer = setTimeout(() => {
+            switchTextTimer = setTimeout(() => {
                 setDisplayIndex(prevIndex => (prevIndex + 1) % texts.length);
             }, FADE_IN_DURATION + HOLD_DURATION + FADE_OUT_DURATION);
-            
-            return { fadeOutTimer, switchTextTimer };
         };
+        
+        const initialTimer = setTimeout(cycle, 100);
 
-        const initialTimer = setTimeout(() => {
-            const { fadeOutTimer, switchTextTimer } = cycle();
-            return () => {
-                clearTimeout(fadeOutTimer);
-                clearTimeout(switchTextTimer);
-            };
-        }, 100);
-
-        return () => clearTimeout(initialTimer);
+        return () => {
+            clearTimeout(initialTimer);
+            clearTimeout(fadeOutTimer);
+            clearTimeout(switchTextTimer);
+        };
 
     }, [displayIndex, gregorian, hijri]);
 
     return (
         <CardTitle 
-            className="pt-2 text-base text-black font-body h-12 flex items-center justify-center text-center"
+            className="pt-1 text-sm text-black font-body h-8 flex items-center justify-center text-center"
             style={{ 
                 opacity: opacity,
                 transition: `opacity ${opacity === 1 ? FADE_IN_DURATION : FADE_OUT_DURATION}ms ease-in-out`
@@ -149,9 +143,9 @@ export function PrayerTimesCard({ prayerTimes, nextPrayer, currentPrayerName, gr
                 <p className="font-bold text-custom-blue text-lg">Gebetszeiten Dortmund</p>
             </div>
 
-            <div className="w-full bg-mint-green/30 text-primary-foreground rounded-lg p-1 border border-black space-y-0 mx-4">
+            <div className="bg-mint-green/30 text-primary-foreground rounded-lg p-1 border border-black space-y-0 mx-4">
                 <DateFader gregorian={gregorianDate} hijri={prayerTimes.Hijri_Date} />
-                <CardDescription className="text-sm font-bold font-body tracking-wider text-black -mt-4 pb-2">
+                <CardDescription className="text-xs font-bold font-body tracking-wider text-black -mt-2 pb-1">
                   {now.toLocaleDateString('de-DE', {day: '2-digit', month: '2-digit', year: 'numeric'})} &nbsp;
                   {now.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit'})}
                 </CardDescription>
