@@ -99,7 +99,7 @@ export function OptionsMenu({
                         <div className="space-y-4 px-4">
                             <div className="flex items-center justify-between space-x-2 p-2 rounded-lg border">
                                 <Label htmlFor="assr-makruh-switch" className="flex flex-col space-y-1">
-                                    <span className="font-semibold">Assr (Makrūh)</span>
+                                    <span className="font-semibold">Assr (Makrūh-Zeit)</span>
                                     <span className="font-normal leading-snug text-muted-foreground text-xs">
                                         Deaktiviert Assr 1 Std. vor Maghrib.
                                     </span>
@@ -114,7 +114,7 @@ export function OptionsMenu({
                                 <Label htmlFor="ishaa-midnight-switch" className="flex flex-col space-y-1">
                                     <span className="font-semibold">Ishaa (Mitternacht)</span>
                                     <span className="font-normal leading-snug text-muted-foreground text-xs">
-                                        Deaktiviert Ishaa zur isl. Mitternacht.
+                                        Deaktiviert Ishaa zur<br/>islam. Mitternacht.
                                     </span>
                                 </Label>
                                 <Switch
