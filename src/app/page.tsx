@@ -82,6 +82,19 @@ export default function Home() {
 
   useEffect(() => {
       if (prayerTimes) {
+          // A special case to check if we received the fallback data
+          if (prayerTimes.Fadjr === '05:30') {
+              // This means the server-side fetch failed and returned the fallback.
+              // We might want to keep the error message visible.
+              // If an error hasn't been set, we can set a generic one.
+              if (!error) {
+                setError("Gebetszeiten konnten nicht vom Server geladen werden.");
+              }
+          } else {
+              // We got real data, clear any previous errors.
+              setError(null);
+          }
+
           setPrayerInfo(getNextPrayerInfo(prayerTimes));
           setLoading(false);
 
@@ -100,7 +113,7 @@ export default function Home() {
 
           return () => clearInterval(timer);
       }
-  }, [prayerTimes, date]);
+  }, [prayerTimes, date, error]);
 
   const renderContent = () => {
     if (loading) {
