@@ -38,11 +38,11 @@ export function OptionsMenu({ isOpen, setIsOpen, jumuahTime, setJumuahTime, pray
                 <SheetHeader>
                     <SheetTitle className="text-primary">Einstellungen</SheetTitle>
                     <SheetDescription>
-                        Passen Sie hier die Gebetszeiten und andere Optionen an.
+                        Passen Sie hier die Offset Zeiten und andere Optionen an.
                     </SheetDescription>
                 </SheetHeader>
                 <Separator className="my-4" />
-                <div className="grid gap-6 py-4">
+                <div className="grid gap-6 px-4 py-4">
                     <div className="grid grid-cols-3 items-center gap-4">
                         <Label htmlFor="jumuah-time" className="text-left font-bold col-span-2">Jumuah Zeit</Label>
                         <Input
