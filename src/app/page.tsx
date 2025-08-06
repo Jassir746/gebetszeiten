@@ -113,7 +113,7 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    // This effect recalculates prayer info when times are loaded or the day changes.
+    // This effect recalculates prayer info when times are loaded or the time changes.
     if (prayerTimes) {
         const currentPrayerInfo = getNextPrayerInfo(prayerTimes, now);
         setPrayerInfo(currentPrayerInfo);
