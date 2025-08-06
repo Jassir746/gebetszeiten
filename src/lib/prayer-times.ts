@@ -23,7 +23,6 @@ let yearlyDataCache: { year: number | null, data: DailyPrayerTimes | null } = { 
 async function fetchYearlyPrayerTimes(year: number): Promise<DailyPrayerTimes> {
   // Return from cache if available for the same year
   if (yearlyDataCache.year === year && yearlyDataCache.data) {
-    // This log was misleading, corrected logic.
     return yearlyDataCache.data;
   }
 
@@ -39,7 +38,7 @@ async function fetchYearlyPrayerTimes(year: number): Promise<DailyPrayerTimes> {
       },
       // Next.js automatically caches fetch requests.
       // We can be explicit about it if needed.
-      // cache: 'force-cache' 
+      // cache: 'force-cache'
     });
 
     if (!response.ok) {
@@ -49,14 +48,14 @@ async function fetchYearlyPrayerTimes(year: number): Promise<DailyPrayerTimes> {
 
     const data: YearlyPrayerTimes = await response.json();
     const yearData = data[year];
-    
+
     if (!yearData) {
         throw new Error(`Year ${year} not found in API response.`);
     }
 
     // Store in cache
     yearlyDataCache = { year, data: yearData };
-    
+
     console.log(`Successfully fetched and cached prayer times for ${year}.`);
     return yearData;
 
