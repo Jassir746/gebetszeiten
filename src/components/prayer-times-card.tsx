@@ -34,13 +34,13 @@ function PrayerTimeRow({ name, time, isActive, offset }: { name: string, time: s
             isActive ? "border-2 border-destructive" : "hover:bg-primary/5"
         )}>
             <div className="flex items-center gap-4 w-1/3">
-                <span className="font-bold text-black text-lg">{name}</span>
+                <span className="font-bold text-black text-xl">{name}</span>
             </div>
             <div className="w-1/3 text-center">
-                <span className="font-bold text-black text-lg">{time}</span>
+                <span className="font-bold text-black text-xl">{time}</span>
             </div>
             <div className="w-1/3 text-right">
-                <span className={cn("text-lg font-bold text-right text-custom-blue")}>{offset}</span>
+                <span className={cn("text-xl font-bold text-right text-custom-blue")}>{offset}</span>
             </div>
         </div>
     )
@@ -82,12 +82,12 @@ export function PrayerTimesCard({ prayerTimes, nextPrayer, currentPrayerName, da
         </div>
         <div className="flex justify-between gap-4 mx-4 pt-2">
             <div className="text-center bg-mint-green/30 text-primary-foreground rounded-lg p-3 border border-black space-y-1 w-[45%]">
-                <div className="font-bold text-black text-lg">Shuruk</div>
-                <div className="font-mono font-bold text-black text-lg">{prayerTimes.Shuruk}</div>
+                <div className="font-bold text-black text-xl">Shuruk</div>
+                <div className="font-mono font-bold text-black text-xl">{prayerTimes.Shuruk}</div>
             </div>
             <div className="text-center bg-mint-green/30 text-primary-foreground rounded-lg p-3 border border-black space-y-1 w-[45%]">
-                <div className="font-bold text-black text-lg">Jumuah</div>
-                <div className="font-mono font-bold text-black text-lg">{jumuahTime}</div>
+                <div className="font-bold text-black text-xl">Jumuah</div>
+                <div className="font-mono font-bold text-black text-xl">{jumuahTime}</div>
             </div>
         </div>
         <div className="flex justify-end items-center gap-2 mt-4 mx-4">
