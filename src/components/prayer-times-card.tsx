@@ -52,7 +52,7 @@ const formatGermanDate = (dateString: string) => {
     try {
         const [year, month, day] = dateString.split('-').map(Number);
         const date = new Date(year, month - 1, day);
-        return date.toLocaleDateString('de-DE', { weekday: 'long', day: 'numeric', month: 'long', timeZone: 'Europe/Berlin' });
+        return date.toLocaleDateString('de-DE', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Europe/Berlin' });
     } catch {
         return dateString;
     }
@@ -103,7 +103,7 @@ function DateFader({ gregorian, hijri }: { gregorian: string, hijri: string }) {
             }, FADE_IN_DURATION + HOLD_DURATION);
 
             switchTextTimer = setTimeout(() => {
-                setDisplayIndex(prevIndex => (prevIndex + 1) % texts.length);
+                setDisplayIndex(prevIndex => (prevIndex + 1) % 2); // Hardcoded to 2 to cycle between the two texts
             }, FADE_IN_DURATION + HOLD_DURATION + FADE_OUT_DURATION);
         };
         
@@ -115,7 +115,7 @@ function DateFader({ gregorian, hijri }: { gregorian: string, hijri: string }) {
             clearTimeout(switchTextTimer);
         };
 
-    }, [displayIndex, texts.length]);
+    }, [displayIndex]);
 
     return (
         <CardTitle 
@@ -159,9 +159,9 @@ export function PrayerTimesCard({ prayerTimes, nextPrayer, currentPrayerName, gr
                 <PrayerTimeRow
                     key={name}
                     name={name}
-                    time={prayerTimes[name]}
                     isActive={currentPrayerName === name}
                     offset={getOffsetDisplay(prayerOffsets[name])}
+                    time={prayerTimes[name]}
                 />
             ))}
         </div>
