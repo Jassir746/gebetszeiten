@@ -29,7 +29,7 @@ function getOffsetDisplay(offsetValue: string): string {
 }
 
 function PrayerTimeRow({ name, time, isActive, offset }: { name: string, time: string, isActive: boolean, offset: string }) {
-    const formattedTime = time.substring(0, 5); // Schneidet "hh:mm:ss" zu "hh:mm"
+    const formattedTime = time.substring(0, 5);
     return (
         <div className={cn(
             "flex items-center justify-between rounded-lg transition-all duration-500 ease-in-out py-1 px-4",
@@ -48,20 +48,19 @@ function PrayerTimeRow({ name, time, isActive, offset }: { name: string, time: s
     )
 }
 
-// Formatiert das Datum aus der API (YYYY-MM-DD) in ein lesbares deutsches Format.
 const formatGermanDate = (dateString: string) => {
     try {
         const [year, month, day] = dateString.split('-').map(Number);
         const date = new Date(year, month - 1, day);
         return date.toLocaleDateString('de-DE', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Europe/Berlin' });
     } catch {
-        return dateString; // Fallback
+        return dateString;
     }
 };
 
 const formatHijriDate = (hijriDate: string): string => {
     const parts = hijriDate.split('/');
-    if (parts.length !== 3) return hijriDate + ' H';
+    if (parts.length !== 3) return hijriDate;
     
     const [year, month, day] = parts;
     const hijriMonths: { [key: number]: string } = {
@@ -71,9 +70,9 @@ const formatHijriDate = (hijriDate: string): string => {
     };
     
     const monthName = hijriMonths[parseInt(month, 10)];
-    if (!monthName) return hijriDate + ' H';
+    if (!monthName) return hijriDate;
 
-    return `${parseInt(day, 10)}. ${monthName} ${year} H`;
+    return `${parseInt(day, 10)}. ${monthName} ${year}`;
 };
 
 
@@ -83,7 +82,6 @@ function DateFader({ gregorian, hijri }: { gregorian: string, hijri: string }) {
 
     const texts = [formatGermanDate(gregorian), formatHijriDate(hijri)];
     
-    // Parametrierbare Zeiten aus dem JS-Code
     const FADE_IN_DURATION = 4000;
     const HOLD_DURATION = 1500;
     const FADE_OUT_MULTIPLIER = 0.7;
@@ -95,31 +93,26 @@ function DateFader({ gregorian, hijri }: { gregorian: string, hijri: string }) {
         let switchTextTimer: NodeJS.Timeout;
 
         const cycle = () => {
-             // Set Text & Start Fade-In
             setOpacity(1);
 
-            // Start Fade-Out-Timer
             fadeOutTimer = setTimeout(() => {
                 setOpacity(0);
             }, FADE_IN_DURATION + HOLD_DURATION);
 
-            // Start Text-Wechsel-Timer
             switchTextTimer = setTimeout(() => {
                 setDisplayIndex((prevIndex) => (prevIndex + 1) % texts.length);
             }, FADE_IN_DURATION + HOLD_DURATION + FADE_OUT_DURATION);
         };
         
-        // Initialer Fade-In
         fadeInTimer = setTimeout(cycle, 100);
 
-        // Cleanup-Funktion
         return () => {
             clearTimeout(fadeInTimer);
             clearTimeout(fadeOutTimer);
             clearTimeout(switchTextTimer);
         };
 
-    }, [displayIndex, gregorian, hijri]);
+    }, [displayIndex, gregorian, hijri, texts.length]);
 
     return (
         <CardTitle 
