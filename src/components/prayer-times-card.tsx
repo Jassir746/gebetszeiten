@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { PrayerTimes, PrayerName } from "@/lib/prayer-times";
 import { Countdown } from "./countdown";
@@ -84,7 +84,7 @@ function DateFader({ gregorian, hijri }: { gregorian: string, hijri: string }) {
     const [displayIndex, setDisplayIndex] = useState(0);
     const [opacity, setOpacity] = useState(0);
 
-    const texts = [formatGermanDate(gregorian), formatHijriDate(hijri)];
+    const texts = useMemo(() => [formatGermanDate(gregorian), formatHijriDate(hijri)], [gregorian, hijri]);
     
     const FADE_IN_DURATION = 4000;
     const HOLD_DURATION = 1500;
@@ -115,7 +115,7 @@ function DateFader({ gregorian, hijri }: { gregorian: string, hijri: string }) {
             clearTimeout(switchTextTimer);
         };
 
-    }, [displayIndex, gregorian, hijri, texts]);
+    }, [displayIndex, texts]);
 
     return (
         <CardTitle 
