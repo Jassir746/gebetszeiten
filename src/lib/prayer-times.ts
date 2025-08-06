@@ -2,14 +2,16 @@ export type PrayerName = 'Fadjr' | 'Shuruk' | 'Duhr' | 'Assr' | 'Maghrib' | 'Ish
 
 export type PrayerTimes = Record<PrayerName, string>;
 
+interface DailyPrayerTimes {
+    [date: string]: PrayerTimes;
+}
+
 interface YearlyPrayerTimes {
-  [month: string]: {
-    [day: string]: PrayerTimes;
-  };
+  [year: string]: DailyPrayerTimes;
 }
 
 // Cache for yearly prayer times to avoid repeated API calls within the same session.
-let yearlyDataCache: { year: number | null, data: YearlyPrayerTimes | null } = { year: null, data: null };
+let yearlyDataCache: { year: number | null, data: DailyPrayerTimes | null } = { year: null, data: null };
 
 
 /**
@@ -17,7 +19,7 @@ let yearlyDataCache: { year: number | null, data: YearlyPrayerTimes | null } = {
  * @param year The year for which to fetch prayer times.
  * @returns A promise that resolves with the prayer times for the entire year.
  */
-async function fetchYearlyPrayerTimes(year: number): Promise<YearlyPrayerTimes> {
+async function fetchYearlyPrayerTimes(year: number): Promise<DailyPrayerTimes> {
   // Return from cache if available for the same year
   if (yearlyDataCache.year === year && yearlyDataCache.data) {
     console.log(`Returning prayer times for ${year} from cache.`);
@@ -45,12 +47,17 @@ async function fetchYearlyPrayerTimes(year: number): Promise<YearlyPrayerTimes> 
     }
 
     const data: YearlyPrayerTimes = await response.json();
+    const yearData = data[year];
     
+    if (!yearData) {
+        throw new Error(`Year ${year} not found in API response.`);
+    }
+
     // Store in cache
-    yearlyDataCache = { year, data };
+    yearlyDataCache = { year, data: yearData };
     
     console.log(`Successfully fetched and cached prayer times for ${year}.`);
-    return data;
+    return yearData;
 
   } catch (error) {
     console.error("Failed to fetch yearly prayer times:", error);
@@ -70,17 +77,26 @@ export async function getPrayerTimes(date: Date, latitude: number, longitude: nu
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, '0'); // '01', '02', ..., '12'
   const day = String(date.getDate()).padStart(2, '0'); // '01', '02', ...
+  const dateKey = `${year}-${month}-${day}`;
 
   try {
     const yearlyTimes = await fetchYearlyPrayerTimes(year);
-    const dayTimes = yearlyTimes[month]?.[day];
+    const dayTimes = yearlyTimes[dateKey];
 
     if (!dayTimes) {
-      throw new Error(`Prayer times not found for ${year}-${month}-${day}`);
+      throw new Error(`Prayer times not found for ${dateKey}`);
     }
 
     // The API provides Fadjr, Shuruk, Duhr, Assr, Maghrib, Ishaa
-    return dayTimes;
+    // and times might have seconds, so we trim them.
+    return {
+      Fadjr: dayTimes.Fadjr.slice(0, 5),
+      Shuruk: dayTimes.Shuruk.slice(0, 5),
+      Duhr: dayTimes.Duhr.slice(0, 5),
+      Assr: dayTimes.Assr.slice(0, 5),
+      Maghrib: dayTimes.Maghrib.slice(0, 5),
+      Ishaa: dayTimes.Ishaa.slice(0, 5),
+    };
 
   } catch (error) {
     console.error(`Error getting prayer times for ${date.toDateString()}:`, error);
