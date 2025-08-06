@@ -8,16 +8,17 @@ interface CountdownProps {
 }
 
 const formatTime = (timeInSeconds: number): string => {
-    if (timeInSeconds < 0) return '00:00';
+    if (timeInSeconds < 0) return '00:00:00';
 
     const hours = Math.floor(timeInSeconds / 3600);
     const minutes = Math.floor((timeInSeconds % 3600) / 60);
+    const seconds = Math.floor(timeInSeconds % 60);
     
-    return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
+    return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
 };
 
 export function Countdown({ nextPrayerName, nextPrayerTime }: CountdownProps) {
-  const [timeLeft, setTimeLeft] = useState<string>('--:--');
+  const [timeLeft, setTimeLeft] = useState<string>('--:--:--');
 
   useEffect(() => {
     const calculateTimeLeft = () => {
@@ -28,10 +29,10 @@ export function Countdown({ nextPrayerName, nextPrayerTime }: CountdownProps) {
     // Set initial value
     setTimeLeft(calculateTimeLeft());
 
-    // Update every minute, as seconds are not displayed
+    // Update every second
     const timer = setInterval(() => {
       setTimeLeft(calculateTimeLeft());
-    }, 1000 * 60);
+    }, 1000);
 
     // Cleanup interval on component unmount
     return () => clearInterval(timer);
