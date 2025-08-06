@@ -59,51 +59,67 @@ const formatGermanDate = (dateString: string) => {
     }
 };
 
-const formatHijriDate = (dateString: string) => {
-    const formatted = dateString.replace(/\//g, '.');
-    return `${formatted} (H)`;
-}
+const formatHijriDate = (hijriDate: string): string => {
+    const parts = hijriDate.split('/');
+    if (parts.length !== 3) return hijriDate + ' H';
+    
+    const [year, month, day] = parts;
+    const hijriMonths: { [key: number]: string } = {
+        1: 'Muharram', 2: 'Safar', 3: 'Rabiʿ al-awwal', 4: 'Rabiʿ al-thani',
+        5: 'Jumada al-awwal', 6: 'Jumada al-thani', 7: 'Rajab', 8: 'Shaʿban',
+        9: 'Ramadan', 10: 'Shawwal', 11: 'Dhu al-Qiʿdah', 12: 'Dhu al-Ḥijjah'
+    };
+    
+    const monthName = hijriMonths[parseInt(month, 10)];
+    if (!monthName) return hijriDate + ' H';
+
+    return `${parseInt(day, 10)}. ${monthName} ${year} H`;
+};
 
 
 function DateFader({ gregorian, hijri }: { gregorian: string, hijri: string }) {
     const [displayIndex, setDisplayIndex] = useState(0);
     const [opacity, setOpacity] = useState(0);
-    const [displayDate, setDisplayDate] = useState('');
 
     const texts = [formatGermanDate(gregorian), formatHijriDate(hijri)];
     
     // Parametrierbare Zeiten aus dem JS-Code
     const FADE_IN_DURATION = 4000;
     const HOLD_DURATION = 1500;
-    const FADE_OUT_DURATION = FADE_IN_DURATION * 0.7;
+    const FADE_OUT_MULTIPLIER = 0.7;
+    const FADE_OUT_DURATION = FADE_IN_DURATION * FADE_OUT_MULTIPLIER;
 
     useEffect(() => {
-        // Initialer Text setzen
-        setDisplayDate(texts[displayIndex]);
-        
-        // Start des Fade-In-Timers
-        const fadeInTimer = setTimeout(() => {
+        let fadeInTimer: NodeJS.Timeout;
+        let fadeOutTimer: NodeJS.Timeout;
+        let switchTextTimer: NodeJS.Timeout;
+
+        const cycle = () => {
+             // Set Text & Start Fade-In
             setOpacity(1);
-        }, 100); // kleiner Delay um den initialen Render abzuwarten
 
-        // Start des Fade-Out-Timers
-        const fadeOutTimer = setTimeout(() => {
-            setOpacity(0);
-        }, FADE_IN_DURATION + HOLD_DURATION);
+            // Start Fade-Out-Timer
+            fadeOutTimer = setTimeout(() => {
+                setOpacity(0);
+            }, FADE_IN_DURATION + HOLD_DURATION);
 
-        // Start des Text-Wechsel-Timers
-        const switchTextTimer = setTimeout(() => {
-            setDisplayIndex((prevIndex) => (prevIndex + 1) % texts.length);
-        }, FADE_IN_DURATION + HOLD_DURATION + FADE_OUT_DURATION);
+            // Start Text-Wechsel-Timer
+            switchTextTimer = setTimeout(() => {
+                setDisplayIndex((prevIndex) => (prevIndex + 1) % texts.length);
+            }, FADE_IN_DURATION + HOLD_DURATION + FADE_OUT_DURATION);
+        };
+        
+        // Initialer Fade-In
+        fadeInTimer = setTimeout(cycle, 100);
 
-        // Cleanup-Funktion, um die Timer zu löschen, wenn die Komponente unmountet
+        // Cleanup-Funktion
         return () => {
             clearTimeout(fadeInTimer);
             clearTimeout(fadeOutTimer);
             clearTimeout(switchTextTimer);
         };
 
-    }, [displayIndex, gregorian, hijri]); // Führt den Effekt bei Index- oder Datenänderung neu aus
+    }, [displayIndex, gregorian, hijri]);
 
     return (
         <CardTitle 
@@ -113,7 +129,7 @@ function DateFader({ gregorian, hijri }: { gregorian: string, hijri: string }) {
                 transition: `opacity ${opacity === 1 ? FADE_IN_DURATION : FADE_OUT_DURATION}ms ease-in-out`
             }}
         >
-            {displayDate}
+            {texts[displayIndex]}
         </CardTitle>
     );
 }
