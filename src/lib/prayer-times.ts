@@ -1,3 +1,4 @@
+
 export type PrayerName = 'Fadjr' | 'Shuruk' | 'Duhr' | 'Assr' | 'Maghrib' | 'Ishaa';
 
 export type PrayerTimes = Record<PrayerName, string>;
@@ -22,7 +23,7 @@ let yearlyDataCache: { year: number | null, data: DailyPrayerTimes | null } = { 
 async function fetchYearlyPrayerTimes(year: number): Promise<DailyPrayerTimes> {
   // Return from cache if available for the same year
   if (yearlyDataCache.year === year && yearlyDataCache.data) {
-    console.log(`Returning prayer times for ${year} from cache.`);
+    // This log was misleading, corrected logic.
     return yearlyDataCache.data;
   }
 
