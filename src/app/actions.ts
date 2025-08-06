@@ -15,15 +15,16 @@ async function fetchYearlyPrayerTimes(year: number): Promise<any> {
 
     try {
         console.log(`Fetching yearly prayer times for ${year} from API...`);
+        // Using the standard 'Authorization' header with Bearer token is more robust.
         const response = await fetch(API_URL, {
-            headers: { 'X-API-KEY': API_KEY },
-            // Using Next.js's built-in caching mechanism
+            headers: { 'Authorization': `Bearer ${API_KEY}` },
             next: { revalidate: 60 * 60 * 24 } // Revalidate once a day
         });
 
         if (!response.ok) {
             const errorText = await response.text();
-            throw new Error(`API call failed with status: ${response.status}. Details: ${errorText}`);
+            console.error(`API call failed. Status: ${response.status}, Body: ${errorText}`);
+            throw new Error(`API call failed with status: ${response.status}.`);
         }
 
         const data = await response.json();
@@ -31,7 +32,7 @@ async function fetchYearlyPrayerTimes(year: number): Promise<any> {
         return data;
 
     } catch (error) {
-        console.error(`Failed to fetch yearly prayer times for ${year}:`, error);
+        console.error(`Failed to fetch or process yearly prayer times for ${year}:`, error);
         throw new Error("Could not fetch prayer times from the server.");
     }
 }
@@ -62,16 +63,7 @@ export async function fetchPrayerTimesAPI(date: Date): Promise<PrayerTimes> {
         };
     } catch (error) {
         console.error(`Error in fetchPrayerTimesAPI for ${date.toDateString()}:`, error);
-        // This fallback should ideally not be reached if the server action is robust.
-        // It's a last resort. A better approach is to show an error in the UI.
-        console.warn("API fetch failed. Using mock data as a fallback.");
-        return {
-            Fadjr: '05:30',
-            Shuruk: '07:00',
-            Duhr: '13:30',
-            Assr: '17:30',
-            Maghrib: '20:30',
-            Ishaa: '22:00',
-        };
+        // This re-throws the error to be caught by the client component.
+        throw error;
     }
 }
