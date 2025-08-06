@@ -141,7 +141,7 @@ export function PrayerTimesCard({ prayerTimes, nextPrayer, currentPrayerName, gr
         <div className="flex flex-col items-center space-y-2 pt-6">
             <Countdown nextPrayerName={nextPrayer.name} nextPrayerTime={nextPrayer.time} />
              <div className="w-full text-left">
-                <p className="font-bold text-custom-blue text-lg">Gebetszeiten Dortmund</p>
+                <p className="font-bold text-custom-blue text-lg pb-1">Gebetszeiten Dortmund</p>
             </div>
 
             <div className="bg-mint-green/30 text-primary-foreground rounded-lg px-2 pt-2 pb-1 border border-black flex flex-col items-center space-y-1 w-[90%]">
