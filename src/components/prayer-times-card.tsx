@@ -136,13 +136,15 @@ export function PrayerTimesCard({ prayerTimes, nextPrayer, currentPrayerName, gr
   return (
     <Card className="w-full w-[20rem] mx-auto shadow-2xl shadow-primary/10 bg-card/40 border-primary/20">
       <CardHeader className="text-center pb-2 relative">
-         <button onClick={() => setIsInfoOpen(true)} className="absolute top-4 left-4 p-2 text-primary hover:text-accent transition-colors">
-            <Info className="w-6 h-6" />
-        </button>
-         <button onClick={() => setIsOptionsOpen(true)} className="absolute top-4 right-4 p-2 text-primary hover:text-accent transition-colors">
-            <Settings className="w-6 h-6" />
-        </button>
-        <div className="flex flex-col items-center space-y-2 pt-6">
+        <div className="absolute top-4 left-0 right-0 px-4 flex justify-between items-center">
+            <button onClick={() => setIsInfoOpen(true)} className="p-2 text-primary hover:text-accent transition-colors">
+                <Info className="w-6 h-6" />
+            </button>
+            <button onClick={() => setIsOptionsOpen(true)} className="p-2 text-primary hover:text-accent transition-colors">
+                <Settings className="w-6 h-6" />
+            </button>
+        </div>
+        <div className="flex flex-col items-center space-y-2 pt-12">
             <Countdown nextPrayerName={nextPrayer.name} nextPrayerTime={nextPrayer.time} />
              <div className="w-full text-left">
                 <p className="font-bold text-base text-custom-blue pb-2">Gebetszeiten Dortmund</p>
