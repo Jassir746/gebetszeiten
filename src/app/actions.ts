@@ -1,3 +1,4 @@
+
 'use server';
 
 import type { PrayerTimes } from "@/lib/prayer-times";
@@ -10,7 +11,7 @@ export async function fetchPrayerTimesAPI(date: Date): Promise<PrayerTimes> {
     const response = await fetch('https://app.izaachen.de/prayer_times_beta.php', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
+        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
         'X-API-KEY': '9~8tj>dtgirtgW-Z§$%&'
       },
       body: new URLSearchParams({
@@ -23,6 +24,7 @@ export async function fetchPrayerTimesAPI(date: Date): Promise<PrayerTimes> {
 
     if (!response.ok) {
       const errorText = await response.text();
+      // Wir werfen einen neuen Fehler, der die Statusmeldung und den Text enthält
       throw new Error(`API-Fehler: Status ${response.status} - ${errorText}`);
     }
 
@@ -46,6 +48,7 @@ export async function fetchPrayerTimesAPI(date: Date): Promise<PrayerTimes> {
 
   } catch (error) {
     console.error("Fehler beim Abrufen der Gebetszeiten:", error);
+    // Wir stellen sicher, dass die Fehlermeldung immer ein String ist
     if (error instanceof Error) {
         throw new Error(`Fehler beim Abrufen der Gebetszeiten: ${error.message}`);
     }
