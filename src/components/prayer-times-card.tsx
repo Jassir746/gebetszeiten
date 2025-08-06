@@ -6,7 +6,6 @@ import { Countdown } from "./countdown";
 import { cn } from "@/lib/utils";
 import { PrayerOffsets } from "./options-menu";
 import { Settings } from "lucide-react";
-import { format as formatDate } from 'date-fns';
 
 interface PrayerTimesCardProps {
   prayerTimes: PrayerTimes;
@@ -67,27 +66,53 @@ const formatHijriDate = (dateString: string) => {
 
 
 function DateFader({ gregorian, hijri }: { gregorian: string, hijri: string }) {
+    const [displayIndex, setDisplayIndex] = useState(0);
+    const [opacity, setOpacity] = useState(0);
     const [displayDate, setDisplayDate] = useState('');
-    const [isGregorian, setIsGregorian] = useState(true);
+
+    const texts = [formatGermanDate(gregorian), formatHijriDate(hijri)];
+    
+    // Parametrierbare Zeiten aus dem JS-Code
+    const FADE_IN_DURATION = 4000;
+    const HOLD_DURATION = 1500;
+    const FADE_OUT_DURATION = FADE_IN_DURATION * 0.7;
 
     useEffect(() => {
-        const gregorianFormatted = formatGermanDate(gregorian);
-        const hijriFormatted = formatHijriDate(hijri);
+        // Initialer Text setzen
+        setDisplayDate(texts[displayIndex]);
+        
+        // Start des Fade-In-Timers
+        const fadeInTimer = setTimeout(() => {
+            setOpacity(1);
+        }, 100); // kleiner Delay um den initialen Render abzuwarten
 
-        setDisplayDate(gregorianFormatted); // Start with Gregorian
+        // Start des Fade-Out-Timers
+        const fadeOutTimer = setTimeout(() => {
+            setOpacity(0);
+        }, FADE_IN_DURATION + HOLD_DURATION);
 
-        const intervalId = setInterval(() => {
-            setIsGregorian(prev => {
-                setDisplayDate(!prev ? gregorianFormatted : hijriFormatted);
-                return !prev;
-            });
-        }, 5000); // Fades every 5 seconds
+        // Start des Text-Wechsel-Timers
+        const switchTextTimer = setTimeout(() => {
+            setDisplayIndex((prevIndex) => (prevIndex + 1) % texts.length);
+        }, FADE_IN_DURATION + HOLD_DURATION + FADE_OUT_DURATION);
 
-        return () => clearInterval(intervalId);
-    }, [gregorian, hijri]);
+        // Cleanup-Funktion, um die Timer zu löschen, wenn die Komponente unmountet
+        return () => {
+            clearTimeout(fadeInTimer);
+            clearTimeout(fadeOutTimer);
+            clearTimeout(switchTextTimer);
+        };
+
+    }, [displayIndex, gregorian, hijri]); // Führt den Effekt bei Index- oder Datenänderung neu aus
 
     return (
-        <CardTitle className="pt-2 text-lg text-black font-body transition-opacity duration-1000 h-14 flex items-center justify-center text-center">
+        <CardTitle 
+            className="pt-2 text-lg text-black font-body h-14 flex items-center justify-center text-center"
+            style={{ 
+                opacity: opacity,
+                transition: `opacity ${opacity === 1 ? FADE_IN_DURATION : FADE_OUT_DURATION}ms ease-in-out`
+            }}
+        >
             {displayDate}
         </CardTitle>
     );
