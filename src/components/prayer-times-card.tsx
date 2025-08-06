@@ -52,6 +52,7 @@ const formatGermanDate = (dateString: string) => {
     try {
         const [year, month, day] = dateString.split('-').map(Number);
         const date = new Date(year, month - 1, day);
+        // Hinzufügen von year: 'numeric' zur Anzeige des Jahres
         return date.toLocaleDateString('de-DE', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Europe/Berlin' });
     } catch {
         return dateString;
