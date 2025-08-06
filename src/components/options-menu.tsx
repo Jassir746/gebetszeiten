@@ -42,7 +42,7 @@ export function OptionsMenu({ isOpen, setIsOpen, jumuahTime, setJumuahTime, pray
                     </SheetDescription>
                 </SheetHeader>
                 <Separator className="my-4" />
-                <div className="grid gap-6 px-6 py-4">
+                <div className="grid gap-4 px-6 py-4">
                     <div className="grid grid-cols-3 items-center gap-4">
                         <Label htmlFor="jumuah-time" className="text-left font-bold col-span-2">Jumuah Zeit</Label>
                         <Input
@@ -53,7 +53,9 @@ export function OptionsMenu({ isOpen, setIsOpen, jumuahTime, setJumuahTime, pray
                             className="col-span-1"
                         />
                     </div>
-                    <Separator />
+                </div>
+                <Separator className="my-4" />
+                <div className="grid gap-2 px-6">
                     <h4 className="font-bold text-center text-primary">Gebets-Offset (in Minuten)</h4>
                      {prayerOrder.map((prayer) => (
                         <div key={prayer} className="grid grid-cols-3 items-center gap-4">
@@ -68,7 +70,7 @@ export function OptionsMenu({ isOpen, setIsOpen, jumuahTime, setJumuahTime, pray
                         </div>
                     ))}
                 </div>
-                <SheetFooter className="pr-6">
+                <SheetFooter className="pr-6 pt-6">
                     <Button onClick={() => setIsOpen(false)}>Speichern & Schließen</Button>
                 </SheetFooter>
             </SheetContent>
