@@ -2,12 +2,12 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { PrayerTimes, PrayerName, getNextPrayerInfo } from '@/lib/prayer-times';
+import { PrayerTimes, PrayerName, getNextPrayerInfo, getFormattedDate } from '@/lib/prayer-times';
 import { PrayerTimesCard } from '@/components/prayer-times-card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useToast } from "@/hooks/use-toast";
 import { OptionsMenu, PrayerOffsets } from '@/components/options-menu';
-import { fetchPrayerTimesAPI } from './actions';
+import { fetchPrayerTimesAPI, YearPrayerTimes } from './actions';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { AlertTriangle } from 'lucide-react';
 
@@ -15,6 +15,8 @@ interface PrayerInfo {
     nextPrayer: { name: PrayerName; time: Date };
     currentPrayer?: { name: PrayerName; time: Date };
 }
+
+const PRAYER_TIMES_STORAGE_KEY = 'prayerTimesData';
 
 export default function Home() {
   const [prayerTimes, setPrayerTimes] = useState<PrayerTimes | null>(null);
@@ -38,28 +40,65 @@ export default function Home() {
 
 
   useEffect(() => {
-    const fetchTimes = async () => {
+    const fetchAndStoreTimes = async () => {
+      const today = new Date();
+      const year = today.getFullYear().toString();
+      const todayFormatted = getFormattedDate(today);
+
+      // 1. Try to load from localStorage first
       try {
-        setLoading(true);
+        const storedData = localStorage.getItem(PRAYER_TIMES_STORAGE_KEY);
+        if (storedData) {
+          const parsedData: YearPrayerTimes = JSON.parse(storedData);
+          const yearData = parsedData[year];
+          if (yearData && yearData[todayFormatted]) {
+            setPrayerTimes(yearData[todayFormatted]);
+            setLoading(false); // We have data, so stop initial loading
+          }
+        }
+      } catch (e) {
+        console.error("Failed to read from localStorage", e);
+      }
+      
+      // 2. Fetch from API to get fresh data
+      try {
         setError(null);
-        // Wir übergeben das aktuelle Datum an die API-Funktion
-        const times = await fetchPrayerTimesAPI(new Date());
-        setPrayerTimes(times);
+        const yearlyData = await fetchPrayerTimesAPI(today);
+        
+        // Save to localStorage
+        try {
+          localStorage.setItem(PRAYER_TIMES_STORAGE_KEY, JSON.stringify(yearlyData));
+        } catch (e) {
+          console.error("Failed to save to localStorage", e);
+        }
+
+        // Update state with today's times from the fresh data
+        const yearData = yearlyData[year];
+        if (yearData && yearData[todayFormatted]) {
+           setPrayerTimes(yearData[todayFormatted]);
+        } else {
+            throw new Error(`Keine Gebetszeiten für heute (${todayFormatted}) in den API-Daten gefunden.`);
+        }
+
       } catch (err) {
         const errorMessage = err instanceof Error ? err.message : "Ein unbekannter Fehler ist aufgetreten.";
-        setError(errorMessage);
-        toast({
-            variant: "destructive",
-            title: "Fehler beim Laden der Gebetszeiten",
-            description: errorMessage,
-        });
+        // Only show error if we don't have ANY data to show
+        if (!prayerTimes) {
+            setError(errorMessage);
+            toast({
+                variant: "destructive",
+                title: "Fehler beim Laden der Gebetszeiten",
+                description: errorMessage,
+            });
+        }
+        console.error("API Fetch failed, using stale data if available.", err);
       } finally {
-        setLoading(false);
+        setLoading(false); // Stop loading in any case
       }
     };
 
-    fetchTimes();
-  }, [toast]); // `date` entfernt, da wir immer das aktuelle Datum wollen
+    fetchAndStoreTimes();
+  }, [toast]);
   
 
   useEffect(() => {
@@ -91,7 +130,7 @@ export default function Home() {
       );
     }
 
-    if (error) {
+    if (error && !prayerTimes) { // Only show full-screen error if no data is available
        return (
          <Card className="w-full w-[20rem] mx-auto shadow-2xl shadow-destructive/20 bg-card/40 border-destructive/50">
            <CardHeader className="text-center pb-4">
@@ -124,7 +163,7 @@ export default function Home() {
       );
     }
 
-    return null; // Should not be reached in normal flow
+    return null; 
   };
 
   return (

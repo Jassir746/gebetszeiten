@@ -1,10 +1,12 @@
 
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { PrayerTimes, PrayerName } from "@/lib/prayer-times";
 import { Countdown } from "./countdown";
 import { cn } from "@/lib/utils";
 import { PrayerOffsets } from "./options-menu";
 import { Settings } from "lucide-react";
+import { format as formatDate } from 'date-fns';
 
 interface PrayerTimesCardProps {
   prayerTimes: PrayerTimes;
@@ -46,6 +48,49 @@ function PrayerTimeRow({ name, time, isActive, offset }: { name: string, time: s
     )
 }
 
+// Formatiert das Datum aus der API (YYYY-MM-DD) in ein lesbares deutsches Format.
+const formatGermanDate = (dateString: string) => {
+    try {
+        const [year, month, day] = dateString.split('-').map(Number);
+        const date = new Date(year, month - 1, day);
+        return date.toLocaleDateString('de-DE', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Europe/Berlin' });
+    } catch {
+        return dateString; // Fallback
+    }
+};
+
+const formatHijriDate = (dateString: string) => {
+    return `${dateString} (H)`;
+}
+
+
+function DateFader({ gregorian, hijri }: { gregorian: string, hijri: string }) {
+    const [displayDate, setDisplayDate] = useState('');
+    const [isGregorian, setIsGregorian] = useState(true);
+
+    useEffect(() => {
+        const gregorianFormatted = formatGermanDate(gregorian);
+        const hijriFormatted = formatHijriDate(hijri);
+
+        setDisplayDate(gregorianFormatted); // Start with Gregorian
+
+        const intervalId = setInterval(() => {
+            setIsGregorian(prev => {
+                setDisplayDate(!prev ? gregorianFormatted : hijriFormatted);
+                return !prev;
+            });
+        }, 5000); // Fades every 5 seconds
+
+        return () => clearInterval(intervalId);
+    }, [gregorian, hijri]);
+
+    return (
+        <CardTitle className="pt-2 text-lg text-black font-body transition-opacity duration-1000 h-14 flex items-center justify-center text-center">
+            {displayDate}
+        </CardTitle>
+    );
+}
+
 export function PrayerTimesCard({ prayerTimes, nextPrayer, currentPrayerName, date, now, locationDenied, jumuahTime, prayerOffsets, setIsOptionsOpen }: PrayerTimesCardProps) {
   return (
     <Card className="w-full w-[20rem] mx-auto shadow-2xl shadow-primary/10 bg-card/40 border-primary/20">
@@ -58,9 +103,7 @@ export function PrayerTimesCard({ prayerTimes, nextPrayer, currentPrayerName, da
              <div className="w-full text-left">
                 <p className="font-bold text-custom-blue text-lg">Gebetszeiten Dortmund</p>
             </div>
-            <CardTitle className="pt-2 text-lg text-black font-body">
-              {date.toLocaleDateString('de-DE', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Europe/Berlin' })}
-            </CardTitle>
+            <DateFader gregorian={prayerTimes.gregorian} hijri={prayerTimes.hijri} />
             <CardDescription className="text-lg font-bold font-body tracking-wider text-black">
               {now.toLocaleDateString('de-DE', {day: '2-digit', month: '2-digit', year: 'numeric'})} &nbsp;
               {now.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit', second: '2-digit'})}

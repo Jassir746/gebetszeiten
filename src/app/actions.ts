@@ -3,6 +3,8 @@
 
 import type { PrayerTimes } from "@/lib/prayer-times";
 
+export type YearPrayerTimes = Record<string, Record<string, PrayerTimes>>;
+
 // Funktion zur Formatierung des Datums in YYYY-MM-DD
 function getFormattedDate(date: Date): string {
     const year = date.getFullYear();
@@ -11,7 +13,7 @@ function getFormattedDate(date: Date): string {
     return `${year}-${month}-${day}`;
 }
 
-export async function fetchPrayerTimesAPI(date: Date): Promise<PrayerTimes> {
+export async function fetchPrayerTimesAPI(date: Date): Promise<YearPrayerTimes> {
   const year = date.getFullYear();
   // Angepasst an den exakten Wert aus dem funktionierenden curl-Befehl, um Kodierungsprobleme zu lösen
   const apiKey = "9~8tj>dtgirtgW-ZÂ§$%&";
@@ -41,7 +43,7 @@ export async function fetchPrayerTimesAPI(date: Date): Promise<PrayerTimes> {
 
     const data = await response.json();
     
-    // Die API liefert ein verschachteltes Objekt. Wir müssen den heutigen Tag finden.
+    // Die API liefert ein verschachteltes Objekt. Wir prüfen, ob das Jahr da ist.
     const yearString = String(year);
     const yearData = data[yearString];
 
@@ -49,24 +51,8 @@ export async function fetchPrayerTimesAPI(date: Date): Promise<PrayerTimes> {
         throw new Error(`Keine Gebetszeiten für das Jahr ${yearString} gefunden.`);
     }
 
-    const todayString = getFormattedDate(date);
-    const dailyData = yearData[todayString];
-
-    if (!dailyData) {
-        throw new Error(`Keine Gebetszeiten für den ${todayString} gefunden.`);
-    }
-
-    // Die API liefert Zeiten mit Sekunden, wir schneiden sie ab.
-    const prayerTimes: PrayerTimes = {
-      Fadjr: dailyData.Fadjr.substring(0, 5),
-      Shuruk: dailyData.Shuruk.substring(0, 5),
-      Duhr: dailyData.Duhr.substring(0, 5),
-      Assr: dailyData.Assr.substring(0, 5),
-      Maghrib: dailyData.Maghrib.substring(0, 5),
-      Ishaa: dailyData.Ishaa.substring(0, 5),
-    };
-
-    return prayerTimes;
+    // Wir geben das gesamte Jahresobjekt zurück
+    return data;
 
   } catch (error) {
     console.error("Fehler beim Abrufen der Gebetszeiten:", error);
