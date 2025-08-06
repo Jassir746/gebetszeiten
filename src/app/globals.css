@@ -97,8 +97,8 @@ body {
 
 @layer utilities {
   @keyframes blink-bg {
-    0%, 100% { background-color: hsl(var(--destructive) / 0.5); }
-    50% { background-color: hsl(var(--primary) / 0.3); }
+    0%, 100% { background-color: hsl(var(--card)); }
+    50% { background-color: hsl(var(--destructive) / 0.3); }
   }
   .animate-blink-bg {
     animation: blink-bg 1.5s infinite;

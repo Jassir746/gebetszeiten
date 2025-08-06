@@ -31,12 +31,14 @@ function getOffsetDisplay(offsetValue: string): string {
     return String(num);
 }
 
-function PrayerTimeRow({ name, time, isActive, offset }: { name: string, time: string, isActive: boolean, offset: string }) {
+function PrayerTimeRow({ name, time, isActive, isBlinking, offset }: { name: string, time: string, isActive: boolean, isBlinking: boolean, offset: string }) {
     const formattedTime = time.substring(0, 5);
     return (
         <div className={cn(
             "flex items-center justify-between rounded-lg transition-all duration-500 ease-in-out py-1 px-4",
-            isActive ? "border-2 border-destructive" : "hover:bg-primary/5"
+            isActive && "border-2 border-destructive",
+            isBlinking && "animate-blink-bg",
+            !isActive && "hover:bg-primary/5"
         )}>
             <div className="w-1/3 text-right pr-1.5">
                 <span className="font-bold text-black text-base">{name}</span>
@@ -135,15 +137,15 @@ function DateFader({ gregorian, hijri }: { gregorian: string, hijri: string }) {
 }
 
 export function PrayerTimesCard({ prayerTimes, nextPrayer, currentPrayerName, gregorianDate, now, locationDenied, jumuahTime, prayerOffsets, setIsOptionsOpen, setIsInfoOpen }: PrayerTimesCardProps) {
-  const [isBlinking, setIsBlinking] = useState(false);
+  const [blinkingPrayer, setBlinkingPrayer] = useState<PrayerName | undefined>(undefined);
   const prevPrayerName = useRef(currentPrayerName);
 
   useEffect(() => {
       // Check if the prayer has changed and is not undefined (i.e., a prayer is active)
       if (currentPrayerName && prevPrayerName.current !== currentPrayerName) {
-          setIsBlinking(true);
+          setBlinkingPrayer(currentPrayerName);
           const timer = setTimeout(() => {
-              setIsBlinking(false);
+              setBlinkingPrayer(undefined);
           }, PRAYER_START_BLINK_DURATION_MS);
 
           // Store the new prayer name for the next comparison
@@ -178,8 +180,7 @@ export function PrayerTimesCard({ prayerTimes, nextPrayer, currentPrayerName, gr
             </div>
 
             <div className={cn(
-                "bg-mint-green/30 text-primary-foreground rounded-lg px-2 pt-2 pb-1 border border-black flex flex-col items-center space-y-1 w-[90%]",
-                 isBlinking && "animate-blink-bg"
+                "bg-mint-green/30 text-primary-foreground rounded-lg px-2 pt-2 pb-1 border border-black flex flex-col items-center space-y-1 w-[90%]"
             )}>
                 <DateFader gregorian={gregorianDate} hijri={prayerTimes.Hijri_Date} />
                 <CardDescription className="text-sm font-body tracking-wider text-black font-bold">
@@ -197,6 +198,7 @@ export function PrayerTimesCard({ prayerTimes, nextPrayer, currentPrayerName, gr
                     key={name}
                     name={name}
                     isActive={currentPrayerName === name}
+                    isBlinking={blinkingPrayer === name}
                     offset={getOffsetDisplay(prayerOffsets[name])}
                     time={prayerTimes[name]}
                 />
