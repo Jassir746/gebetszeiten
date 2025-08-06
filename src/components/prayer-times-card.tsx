@@ -33,7 +33,7 @@ function PrayerTimeRow({ name, time, isActive, offset }: { name: string, time: s
             "flex items-center justify-between rounded-lg transition-all duration-500 ease-in-out py-1 px-4",
             isActive ? "border-2 border-destructive" : "hover:bg-primary/5"
         )}>
-            <div className="flex items-center gap-4 w-1/3">
+            <div className="w-1/3 text-right">
                 <span className="font-bold text-black text-xl">{name}</span>
             </div>
             <div className="w-1/3 text-center">
@@ -58,7 +58,7 @@ export function PrayerTimesCard({ prayerTimes, nextPrayer, currentPrayerName, da
              <div className="w-full text-left">
                 <p className="font-bold text-custom-blue text-lg">Gebetszeiten Dortmund</p>
             </div>
-            <CardTitle className="pt-2 text-lg text-black">
+            <CardTitle className="pt-2 text-lg text-black font-body">
               {date.toLocaleDateString('de-DE', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Europe/Berlin' })}
             </CardTitle>
             <CardDescription className="text-lg font-bold font-body tracking-wider text-black">
