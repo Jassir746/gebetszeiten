@@ -13,11 +13,12 @@ export async function fetchPrayerTimesAPI(date: Date): Promise<PrayerTimes> {
   const apiUrl = `${baseUrl}?year=${year}&month=${month}&day=${day}`;
   
   try {
+    const headers = new Headers();
+    headers.append('X-API-KEY', '9~8tj>dtgirtgW-Z§$%&');
+
     const response = await fetch(apiUrl, {
       method: 'GET',
-      headers: {
-        'X-API-KEY': '9~8tj>dtgirtgW-Z§$%&'
-      },
+      headers: headers,
       cache: 'no-store',
     });
 
