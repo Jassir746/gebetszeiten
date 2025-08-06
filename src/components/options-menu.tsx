@@ -57,7 +57,7 @@ export function OptionsMenu({ isOpen, setIsOpen, jumuahTime, setJumuahTime, pray
                     <h4 className="font-bold text-center text-primary">Gebets-Offset (in Minuten)</h4>
                      {prayerOrder.map((prayer) => (
                         <div key={prayer} className="grid grid-cols-3 items-center gap-4">
-                            <Label htmlFor={`${prayer}-offset`} className="text-left col-span-2 pl-4">{prayer}</Label>
+                            <Label htmlFor={`${prayer}-offset`} className="text-left col-span-2 pl-8">{prayer}</Label>
                             <Input
                                 id={`${prayer}-offset`}
                                 type="text"
