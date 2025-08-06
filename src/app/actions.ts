@@ -13,7 +13,7 @@ function getFormattedDate(date: Date): string {
 
 export async function fetchPrayerTimesAPI(date: Date): Promise<PrayerTimes> {
   const year = date.getFullYear();
-  // Angepasst an den exakten Wert aus dem funktionierenden curl-Befehl
+  // Angepasst an den exakten Wert aus dem funktionierenden curl-Befehl, um Kodierungsprobleme zu lösen
   const apiKey = "9~8tj>dtgirtgW-ZÂ§$%&";
   const url = `https://zero-clue.de/as-salah/api/load_prayer_times.php?year=${year}`;
 
