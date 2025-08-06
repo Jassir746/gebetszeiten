@@ -18,9 +18,11 @@ interface PrayerInfo {
 }
 
 const PRAYER_TIMES_STORAGE_KEY = 'prayerTimesData';
+const SETTINGS_STORAGE_KEY = 'prayerAppSettings';
 
 export default function Home() {
   const [prayerTimes, setPrayerTimes] = useState<PrayerTimes | null>(null);
+  const [tomorrowPrayerTimes, setTomorrowPrayerTimes] = useState<PrayerTimes | null>(null);
   const [prayerInfo, setPrayerInfo] = useState<PrayerInfo | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -30,6 +32,7 @@ export default function Home() {
   const [isOptionsOpen, setIsOptionsOpen] = useState(false);
   const [isInfoOpen, setIsInfoOpen] = useState(false);
   
+  // Default states
   const [jumuahTime, setJumuahTime] = useState('14:00');
   const [prayerOffsets, setPrayerOffsets] = useState<PrayerOffsets>({
     Fadjr: '+30',
@@ -38,14 +41,51 @@ export default function Home() {
     Maghrib: '+5',
     Ishaa: '+10',
   });
+  const [deactivateAssrEarly, setDeactivateAssrEarly] = useState(true);
+  const [deactivateIshaaAtMidnight, setDeactivateIshaaAtMidnight] = useState(true);
   const [locationDenied, setLocationDenied] = useState(false);
 
+  // Load settings from localStorage on initial mount
+  useEffect(() => {
+    try {
+      const storedSettings = localStorage.getItem(SETTINGS_STORAGE_KEY);
+      if (storedSettings) {
+        const settings = JSON.parse(storedSettings);
+        if (settings.jumuahTime) setJumuahTime(settings.jumuahTime);
+        if (settings.prayerOffsets) setPrayerOffsets(settings.prayerOffsets);
+        if (typeof settings.deactivateAssrEarly === 'boolean') setDeactivateAssrEarly(settings.deactivateAssrEarly);
+        if (typeof settings.deactivateIshaaAtMidnight === 'boolean') setDeactivateIshaaAtMidnight(settings.deactivateIshaaAtMidnight);
+      }
+    } catch (e) {
+      console.error("Failed to load settings from localStorage", e);
+    }
+  }, []);
+
+  // Save settings to localStorage whenever they change
+  useEffect(() => {
+    try {
+      const settings = {
+        jumuahTime,
+        prayerOffsets,
+        deactivateAssrEarly,
+        deactivateIshaaAtMidnight
+      };
+      localStorage.setItem(SETTINGS_STORAGE_KEY, JSON.stringify(settings));
+    } catch (e) {
+      console.error("Failed to save settings to localStorage", e);
+    }
+  }, [jumuahTime, prayerOffsets, deactivateAssrEarly, deactivateIshaaAtMidnight]);
 
   useEffect(() => {
     const fetchAndStoreTimes = async () => {
       const today = new Date();
+      const tomorrow = new Date(today);
+      tomorrow.setDate(today.getDate() + 1);
+      
       const year = today.getFullYear().toString();
       const todayFormatted = getFormattedDate(today);
+      const tomorrowFormatted = getFormattedDate(tomorrow);
+
       let loadedFromStorage = false;
 
       // 1. Try to load from localStorage first
@@ -56,7 +96,10 @@ export default function Home() {
           const yearData = parsedData[year];
           if (yearData && yearData[todayFormatted]) {
             setPrayerTimes(yearData[todayFormatted]);
-            setLoading(false); // We have data, so stop initial loading
+            if (yearData[tomorrowFormatted]) {
+              setTomorrowPrayerTimes(yearData[tomorrowFormatted]);
+            }
+            setLoading(false);
             loadedFromStorage = true;
           }
         }
@@ -64,29 +107,40 @@ export default function Home() {
         console.error("Failed to read from localStorage", e);
       }
       
-      // 2. Fetch from API to get fresh data
+      // 2. Fetch from API to get fresh data for current year and next year if needed
       try {
         setError(null);
-        const yearlyData = await fetchPrayerTimesAPI(today);
+        let yearlyData = await fetchPrayerTimesAPI(today);
         
-        // Save to localStorage
-        try {
-          localStorage.setItem(PRAYER_TIMES_STORAGE_KEY, JSON.stringify(yearlyData));
-        } catch (e) {
-          console.error("Failed to save to localStorage", e);
+        // If it's the end of the year, we need next year's data for tomorrow's Fadjr
+        if (today.getMonth() === 11 && today.getDate() === 31) {
+            const nextYearData = await fetchPrayerTimesAPI(tomorrow);
+            yearlyData = {...yearlyData, ...nextYearData};
         }
 
-        // Update state with today's times from the fresh data
-        const yearData = yearlyData[year];
-        if (yearData && yearData[todayFormatted]) {
-           setPrayerTimes(yearData[todayFormatted]);
+        localStorage.setItem(PRAYER_TIMES_STORAGE_KEY, JSON.stringify(yearlyData));
+
+        const todayYearData = yearlyData[year];
+        const tomorrowYear = tomorrow.getFullYear().toString();
+        const tomorrowYearData = yearlyData[tomorrowYear];
+
+        if (todayYearData && todayYearData[todayFormatted]) {
+           setPrayerTimes(todayYearData[todayFormatted]);
         } else {
             throw new Error(`Keine Gebetszeiten für heute (${todayFormatted}) in den API-Daten gefunden.`);
+        }
+        
+        if (tomorrowYearData && tomorrowYearData[tomorrowFormatted]) {
+            setTomorrowPrayerTimes(tomorrowYearData[tomorrowFormatted]);
+        } else {
+            // This might happen at the end of the year, but we've already fetched next year's data
+             if (!loadedFromStorage) { // only error if we dont have stale data
+                console.warn(`Keine morgigen Gebetszeiten (${tomorrowFormatted}) gefunden. Mitternachtsberechnung könnte ungenau sein.`);
+             }
         }
 
       } catch (err) {
         const errorMessage = err instanceof Error ? err.message : "Ein unbekannter Fehler ist aufgetreten.";
-        // Only show error if we don't have ANY data to show
         if (!loadedFromStorage) {
             setError(errorMessage);
             toast({
@@ -97,17 +151,16 @@ export default function Home() {
         }
         console.error("API Fetch failed, using stale data if available.", err);
       } finally {
-        setLoading(false); // Stop loading in any case
+        setLoading(false);
       }
     };
 
     fetchAndStoreTimes();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []); // Run only once on mount
+  }, []);
   
 
   useEffect(() => {
-    // This effect handles the timer to update the current time.
     const timer = setInterval(() => {
         setNow(new Date());
     }, 1000);
@@ -115,13 +168,20 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    // This effect recalculates prayer info ONLY when prayer times are loaded/changed.
-    // It is now decoupled from the 'now' state to prevent re-renders every second.
     if (prayerTimes) {
-        const currentPrayerInfo = getNextPrayerInfo(prayerTimes, new Date()); // Use a fresh Date here
+        const currentPrayerInfo = getNextPrayerInfo(
+            prayerTimes,
+            new Date(), // Use a fresh Date for calculation
+            {
+              deactivateAssrEarly,
+              deactivateIshaaAtMidnight,
+              tomorrowFadjr: tomorrowPrayerTimes?.Fadjr ?? '05:30' // Provide fallback
+            }
+        );
         setPrayerInfo(currentPrayerInfo);
     }
-  }, [prayerTimes]); // This hook depends ONLY on prayerTimes.
+  }, [prayerTimes, tomorrowPrayerTimes, deactivateAssrEarly, deactivateIshaaAtMidnight, now]);
+
 
   const renderContent = () => {
     if (loading) {
@@ -178,6 +238,10 @@ export default function Home() {
         setJumuahTime={setJumuahTime}
         prayerOffsets={prayerOffsets}
         setPrayerOffsets={setPrayerOffsets}
+        deactivateAssrEarly={deactivateAssrEarly}
+        setDeactivateAssrEarly={setDeactivateAssrEarly}
+        deactivateIshaaAtMidnight={deactivateIshaaAtMidnight}
+        setDeactivateIshaaAtMidnight={setDeactivateIshaaAtMidnight}
       />
       <InfoDialog isOpen={isInfoOpen} setIsOpen={setIsInfoOpen} />
       {renderContent()}
