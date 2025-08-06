@@ -6,16 +6,9 @@ import { PrayerTimesCard } from '@/components/prayer-times-card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useToast } from "@/hooks/use-toast";
 import { OptionsMenu, PrayerOffsets } from '@/components/options-menu';
-
-// Hardcoded placeholder data to ensure the UI renders.
-const placeholderPrayerTimes: PrayerTimes = {
-    Fadjr: "05:30",
-    Shuruk: "07:00",
-    Duhr: "13:30",
-    Assr: "17:30",
-    Maghrib: "20:30",
-    Ishaa: "22:00",
-};
+import { fetchPrayerTimesAPI } from './actions';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { AlertTriangle } from 'lucide-react';
 
 interface PrayerInfo {
     nextPrayer: { name: PrayerName; time: Date };
@@ -23,9 +16,10 @@ interface PrayerInfo {
 }
 
 export default function Home() {
-  const [prayerTimes, setPrayerTimes] = useState<PrayerTimes | null>(placeholderPrayerTimes);
+  const [prayerTimes, setPrayerTimes] = useState<PrayerTimes | null>(null);
   const [prayerInfo, setPrayerInfo] = useState<PrayerInfo | null>(null);
-  const [loading, setLoading] = useState<boolean>(false); // Kept for potential future use, but not actively used
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
   const [date] = useState(new Date());
   const [now, setNow] = useState(new Date());
   const { toast } = useToast();
@@ -43,26 +37,51 @@ export default function Home() {
 
 
   useEffect(() => {
-    // This effect now only handles the timer and prayer info calculation based on static data.
+    const fetchTimes = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        const times = await fetchPrayerTimesAPI(date);
+        setPrayerTimes(times);
+      } catch (err) {
+        const errorMessage = err instanceof Error ? err.message : "Ein unbekannter Fehler ist aufgetreten.";
+        setError(errorMessage);
+        toast({
+            variant: "destructive",
+            title: "Fehler beim Laden der Gebetszeiten",
+            description: errorMessage,
+        });
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchTimes();
+  }, [date, toast]);
+  
+
+  useEffect(() => {
+    // This effect handles the timer and prayer info calculation.
     if (prayerTimes) {
         const currentPrayerInfo = getNextPrayerInfo(prayerTimes);
         setPrayerInfo(currentPrayerInfo);
-        
-        const timer = setInterval(() => {
-            const currentDate = new Date();
-            setNow(currentDate);
-            // Recalculate prayer info every second for the countdown
+    }
+    // This runs regardless of prayer times being available to keep the clock ticking
+    const timer = setInterval(() => {
+        const currentDate = new Date();
+        setNow(currentDate);
+        // Recalculate prayer info every second for the countdown if times are available
+        if (prayerTimes) {
             const updatedPrayerInfo = getNextPrayerInfo(prayerTimes);
             setPrayerInfo(updatedPrayerInfo);
-        }, 1000);
+        }
+    }, 1000);
 
-        return () => clearInterval(timer);
-    }
+    return () => clearInterval(timer);
   }, [prayerTimes]);
 
   const renderContent = () => {
-    // Simplified render logic, as we are not handling loading/error states from an API
-    if (!prayerTimes || !prayerInfo?.nextPrayer) {
+    if (loading) {
       return (
         <div className="w-full max-w-sm mx-auto">
           <Skeleton className="h-[550px] w-full rounded-xl bg-primary/10" />
@@ -70,19 +89,40 @@ export default function Home() {
       );
     }
 
-    return (
-      <PrayerTimesCard
-        prayerTimes={prayerTimes}
-        nextPrayer={prayerInfo.nextPrayer}
-        currentPrayerName={prayerInfo.currentPrayer?.name}
-        date={date}
-        now={now}
-        locationDenied={locationDenied}
-        jumuahTime={jumuahTime}
-        prayerOffsets={prayerOffsets}
-        setIsOptionsOpen={setIsOptionsOpen}
-      />
-    );
+    if (error) {
+       return (
+         <Card className="w-full w-[20rem] mx-auto shadow-2xl shadow-destructive/20 bg-card/40 border-destructive/50">
+           <CardHeader className="text-center pb-4">
+             <div className="flex flex-col items-center text-destructive">
+                <AlertTriangle className="w-12 h-12 mb-4" />
+                <CardTitle className="text-lg">Fehler</CardTitle>
+             </div>
+           </CardHeader>
+           <CardContent className="text-center">
+             <p>Gebetszeiten konnten nicht vom Server geladen werden.</p>
+             <p className="text-xs text-muted-foreground mt-2">{error}</p>
+           </CardContent>
+         </Card>
+       );
+    }
+    
+    if (prayerTimes && prayerInfo) {
+      return (
+        <PrayerTimesCard
+          prayerTimes={prayerTimes}
+          nextPrayer={prayerInfo.nextPrayer}
+          currentPrayerName={prayerInfo.currentPrayer?.name}
+          date={date}
+          now={now}
+          locationDenied={locationDenied}
+          jumuahTime={jumuahTime}
+          prayerOffsets={prayerOffsets}
+          setIsOptionsOpen={setIsOptionsOpen}
+        />
+      );
+    }
+
+    return null; // Should not be reached in normal flow
   };
 
   return (
