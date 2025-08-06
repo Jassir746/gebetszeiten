@@ -2,47 +2,99 @@ export type PrayerName = 'Fadjr' | 'Shuruk' | 'Duhr' | 'Assr' | 'Maghrib' | 'Ish
 
 export type PrayerTimes = Record<PrayerName, string>;
 
+interface YearlyPrayerTimes {
+  [month: string]: {
+    [day: string]: PrayerTimes;
+  };
+}
+
+// Cache for yearly prayer times to avoid repeated API calls within the same session.
+let yearlyDataCache: { year: number | null, data: YearlyPrayerTimes | null } = { year: null, data: null };
+
+
 /**
- * Fetches prayer times from the API.
- * @param date The date for which to fetch prayer times.
- * @param latitude The user's latitude.
- * @param longitude The user's longitude.
- * @returns A promise that resolves with the prayer times.
+ * Fetches prayer times for a whole year from the API.
+ * @param year The year for which to fetch prayer times.
+ * @returns A promise that resolves with the prayer times for the entire year.
  */
-export async function getPrayerTimes(date: Date, latitude: number, longitude: number): Promise<PrayerTimes> {
-  console.log(`Fetching prayer times for ${date.toDateString()} at lat: ${latitude}, long: ${longitude}`);
-  
-  // This is the placeholder for your actual API endpoint.
-  // We will uncomment and use this block once your API is ready.
-  /*
-  const API_URL = 'https://YOUR_WEBSPACE_URL/api/prayer-times.php'; 
+async function fetchYearlyPrayerTimes(year: number): Promise<YearlyPrayerTimes> {
+  // Return from cache if available for the same year
+  if (yearlyDataCache.year === year && yearlyDataCache.data) {
+    console.log(`Returning prayer times for ${year} from cache.`);
+    return yearlyDataCache.data;
+  }
+
+  const API_URL = `https://zero-clue.de/as-salah/api/load_prayer_times.php?year=${year}`;
+  const API_KEY = '9~8tj>dtgirtgW-Z§$%&';
+
+  console.log(`Fetching yearly prayer times for ${year} from API...`);
 
   try {
-    const response = await fetch(`${API_URL}?lat=${latitude}&lng=${longitude}&date=${date.toISOString().split('T')[0]}`);
-    
+    const response = await fetch(API_URL, {
+      headers: {
+        'X-API-KEY': API_KEY,
+      },
+      // Next.js automatically caches fetch requests.
+      // We can be explicit about it if needed.
+      // cache: 'force-cache' 
+    });
+
     if (!response.ok) {
-      throw new Error(`API call failed with status: ${response.status}`);
+      const errorText = await response.text();
+      throw new Error(`API call failed with status: ${response.status}. Details: ${errorText}`);
     }
 
-    const data: PrayerTimes = await response.json();
+    const data: YearlyPrayerTimes = await response.json();
+    
+    // Store in cache
+    yearlyDataCache = { year, data };
+    
+    console.log(`Successfully fetched and cached prayer times for ${year}.`);
     return data;
 
   } catch (error) {
-    console.error("Failed to fetch prayer times:", error);
+    console.error("Failed to fetch yearly prayer times:", error);
     throw new Error("Could not fetch prayer times from the server.");
   }
-  */
+}
 
-  // Using mock data until the API is connected.
-  console.log("Using mock data for development.");
-  return Promise.resolve({
-    Fadjr: '05:30',
-    Shuruk: '07:00',
-    Duhr: '13:30',
-    Assr: '17:30',
-    Maghrib: '20:30',
-    Ishaa: '22:00',
-  });
+
+/**
+ * Gets prayer times for a specific date by fetching the whole year if not already cached.
+ * @param date The date for which to get prayer times.
+ * @param latitude The user's latitude (no longer needed for API call but kept for interface consistency).
+ * @param longitude The user's longitude (no longer needed for API call but kept for interface consistency).
+ * @returns A promise that resolves with the prayer times for the given date.
+ */
+export async function getPrayerTimes(date: Date, latitude: number, longitude: number): Promise<PrayerTimes> {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0'); // '01', '02', ..., '12'
+  const day = String(date.getDate()).padStart(2, '0'); // '01', '02', ...
+
+  try {
+    const yearlyTimes = await fetchYearlyPrayerTimes(year);
+    const dayTimes = yearlyTimes[month]?.[day];
+
+    if (!dayTimes) {
+      throw new Error(`Prayer times not found for ${year}-${month}-${day}`);
+    }
+
+    // The API provides Fadjr, Shuruk, Duhr, Assr, Maghrib, Ishaa
+    return dayTimes;
+
+  } catch (error) {
+    console.error(`Error getting prayer times for ${date.toDateString()}:`, error);
+    // Fallback to mock data in case of error
+    console.warn("API fetch failed. Using mock data as a fallback.");
+    return {
+      Fadjr: '05:30',
+      Shuruk: '07:00',
+      Duhr: '13:30',
+      Assr: '17:30',
+      Maghrib: '20:30',
+      Ishaa: '22:00',
+    };
+  }
 }
 
 /**
@@ -65,6 +117,7 @@ const parseTime = (time: string): Date => {
 export function getNextPrayerInfo(prayerTimes: PrayerTimes) {
   const now = new Date();
   const prayerSchedule: { name: PrayerName; time: Date }[] = (Object.keys(prayerTimes) as PrayerName[])
+    .filter(name => name !== 'Shuruk') // Shuruk is not a prayer time for this logic
     .map(name => ({
       name,
       time: parseTime(prayerTimes[name]),
@@ -76,8 +129,10 @@ export function getNextPrayerInfo(prayerTimes: PrayerTimes) {
 
   // If it's after Isha, the next prayer is Fajr of the next day.
   if (!nextPrayer) {
-    const fajr = prayerSchedule[0];
-    nextPrayer = { ...fajr, time: new Date(fajr.time.getTime() + 24 * 60 * 60 * 1000) };
+    const fajr = prayerSchedule.find(p => p.name === 'Fadjr');
+    if (fajr) {
+      nextPrayer = { ...fajr, time: new Date(fajr.time.getTime() + 24 * 60 * 60 * 1000) };
+    }
   }
 
   // If it's before Fajr, the current prayer is Isha of the previous day.
@@ -85,6 +140,20 @@ export function getNextPrayerInfo(prayerTimes: PrayerTimes) {
       const ishaTime = prayerSchedule.find(p => p.name === 'Ishaa')?.time;
       if (ishaTime) {
           currentPrayer = { name: 'Ishaa', time: new Date(ishaTime.getTime() - 24 * 60 * 60 * 1000) };
+      }
+  }
+
+  // Default to Fajr if no next prayer is found (should not happen with the logic above)
+  if (!nextPrayer) {
+      const fajr = prayerSchedule.find(p => p.name === 'Fadjr');
+      if (fajr) {
+         nextPrayer = { ...fajr, time: new Date(fajr.time.getTime() + 24 * 60 * 60 * 1000) };
+      } else {
+         // Fallback in case Fajr is not in the list
+         const fallbackTime = new Date();
+         fallbackTime.setDate(fallbackTime.getDate() + 1);
+         fallbackTime.setHours(5, 30, 0, 0);
+         nextPrayer = { name: 'Fadjr', time: fallbackTime };
       }
   }
 
