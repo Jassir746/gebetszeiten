@@ -98,7 +98,7 @@ export default function Home() {
     };
 
     fetchAndStoreTimes();
-  }, [toast]);
+  }, [toast, prayerTimes]);
   
 
   useEffect(() => {
