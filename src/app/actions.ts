@@ -1,3 +1,4 @@
+
 'use server';
 
 import type { PrayerTimes } from "@/lib/prayer-times";
@@ -15,7 +16,6 @@ async function fetchYearlyPrayerTimes(year: number): Promise<any> {
 
     try {
         console.log(`Fetching yearly prayer times for ${year} from API...`);
-        // Using the standard 'Authorization' header with Bearer token is more robust.
         const response = await fetch(API_URL, {
             headers: { 'Authorization': `Bearer ${API_KEY}` },
             next: { revalidate: 60 * 60 * 24 } // Revalidate once a day
