@@ -112,9 +112,9 @@ export function OptionsMenu({
                             </div>
                              <div className="flex items-center justify-between space-x-2 p-2 rounded-lg border">
                                 <Label htmlFor="ishaa-midnight-switch" className="flex flex-col space-y-1">
-                                    <span className="font-semibold">Ishaa (Mitternacht)</span>
+                                    <span className="font-semibold">Ishaa (Mitte der Nacht)</span>
                                     <span className="font-normal leading-snug text-muted-foreground text-xs">
-                                        Deaktiviert Ishaa zur<br/>islam. Mitternacht.
+                                        Deaktiviert Ishaa zur<br/>islam. Mitte der Nacht.
                                     </span>
                                 </Label>
                                 <Switch
