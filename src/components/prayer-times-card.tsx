@@ -52,7 +52,7 @@ const formatGermanDate = (dateString: string) => {
     try {
         const [year, month, day] = dateString.split('-').map(Number);
         const date = new Date(year, month - 1, day);
-        return date.toLocaleDateString('de-DE', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Europe/Berlin' });
+        return date.toLocaleDateString('de-DE', { weekday: 'long', day: 'numeric', month: 'long', timeZone: 'Europe/Berlin' });
     } catch {
         return dateString;
     }
@@ -61,7 +61,7 @@ const formatGermanDate = (dateString: string) => {
 const formatHijriDate = (hijriDate: string): string => {
     if (!hijriDate) return 'Lädt...';
     
-    const cleanedDate = hijriDate.replace(' H', '').trim();
+    const cleanedDate = hijriDate.replace('H', '').trim();
     
     const parts = cleanedDate.split('/');
     if (parts.length !== 3) return cleanedDate;
@@ -103,7 +103,7 @@ function DateFader({ gregorian, hijri }: { gregorian: string, hijri: string }) {
             }, FADE_IN_DURATION + HOLD_DURATION);
 
             switchTextTimer = setTimeout(() => {
-                setDisplayIndex(prevIndex => (prevIndex + 1) % texts.length);
+                setDisplayIndex(prevIndex => (prevIndex + 1) % 2);
             }, FADE_IN_DURATION + HOLD_DURATION + FADE_OUT_DURATION);
         };
         
@@ -115,11 +115,11 @@ function DateFader({ gregorian, hijri }: { gregorian: string, hijri: string }) {
             clearTimeout(switchTextTimer);
         };
 
-    }, [displayIndex, texts]);
+    }, [displayIndex, gregorian, hijri]);
 
     return (
         <CardTitle 
-            className="pt-1 text-sm text-black font-body h-6 flex items-center justify-center text-center min-w-full"
+            className="text-sm font-body h-8 flex items-center justify-center text-center rounded-md bg-primary text-white p-2"
             style={{ 
                 opacity: opacity,
                 transition: `opacity ${opacity === 1 ? FADE_IN_DURATION : FADE_OUT_DURATION}ms ease-in-out`
@@ -143,9 +143,9 @@ export function PrayerTimesCard({ prayerTimes, nextPrayer, currentPrayerName, gr
                 <p className="font-bold text-custom-blue text-lg">Gebetszeiten Dortmund</p>
             </div>
 
-            <div className="bg-mint-green/30 text-primary-foreground rounded-lg p-1 border border-black flex flex-col items-center space-y-0 mx-auto w-[90%]">
+            <div className="bg-mint-green/30 text-primary-foreground rounded-lg p-2 border border-black flex flex-col items-center space-y-1 mx-auto w-[90%]">
                 <DateFader gregorian={gregorianDate} hijri={prayerTimes.Hijri_Date} />
-                <CardDescription className="text-sm font-bold font-body tracking-wider text-black -mt-1 pb-1">
+                <CardDescription className="text-sm font-bold font-body tracking-wider text-black pb-1">
                   {now.toLocaleDateString('de-DE', {day: '2-digit', month: '2-digit', year: 'numeric'})} &nbsp;
                   {now.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit'})}
                 </CardDescription>
