@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -41,7 +42,8 @@ export default function Home() {
       try {
         setLoading(true);
         setError(null);
-        const times = await fetchPrayerTimesAPI(date);
+        // Wir übergeben das aktuelle Datum an die API-Funktion
+        const times = await fetchPrayerTimesAPI(new Date());
         setPrayerTimes(times);
       } catch (err) {
         const errorMessage = err instanceof Error ? err.message : "Ein unbekannter Fehler ist aufgetreten.";
@@ -57,7 +59,7 @@ export default function Home() {
     };
 
     fetchTimes();
-  }, [date, toast]);
+  }, [toast]); // `date` entfernt, da wir immer das aktuelle Datum wollen
   
 
   useEffect(() => {
