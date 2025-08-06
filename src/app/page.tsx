@@ -39,27 +39,25 @@ export default function Home() {
     if (error) {
       toast({
         variant: "destructive",
-        title: "Hinweis",
+        title: "Fehler",
         description: error,
       });
     }
   }, [error, toast]);
 
   useEffect(() => {
-    // Geolocation is not strictly needed for the API call anymore,
-    // but we can keep it to show a message if access was denied.
     if ("geolocation" in navigator) {
       navigator.geolocation.getCurrentPosition(
         () => {
           setLocationDenied(false);
         },
         () => {
-          setError("Standortzugriff verweigert. Gebetszeiten für Dortmund werden angezeigt.");
+          // No need to set an error here, as the API call doesn't depend on it.
+          // We can just note that access was denied.
           setLocationDenied(true);
         }
       );
     } else {
-      // Geolocation is not supported
       setLocationDenied(true);
     }
   }, []);
@@ -67,14 +65,14 @@ export default function Home() {
   useEffect(() => {
     const fetchTimes = async () => {
       setLoading(true);
-      setError(null); // Reset error state before fetching
+      setError(null);
       try {
         const times = await fetchPrayerTimesAPI(date);
         setPrayerTimes(times);
       } catch (err) {
         const errorMessage = err instanceof Error ? err.message : "Ein unbekannter Fehler ist aufgetreten.";
-        setError(`Gebetszeiten konnten nicht abgerufen werden: ${errorMessage}`);
-        setPrayerTimes(null); // Ensure we clear old data on error
+        setError(errorMessage); // Set the specific error message
+        setPrayerTimes(null);
       } finally {
         setLoading(false);
       }
@@ -84,13 +82,12 @@ export default function Home() {
 
   useEffect(() => {
       if (prayerTimes) {
-          setError(null); // We got data, so clear any previous errors.
+          setError(null);
           setPrayerInfo(getNextPrayerInfo(prayerTimes));
           
           const timer = setInterval(() => {
               const currentDate = new Date();
               setNow(currentDate);
-              // We need to get the info based on the latest prayer times
               const currentPrayerInfo = getNextPrayerInfo(prayerTimes);
               setPrayerInfo(currentPrayerInfo);
               
@@ -118,7 +115,7 @@ export default function Home() {
                 <h3 className="text-lg font-bold text-destructive">Fehler</h3>
                 <p className="text-card-foreground">{error}</p>
              </div>
-        )
+        );
     }
 
     if (prayerTimes && prayerInfo?.nextPrayer) {
@@ -137,7 +134,14 @@ export default function Home() {
       );
     }
 
-    return null; // Should not be reached if logic is correct
+    // Fallback for the case where there's no loading, no error, but also no data.
+    // This prevents the UI from crashing.
+    return (
+        <div className="w-full w-[20rem] mx-auto bg-card/80 p-6 rounded-lg shadow-lg text-center">
+            <h3 className="text-lg font-bold">Keine Daten</h3>
+            <p className="text-card-foreground">Es konnten keine Gebetszeiten geladen werden.</p>
+        </div>
+    );
   };
 
   return (

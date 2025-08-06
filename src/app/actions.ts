@@ -3,7 +3,6 @@
 
 import type { PrayerTimes } from "@/lib/prayer-times";
 
-// This is a cache for the prayer times to avoid fetching the same year multiple times.
 const prayerTimesCache = new Map<number, any>();
 
 async function fetchYearlyPrayerTimes(year: number): Promise<any> {
@@ -18,13 +17,14 @@ async function fetchYearlyPrayerTimes(year: number): Promise<any> {
         console.log(`Fetching yearly prayer times for ${year} from API...`);
         const response = await fetch(API_URL, {
             headers: { 'Authorization': `Bearer ${API_KEY}` },
-            next: { revalidate: 60 * 60 * 24 } // Revalidate once a day
+            next: { revalidate: 60 } // Revalidate every 60 seconds
         });
 
         if (!response.ok) {
             const errorText = await response.text();
-            console.error(`API call failed. Status: ${response.status}, Body: ${errorText}`);
-            throw new Error(`API call failed with status: ${response.status}.`);
+            console.error(`API call failed with status: ${response.status}, Body: ${errorText}`);
+            // Throw a more specific error
+            throw new Error(`API-Antwort ist nicht OK. Status: ${response.status}. Meldung: ${errorText}`);
         }
 
         const data = await response.json();
@@ -32,8 +32,9 @@ async function fetchYearlyPrayerTimes(year: number): Promise<any> {
         return data;
 
     } catch (error) {
-        console.error(`Failed to fetch or process yearly prayer times for ${year}:`, error);
-        throw new Error("Could not fetch prayer times from the server.");
+        console.error("Detaillierter Fehler beim Abrufen der Gebetszeiten:", error);
+        // Re-throw the caught error to be handled by the client component
+        throw new Error("Gebetszeiten konnten nicht vom Server geladen werden");
     }
 }
 
@@ -50,7 +51,8 @@ export async function fetchPrayerTimesAPI(date: Date): Promise<PrayerTimes> {
         const dayTimes = yearData?.[dateKey];
 
         if (!dayTimes) {
-            throw new Error(`Prayer times not found for ${dateKey} in API response.`);
+            console.error(`Gebetszeiten für ${dateKey} nicht in der API-Antwort gefunden.`, yearlyData);
+            throw new Error(`Gebetszeiten für ${dateKey} nicht gefunden.`);
         }
 
         return {
@@ -62,8 +64,8 @@ export async function fetchPrayerTimesAPI(date: Date): Promise<PrayerTimes> {
             Ishaa: dayTimes.Ishaa.slice(0, 5),
         };
     } catch (error) {
-        console.error(`Error in fetchPrayerTimesAPI for ${date.toDateString()}:`, error);
-        // This re-throws the error to be caught by the client component.
-        throw error;
+        const errorMessage = error instanceof Error ? error.message : "Unbekannter Fehler in fetchPrayerTimesAPI";
+        console.error(`Error in fetchPrayerTimesAPI for ${date.toDateString()}:`, errorMessage);
+        throw error; // Re-throw to be caught by the UI
     }
 }
