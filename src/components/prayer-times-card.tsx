@@ -36,7 +36,7 @@ function PrayerTimeRow({ name, time, isActive, offset }: { name: string, time: s
             "flex items-center justify-between rounded-lg transition-all duration-500 ease-in-out py-1 px-4",
             isActive ? "border-2 border-destructive" : "hover:bg-primary/5"
         )}>
-            <div className="w-1/3 text-right">
+            <div className="w-1/3 text-right pr-1.5">
                 <span className="font-bold text-black text-base">{name}</span>
             </div>
             <div className="w-1/3 text-center">
@@ -127,12 +127,12 @@ export function PrayerTimesCard({ prayerTimes, nextPrayer, currentPrayerName, gr
         </div>
         <div className="flex justify-between gap-4 mx-4 pt-2">
             <div className="text-center bg-mint-green/30 text-primary-foreground rounded-lg p-2 border border-black space-y-1 w-[45%]">
-                <div className="font-bold text-black text-lg">Shuruk</div>
-                <div className="font-body font-bold text-black text-lg">{prayerTimes.Shuruk.substring(0, 5)}</div>
+                <div className="font-bold text-black text-base">Shuruk</div>
+                <div className="font-body font-bold text-black text-base">{prayerTimes.Shuruk.substring(0, 5)}</div>
             </div>
             <div className="text-center bg-mint-green/30 text-primary-foreground rounded-lg p-2 border border-black space-y-1 w-[45%]">
-                <div className="font-bold text-black text-lg">Jumuah</div>
-                <div className="font-body font-bold text-black text-lg">{jumuahTime}</div>
+                <div className="font-bold text-black text-base">Jumuah</div>
+                <div className="font-body font-bold text-black text-base">{jumuahTime}</div>
             </div>
         </div>
         <div className="flex justify-end items-center gap-2 mt-4 mx-4">
