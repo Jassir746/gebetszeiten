@@ -12,7 +12,7 @@ interface PrayerTimesCardProps {
   prayerTimes: PrayerTimes;
   nextPrayer: { name: PrayerName, time: Date };
   currentPrayerName?: PrayerName;
-  date: Date;
+  gregorianDate: string;
   now: Date;
   locationDenied?: boolean;
   jumuahTime: string;
@@ -60,7 +60,8 @@ const formatGermanDate = (dateString: string) => {
 };
 
 const formatHijriDate = (dateString: string) => {
-    return `${dateString} (H)`;
+    const formatted = dateString.replace(/\//g, '.');
+    return `${formatted} (H)`;
 }
 
 
@@ -91,7 +92,7 @@ function DateFader({ gregorian, hijri }: { gregorian: string, hijri: string }) {
     );
 }
 
-export function PrayerTimesCard({ prayerTimes, nextPrayer, currentPrayerName, date, now, locationDenied, jumuahTime, prayerOffsets, setIsOptionsOpen }: PrayerTimesCardProps) {
+export function PrayerTimesCard({ prayerTimes, nextPrayer, currentPrayerName, gregorianDate, now, locationDenied, jumuahTime, prayerOffsets, setIsOptionsOpen }: PrayerTimesCardProps) {
   return (
     <Card className="w-full w-[20rem] mx-auto shadow-2xl shadow-primary/10 bg-card/40 border-primary/20">
       <CardHeader className="text-center pb-2 relative">
@@ -103,7 +104,7 @@ export function PrayerTimesCard({ prayerTimes, nextPrayer, currentPrayerName, da
              <div className="w-full text-left">
                 <p className="font-bold text-custom-blue text-lg">Gebetszeiten Dortmund</p>
             </div>
-            <DateFader gregorian={prayerTimes.gregorian} hijri={prayerTimes.hijri} />
+            <DateFader gregorian={gregorianDate} hijri={prayerTimes.Hijri_Date} />
             <CardDescription className="text-lg font-bold font-body tracking-wider text-black">
               {now.toLocaleDateString('de-DE', {day: '2-digit', month: '2-digit', year: 'numeric'})} &nbsp;
               {now.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit', second: '2-digit'})}

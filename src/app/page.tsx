@@ -153,7 +153,7 @@ export default function Home() {
           prayerTimes={prayerTimes}
           nextPrayer={prayerInfo.nextPrayer}
           currentPrayerName={prayerInfo.currentPrayer?.name}
-          date={date}
+          gregorianDate={getFormattedDate(date)}
           now={now}
           locationDenied={locationDenied}
           jumuahTime={jumuahTime}

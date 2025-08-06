@@ -9,8 +9,7 @@ export interface PrayerTimes {
     Assr: string;
     Maghrib: string;
     Ishaa: string;
-    gregorian: string;
-    hijri: string;
+    Hijri_Date: string;
 };
 
 
@@ -21,8 +20,7 @@ export const mockPrayerTimes: PrayerTimes = {
     Assr: "17:30",
     Maghrib: "20:30",
     Ishaa: "22:00",
-    gregorian: "2024-07-28",
-    hijri: "1446-01-22"
+    Hijri_Date: "1446/01/22"
 };
 
 export function getFormattedDate(date: Date): string {
@@ -55,10 +53,10 @@ const parseTime = (time: string): Date => {
 export function getNextPrayerInfo(prayerTimes: PrayerTimes) {
   const now = new Date();
   const prayerSchedule: { name: PrayerName; time: Date }[] = (Object.keys(prayerTimes) as (keyof PrayerTimes)[])
-    .filter(name => name !== 'Shuruk' && name !== 'gregorian' && name !== 'hijri') // Shuruk is not a prayer time for this logic
+    .filter(name => name !== 'Shuruk' && name !== 'Hijri_Date') // Shuruk is not a prayer time for this logic
     .map(name => ({
       name: name as PrayerName,
-      time: parseTime(prayerTimes[name as PrayerName]),
+      time: parseTime(prayerTimes[name as Exclude<keyof PrayerTimes, 'Hijri_Date'>]),
     }))
     .sort((a, b) => a.time.getTime() - b.time.getTime());
 
