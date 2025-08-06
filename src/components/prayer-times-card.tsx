@@ -144,7 +144,7 @@ export function PrayerTimesCard({ prayerTimes, nextPrayer, currentPrayerName, gr
                 <p className="font-bold text-custom-blue text-lg">Gebetszeiten Dortmund</p>
             </div>
 
-            <div className="bg-mint-green/30 text-primary-foreground rounded-lg p-2 border border-black flex flex-col items-center space-y-1 w-[90%]">
+            <div className="bg-mint-green/30 text-primary-foreground rounded-lg px-2 pt-2 pb-1 border border-black flex flex-col items-center space-y-1 w-[90%]">
                 <DateFader gregorian={gregorianDate} hijri={prayerTimes.Hijri_Date} />
                 <CardDescription className="text-sm font-body tracking-wider text-black font-bold">
                   {now.toLocaleDateString('de-DE', {day: '2-digit', month: '2-digit', year: 'numeric'})} &nbsp;
