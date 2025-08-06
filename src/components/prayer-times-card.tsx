@@ -115,11 +115,11 @@ function DateFader({ gregorian, hijri }: { gregorian: string, hijri: string }) {
             clearTimeout(switchTextTimer);
         };
 
-    }, [displayIndex, gregorian, hijri]);
+    }, [displayIndex, gregorian, hijri, texts]);
 
     return (
         <CardTitle 
-            className="pt-1 text-sm text-black font-body h-6 flex items-center justify-center text-center w-full"
+            className="pt-1 text-sm text-black font-body h-6 flex items-center justify-center text-center min-w-full"
             style={{ 
                 opacity: opacity,
                 transition: `opacity ${opacity === 1 ? FADE_IN_DURATION : FADE_OUT_DURATION}ms ease-in-out`
@@ -143,7 +143,7 @@ export function PrayerTimesCard({ prayerTimes, nextPrayer, currentPrayerName, gr
                 <p className="font-bold text-custom-blue text-lg">Gebetszeiten Dortmund</p>
             </div>
 
-            <div className="bg-mint-green/30 text-primary-foreground rounded-lg p-1 border border-black flex flex-col items-center space-y-0 mx-auto w-4/5">
+            <div className="bg-mint-green/30 text-primary-foreground rounded-lg p-1 border border-black flex flex-col items-center space-y-0 mx-auto w-[90%]">
                 <DateFader gregorian={gregorianDate} hijri={prayerTimes.Hijri_Date} />
                 <CardDescription className="text-xs font-bold font-body tracking-wider text-black -mt-1 pb-1">
                   {now.toLocaleDateString('de-DE', {day: '2-digit', month: '2-digit', year: 'numeric'})} &nbsp;
