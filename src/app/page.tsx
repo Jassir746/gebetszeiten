@@ -25,7 +25,7 @@ interface PrayerInfo {
 export default function Home() {
   const [prayerTimes, setPrayerTimes] = useState<PrayerTimes | null>(placeholderPrayerTimes);
   const [prayerInfo, setPrayerInfo] = useState<PrayerInfo | null>(null);
-  const [loading, setLoading] = useState<boolean>(false); // Set to false initially
+  const [loading, setLoading] = useState<boolean>(false); // Kept for potential future use, but not actively used
   const [date] = useState(new Date());
   const [now, setNow] = useState(new Date());
   const { toast } = useToast();
@@ -43,7 +43,7 @@ export default function Home() {
 
 
   useEffect(() => {
-    // This effect now only handles the timer and prayer info calculation.
+    // This effect now only handles the timer and prayer info calculation based on static data.
     if (prayerTimes) {
         const currentPrayerInfo = getNextPrayerInfo(prayerTimes);
         setPrayerInfo(currentPrayerInfo);
@@ -60,9 +60,9 @@ export default function Home() {
     }
   }, [prayerTimes]);
 
-  // UI rendering logic
   const renderContent = () => {
-    if (loading) {
+    // Simplified render logic, as we are not handling loading/error states from an API
+    if (!prayerTimes || !prayerInfo?.nextPrayer) {
       return (
         <div className="w-full max-w-sm mx-auto">
           <Skeleton className="h-[550px] w-full rounded-xl bg-primary/10" />
@@ -70,28 +70,18 @@ export default function Home() {
       );
     }
 
-    if (prayerTimes && prayerInfo?.nextPrayer) {
-      return (
-        <PrayerTimesCard
-          prayerTimes={prayerTimes}
-          nextPrayer={prayerInfo.nextPrayer}
-          currentPrayerName={prayerInfo.currentPrayer?.name}
-          date={date}
-          now={now}
-          locationDenied={locationDenied}
-          jumuahTime={jumuahTime}
-          prayerOffsets={prayerOffsets}
-          setIsOptionsOpen={setIsOptionsOpen}
-        />
-      );
-    }
-
-    // Fallback in case something is still wrong
     return (
-        <div className="w-full max-w-sm mx-auto bg-card/80 p-6 rounded-lg shadow-lg text-center">
-            <h3 className="text-lg font-bold">Fehler beim Laden</h3>
-            <p className="text-card-foreground">Die Gebetszeiten-Komponente konnte nicht gerendert werden.</p>
-        </div>
+      <PrayerTimesCard
+        prayerTimes={prayerTimes}
+        nextPrayer={prayerInfo.nextPrayer}
+        currentPrayerName={prayerInfo.currentPrayer?.name}
+        date={date}
+        now={now}
+        locationDenied={locationDenied}
+        jumuahTime={jumuahTime}
+        prayerOffsets={prayerOffsets}
+        setIsOptionsOpen={setIsOptionsOpen}
+      />
     );
   };
 
