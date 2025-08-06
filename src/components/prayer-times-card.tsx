@@ -59,6 +59,7 @@ const formatGermanDate = (dateString: string) => {
 };
 
 const formatHijriDate = (hijriDate: string): string => {
+    if (!hijriDate) return 'Lädt...';
     const parts = hijriDate.split('/');
     if (parts.length !== 3) return hijriDate;
     
@@ -88,31 +89,34 @@ function DateFader({ gregorian, hijri }: { gregorian: string, hijri: string }) {
     const FADE_OUT_DURATION = FADE_IN_DURATION * FADE_OUT_MULTIPLIER;
 
     useEffect(() => {
-        let fadeInTimer: NodeJS.Timeout;
-        let fadeOutTimer: NodeJS.Timeout;
-        let switchTextTimer: NodeJS.Timeout;
-
         const cycle = () => {
+            // Fade-In
             setOpacity(1);
 
-            fadeOutTimer = setTimeout(() => {
+            // After hold duration, start Fade-Out
+            const fadeOutTimer = setTimeout(() => {
                 setOpacity(0);
             }, FADE_IN_DURATION + HOLD_DURATION);
 
-            switchTextTimer = setTimeout(() => {
-                setDisplayIndex((prevIndex) => (prevIndex + 1) % texts.length);
+            // After fade-out, switch text and restart cycle
+            const switchTextTimer = setTimeout(() => {
+                setDisplayIndex(prevIndex => (prevIndex + 1) % texts.length);
             }, FADE_IN_DURATION + HOLD_DURATION + FADE_OUT_DURATION);
-        };
-        
-        fadeInTimer = setTimeout(cycle, 100);
-
-        return () => {
-            clearTimeout(fadeInTimer);
-            clearTimeout(fadeOutTimer);
-            clearTimeout(switchTextTimer);
+            
+            return { fadeOutTimer, switchTextTimer };
         };
 
-    }, [displayIndex, gregorian, hijri, texts.length]);
+        const initialTimer = setTimeout(() => {
+            const { fadeOutTimer, switchTextTimer } = cycle();
+            return () => {
+                clearTimeout(fadeOutTimer);
+                clearTimeout(switchTextTimer);
+            };
+        }, 100);
+
+        return () => clearTimeout(initialTimer);
+
+    }, [displayIndex, gregorian, hijri]);
 
     return (
         <CardTitle 
@@ -139,11 +143,14 @@ export function PrayerTimesCard({ prayerTimes, nextPrayer, currentPrayerName, gr
              <div className="w-full text-left">
                 <p className="font-bold text-custom-blue text-lg">Gebetszeiten Dortmund</p>
             </div>
-            <DateFader gregorian={gregorianDate} hijri={prayerTimes.Hijri_Date} />
-            <CardDescription className="text-lg font-bold font-body tracking-wider text-black">
-              {now.toLocaleDateString('de-DE', {day: '2-digit', month: '2-digit', year: 'numeric'})} &nbsp;
-              {now.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit'})}
-            </CardDescription>
+
+            <div className="w-full bg-mint-green/30 text-primary-foreground rounded-lg p-1 border border-black space-y-0">
+                <DateFader gregorian={gregorianDate} hijri={prayerTimes.Hijri_Date} />
+                <CardDescription className="text-base font-bold font-body tracking-wider text-black -mt-4 pb-2">
+                  {now.toLocaleDateString('de-DE', {day: '2-digit', month: '2-digit', year: 'numeric'})} &nbsp;
+                  {now.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit'})}
+                </CardDescription>
+            </div>
         </div>
         <CardDescription>{locationDenied ? "Es werden die Zeiten für den Standardstandort angezeigt" : ""}</CardDescription>
       </CardHeader>
