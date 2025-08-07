@@ -175,15 +175,21 @@ export function PrayerTimesCard({
     <Card className="w-full w-[20rem] mx-auto shadow-2xl shadow-primary/10 bg-card/40 border-primary/20">
       <CardHeader className="text-center pb-2 relative">
         <div className="absolute top-4 left-4 right-4 flex justify-between items-center">
-            <button onClick={() => setIsInfoOpen(true)} className="p-2 text-custom-blue hover:text-accent transition-colors">
-                <Info className="w-6 h-6" />
-            </button>
-            <button onClick={() => setIsOptionsOpen(true)} className="p-2 text-custom-blue hover:text-accent transition-colors">
-                <Settings className="w-6 h-6" />
-            </button>
-            <button onClick={() => setIsScannerOpen(true)} className="p-2 text-custom-blue hover:text-accent transition-colors">
-                <QrCode className="w-6 h-6" />
-            </button>
+             <div className="w-1/3 text-left">
+                <button onClick={() => setIsInfoOpen(true)} className="p-2 text-custom-blue hover:text-accent transition-colors">
+                    <Info className="w-6 h-6" />
+                </button>
+            </div>
+            <div className="w-1/3 text-center">
+                <button onClick={() => setIsOptionsOpen(true)} className="p-2 text-custom-blue hover:text-accent transition-colors">
+                    <Settings className="w-6 h-6" />
+                </button>
+            </div>
+            <div className="w-1/3 text-right">
+                <button onClick={() => setIsScannerOpen(true)} className="p-2 text-custom-blue hover:text-accent transition-colors">
+                    <QrCode className="w-6 h-6" />
+                </button>
+            </div>
         </div>
         <div className="flex flex-col items-center space-y-2 pt-12">
             <Countdown nextPrayerName={nextPrayer.name} nextPrayerTime={nextPrayer.time} />
