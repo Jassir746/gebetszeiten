@@ -231,12 +231,12 @@ export function PrayerTimesCard({
                   <div className="font-body font-bold text-black text-base">{jumuahTime}</div>
               </div>
           </div>
-          <div className="mt-4 mx-4 text-right">
+          <div className="mt-4 mx-4">
               <a href="https://app.izaachen.de" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-black text-sm hover:text-accent transition-colors underline">
                   <span className="text-lg">☪</span>
                   app.izaachen.de
               </a>
-              <p className="text-xs text-muted-foreground font-bold">{locationName}</p>
+              <p className="text-xs text-muted-foreground font-bold text-right">{locationName}</p>
           </div>
         </CardContent>
       </Card>
