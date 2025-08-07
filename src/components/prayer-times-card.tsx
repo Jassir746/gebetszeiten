@@ -5,7 +5,7 @@ import { PrayerTimes, PrayerName } from "@/lib/prayer-times";
 import { Countdown } from "./countdown";
 import { cn } from "@/lib/utils";
 import { PrayerOffsets } from "./options-menu";
-import { Settings, Info } from "lucide-react";
+import { Settings, Info, QrCode } from "lucide-react";
 
 interface PrayerTimesCardProps {
   prayerTimes: PrayerTimes;
@@ -13,11 +13,12 @@ interface PrayerTimesCardProps {
   currentPrayer?: { name: PrayerName, time: Date };
   gregorianDate: string;
   now: Date;
-  locationDenied?: boolean;
   jumuahTime: string;
   prayerOffsets: PrayerOffsets;
   setIsOptionsOpen: (isOpen: boolean) => void;
   setIsInfoOpen: (isOpen: boolean) => void;
+  setIsScannerOpen: (isOpen: boolean) => void;
+  locationName: string;
 }
 
 const PRAYER_START_BLINK_DURATION_MS = 2 * 60 * 1000; // 2 minutes
@@ -135,31 +136,38 @@ function DateFader({ gregorian, hijri }: { gregorian: string, hijri: string }) {
     );
 }
 
-export function PrayerTimesCard({ prayerTimes, nextPrayer, currentPrayer, gregorianDate, now, locationDenied, jumuahTime, prayerOffsets, setIsOptionsOpen, setIsInfoOpen }: PrayerTimesCardProps) {
+export function PrayerTimesCard({ 
+    prayerTimes, 
+    nextPrayer, 
+    currentPrayer, 
+    gregorianDate, 
+    now, 
+    jumuahTime, 
+    prayerOffsets, 
+    setIsOptionsOpen, 
+    setIsInfoOpen, 
+    setIsScannerOpen,
+    locationName 
+}: PrayerTimesCardProps) {
   const [blinkingPrayer, setBlinkingPrayer] = useState<PrayerName | undefined>(undefined);
-  const prevPrayerName = useRef(currentPrayer?.name);
-  const currentPrayerName = currentPrayer?.name;
+  const prevPrayer = useRef(currentPrayer);
 
   useEffect(() => {
-    // Only trigger blink if the prayer name actually changes AND its start time is recent
-    if (currentPrayer && currentPrayer.name !== prevPrayerName.current) {
+    if (currentPrayer && currentPrayer.name !== prevPrayer.current?.name) {
       const timeSincePrayerStart = now.getTime() - currentPrayer.time.getTime();
       
-      // Check if the prayer just started (within the blink duration)
       if (timeSincePrayerStart >= 0 && timeSincePrayerStart < PRAYER_START_BLINK_DURATION_MS) {
         setBlinkingPrayer(currentPrayer.name);
         
         const timer = setTimeout(() => {
           setBlinkingPrayer(undefined);
-        }, PRAYER_START_BLINK_DURATION_MS - timeSincePrayerStart); // Adjust timer for already elapsed time
+        }, PRAYER_START_BLINK_DURATION_MS - timeSincePrayerStart);
         
         return () => clearTimeout(timer);
       }
     }
     
-    // Always update the ref to the current prayer name to track changes correctly
-    prevPrayerName.current = currentPrayer?.name;
-
+    prevPrayer.current = currentPrayer;
   }, [currentPrayer, now]);
 
 
@@ -170,6 +178,9 @@ export function PrayerTimesCard({ prayerTimes, nextPrayer, currentPrayer, gregor
             <button onClick={() => setIsInfoOpen(true)} className="p-2 text-custom-blue hover:text-accent transition-colors">
                 <Info className="w-6 h-6" />
             </button>
+             <button onClick={() => setIsScannerOpen(true)} className="p-2 text-custom-blue hover:text-accent transition-colors">
+                <QrCode className="w-6 h-6" />
+            </button>
             <button onClick={() => setIsOptionsOpen(true)} className="p-2 text-custom-blue hover:text-accent transition-colors">
                 <Settings className="w-6 h-6" />
             </button>
@@ -177,7 +188,7 @@ export function PrayerTimesCard({ prayerTimes, nextPrayer, currentPrayer, gregor
         <div className="flex flex-col items-center space-y-2 pt-8">
             <Countdown nextPrayerName={nextPrayer.name} nextPrayerTime={nextPrayer.time} />
              <div className="w-full text-left">
-                <p className="font-bold text-base text-custom-blue pb-2">Gebetszeiten Dortmund</p>
+                <p className="font-bold text-base text-custom-blue pb-2">Gebetszeiten {locationName}</p>
             </div>
 
             <div className={cn(
@@ -190,7 +201,6 @@ export function PrayerTimesCard({ prayerTimes, nextPrayer, currentPrayer, gregor
                 </CardDescription>
             </div>
         </div>
-        <CardDescription>{locationDenied ? "Es werden die Zeiten für den Standardstandort angezeigt" : ""}</CardDescription>
       </CardHeader>
       <CardContent className="pt-0">
         <div className="space-y-2 py-2">
@@ -198,7 +208,7 @@ export function PrayerTimesCard({ prayerTimes, nextPrayer, currentPrayer, gregor
                 <PrayerTimeRow
                     key={name}
                     name={name}
-                    isActive={currentPrayerName === name}
+                    isActive={currentPrayer?.name === name}
                     isBlinking={blinkingPrayer === name}
                     offset={getOffsetDisplay(prayerOffsets[name])}
                     time={prayerTimes[name]}

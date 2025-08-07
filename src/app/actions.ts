@@ -1,23 +1,23 @@
 
 'use server';
 
-import type { PrayerTimes } from "@/lib/prayer-times";
+import type { PrayerTimes, ApiConfig } from "@/lib/prayer-times";
 
 export type YearPrayerTimes = Record<string, Record<string, PrayerTimes>>;
 
-// Funktion zur Formatierung des Datums in YYYY-MM-DD
-function getFormattedDate(date: Date): string {
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    return `${year}-${month}-${day}`;
-}
-
-export async function fetchPrayerTimesAPI(date: Date): Promise<YearPrayerTimes> {
+export async function fetchPrayerTimesAPI(date: Date, config: ApiConfig): Promise<YearPrayerTimes> {
   const year = date.getFullYear();
-  // Angepasst an den exakten Wert aus dem funktionierenden curl-Befehl, um Kodierungsprobleme zu lösen
-  const apiKey = "9~8tj>dtgirtgW-ZÂ§$%&";
-  const url = `https://zero-clue.de/as-salah/api/load_prayer_times.php?year=${year}`;
+
+  if (!config || !config.serverUrl || !config.apiKey || !config.alias) {
+      throw new Error("API-Konfiguration ist unvollständig. Bitte QR-Code scannen.");
+  }
+  
+  // Stellt sicher, dass die URL mit / endet und der Pfad nicht mit / beginnt
+  const baseUrl = config.serverUrl.endsWith('/') ? config.serverUrl : `${config.serverUrl}/`;
+  const path = 'api/load_prayer_times.php';
+  
+  const url = `${baseUrl}${path}?year=${year}`;
+  const apiKey = config.apiKey;
 
   try {
     const response = await fetch(url, {
@@ -32,7 +32,6 @@ export async function fetchPrayerTimesAPI(date: Date): Promise<YearPrayerTimes> 
 
     if (!response.ok) {
         const errorText = await response.text();
-        // Wir versuchen, die JSON-Fehlermeldung zu parsen, falls vorhanden
         try {
             const errorJson = JSON.parse(errorText);
             throw new Error(`API-Fehler: Status ${response.status} - ${errorJson.error || errorText}`);
@@ -43,7 +42,6 @@ export async function fetchPrayerTimesAPI(date: Date): Promise<YearPrayerTimes> 
 
     const data = await response.json();
     
-    // Die API liefert ein verschachteltes Objekt. Wir prüfen, ob das Jahr da ist.
     const yearString = String(year);
     const yearData = data[yearString];
 
@@ -51,12 +49,12 @@ export async function fetchPrayerTimesAPI(date: Date): Promise<YearPrayerTimes> 
         throw new Error(`Keine Gebetszeiten für das Jahr ${yearString} gefunden.`);
     }
 
-    // Wir geben das gesamte Jahresobjekt zurück
     return data;
 
   } catch (error) {
     console.error("Fehler beim Abrufen der Gebetszeiten:", error);
     if (error instanceof Error) {
+        // Leite den Originalfehler weiter, insbesondere für den Fall der unvollständigen Konfiguration
         throw error;
     }
     throw new Error("Ein unbekannter Fehler ist aufgetreten.");

@@ -11,6 +11,12 @@ export interface PrayerTimes {
     Hijri_Date: string;
 };
 
+export interface ApiConfig {
+    alias: string;
+    serverUrl: string;
+    apiKey: string;
+}
+
 export interface PrayerTimeOptions {
     deactivateAssrEarly: boolean;
     deactivateIshaaAtMidnight: boolean;
@@ -85,8 +91,7 @@ export function getNextPrayerInfo(
 
       let prayerEndTime: Date;
       const prayerIndex = prayerSchedule.findIndex(p => p.name === prayer.name);
-      const nextPrayerInSchedule = prayerSchedule[prayerIndex + 1];
-
+      
       switch(prayer.name) {
           case 'Fadjr':
               const shurukTime = prayerSchedule.find(p => p.name === 'Shuruk')?.time;
@@ -121,14 +126,16 @@ export function getNextPrayerInfo(
 
           default:
               // Default for Duhr, Maghrib
-              // End 10 minutes before the next prayer
-              const nextPrayerTime = prayerSchedule[prayerIndex + 1]?.time;
-              if (nextPrayerTime) {
-                prayerEndTime = new Date(nextPrayerTime.getTime() - 10 * 60 * 1000);
+              const nextPrayerInSchedule = prayerSchedule[prayerIndex + 1];
+              if (nextPrayerInSchedule) {
+                // End 10 minutes before the next prayer
+                prayerEndTime = new Date(nextPrayerInSchedule.time.getTime() - 10 * 60 * 1000);
               } else {
-                // Fallback for Maghrib if it's the last prayer before Ishaa in the schedule
-                const ishaaTime = prayerSchedule.find(p => p.name === 'Ishaa')?.time;
-                prayerEndTime = new Date(ishaaTime!.getTime() - 10 * 60 * 1000);
+                 // Fallback for Ishaa if it's the last prayer of the day
+                 const tomorrowFajrDate = new Date(now);
+                 tomorrowFajrDate.setDate(now.getDate() + 1);
+                 const fajrTomorrowTime = parseTime(options.tomorrowFadjr, tomorrowFajrDate);
+                 prayerEndTime = new Date(fajrTomorrowTime.getTime() - 10 * 60 * 1000);
               }
               break;
       }
