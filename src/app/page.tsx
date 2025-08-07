@@ -161,7 +161,7 @@ export default function Home() {
   const renderContent = () => {
     if (loading) {
       return (
-        <div className="w-full max-w-[20rem] mx-auto">
+        <div className="w-[20rem] mx-auto">
           <Skeleton className="h-[550px] w-full rounded-xl bg-primary/10" />
         </div>
       );
@@ -169,38 +169,42 @@ export default function Home() {
 
     if (error && !prayerTimes) {
        return (
-         <Card className="w-full max-w-[20rem] mx-auto shadow-2xl shadow-destructive/20 bg-card/40 border-destructive/50">
-           <CardHeader className="text-center pb-4">
-             <div className="flex flex-col items-center text-destructive">
-                <AlertTriangle className="w-12 h-12 mb-4" />
-                <CardTitle className="text-lg">Fehler</CardTitle>
-             </div>
-           </CardHeader>
-           <CardContent className="text-center">
-             <p>{error}</p>
-             <button onClick={() => setIsScannerOpen(true)} className="mt-4 inline-flex items-center gap-2 text-primary underline">
-                <QrCode className="w-4 h-4" /> QR-Code scannen
-             </button>
-           </CardContent>
-         </Card>
+         <div className="w-[20rem] mx-auto">
+             <Card className="w-full shadow-2xl shadow-destructive/20 bg-card/40 border-destructive/50">
+               <CardHeader className="text-center pb-4">
+                 <div className="flex flex-col items-center text-destructive">
+                    <AlertTriangle className="w-12 h-12 mb-4" />
+                    <CardTitle className="text-lg">Fehler</CardTitle>
+                 </div>
+               </CardHeader>
+               <CardContent className="text-center">
+                 <p>{error}</p>
+                 <button onClick={() => setIsScannerOpen(true)} className="mt-4 inline-flex items-center gap-2 text-primary underline">
+                    <QrCode className="w-4 h-4" /> QR-Code scannen
+                 </button>
+               </CardContent>
+             </Card>
+         </div>
        );
     }
     
     if (prayerTimes && prayerInfo) {
       return (
-        <PrayerTimesCard
-          prayerTimes={prayerTimes}
-          nextPrayer={prayerInfo.nextPrayer}
-          currentPrayer={prayerInfo.currentPrayer}
-          gregorianDate={getFormattedDate(date)}
-          now={now}
-          jumuahTime={jumuahTime}
-          prayerOffsets={prayerOffsets}
-          setIsOptionsOpen={setIsOptionsOpen}
-          setIsInfoOpen={setIsInfoOpen}
-          setIsScannerOpen={setIsScannerOpen}
-          locationName={apiConfig?.alias ?? "Standort"}
-        />
+        <div className="w-[20rem] mx-auto">
+            <PrayerTimesCard
+              prayerTimes={prayerTimes}
+              nextPrayer={prayerInfo.nextPrayer}
+              currentPrayer={prayerInfo.currentPrayer}
+              gregorianDate={getFormattedDate(date)}
+              now={now}
+              jumuahTime={jumuahTime}
+              prayerOffsets={prayerOffsets}
+              setIsOptionsOpen={setIsOptionsOpen}
+              setIsInfoOpen={setIsInfoOpen}
+              setIsScannerOpen={setIsScannerOpen}
+              locationName={apiConfig?.alias ?? "Standort"}
+            />
+        </div>
       );
     }
 
