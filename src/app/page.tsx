@@ -32,7 +32,6 @@ const defaultConfig: ApiConfig = {
 };
 
 export default function Home() {
-  console.log('Forcing rebuild...');
   const [prayerTimes, setPrayerTimes] = useState<PrayerTimes | null>(null);
   const [tomorrowPrayerTimes, setTomorrowPrayerTimes] = useState<PrayerTimes | null>(null);
   const [prayerInfo, setPrayerInfo] = useState<PrayerInfo | null>(null);
