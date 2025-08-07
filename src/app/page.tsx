@@ -161,7 +161,7 @@ export default function Home() {
   const renderContent = () => {
     if (loading) {
       return (
-        <div className="w-full max-w-xs mx-auto">
+        <div className="w-full max-w-[20rem] mx-auto">
           <Skeleton className="h-[550px] w-full rounded-xl bg-primary/10" />
         </div>
       );
@@ -169,7 +169,7 @@ export default function Home() {
 
     if (error && !prayerTimes) {
        return (
-         <Card className="w-full w-[20rem] mx-auto shadow-2xl shadow-destructive/20 bg-card/40 border-destructive/50">
+         <Card className="w-full max-w-[20rem] mx-auto shadow-2xl shadow-destructive/20 bg-card/40 border-destructive/50">
            <CardHeader className="text-center pb-4">
              <div className="flex flex-col items-center text-destructive">
                 <AlertTriangle className="w-12 h-12 mb-4" />
