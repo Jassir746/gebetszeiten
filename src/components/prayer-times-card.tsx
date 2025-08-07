@@ -19,6 +19,7 @@ interface PrayerTimesCardProps {
   setIsInfoOpen: (isOpen: boolean) => void;
   setIsScannerOpen: (isOpen: boolean) => void;
   locationName: string;
+  footer: React.ReactNode;
 }
 
 const PRAYER_START_BLINK_DURATION_MS = 2 * 60 * 1000; // 2 minutes
@@ -147,7 +148,8 @@ export function PrayerTimesCard({
     setIsOptionsOpen, 
     setIsInfoOpen, 
     setIsScannerOpen,
-    locationName 
+    locationName,
+    footer,
 }: PrayerTimesCardProps) {
   const [blinkingPrayer, setBlinkingPrayer] = useState<PrayerName | undefined>(undefined);
   const prevPrayer = useRef(currentPrayer);
@@ -200,7 +202,9 @@ export function PrayerTimesCard({
               <div className={cn(
                   "bg-mint-green/30 text-primary-foreground rounded-lg px-2 pt-2 pb-1 border border-black flex flex-col items-center space-y-1 w-full"
               )}>
-                  <DateFader gregorian={gregorianDate} hijri={prayerTimes.Hijri_Date} />
+                  <div className="w-full">
+                    <DateFader gregorian={gregorianDate} hijri={prayerTimes.Hijri_Date} />
+                  </div>
                   <CardDescription className="text-sm font-body tracking-wider text-black font-bold">
                     {now.toLocaleDateString('de-DE', {day: '2-digit', month: '2-digit', year: 'numeric'})} &nbsp;
                     {now.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit'})}
@@ -231,13 +235,7 @@ export function PrayerTimesCard({
                   <div className="font-body font-bold text-black text-base">{jumuahTime}</div>
               </div>
           </div>
-          <div className="mt-4 mx-4">
-              <a href="https://app.izaachen.de" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-black text-sm hover:text-accent transition-colors underline">
-                  <span className="text-lg">☪</span>
-                  app.izaachen.de
-              </a>
-              <p className="text-xs text-muted-foreground font-bold text-right">{locationName}</p>
-          </div>
+          {footer}
         </CardContent>
       </Card>
   );

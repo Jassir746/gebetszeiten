@@ -161,16 +161,16 @@ export default function Home() {
   const renderContent = () => {
     if (loading) {
       return (
-        <div>
-          <Skeleton className="h-[600px] w-full max-w-[20rem] mx-auto rounded-xl bg-primary/10" />
+        <div className="w-full max-w-[20rem] mx-auto">
+          <Skeleton className="h-[600px] w-full rounded-xl bg-primary/10" />
         </div>
       );
     }
 
     if (error && !prayerTimes) {
        return (
-         <div>
-             <Card className="w-full max-w-[20rem] mx-auto shadow-2xl shadow-destructive/20 bg-card/40 border-destructive/50">
+         <div className="w-full max-w-[20rem] mx-auto">
+             <Card className="w-full shadow-2xl shadow-destructive/20 bg-card/40 border-destructive/50">
                <CardHeader className="text-center pb-4">
                  <div className="flex flex-col items-center text-destructive">
                     <AlertTriangle className="w-12 h-12 mb-4" />
@@ -190,7 +190,7 @@ export default function Home() {
     
     if (prayerTimes && prayerInfo) {
       return (
-        <div>
+        <div className="w-full max-w-[20rem] mx-auto">
           <PrayerTimesCard
             prayerTimes={prayerTimes}
             nextPrayer={prayerInfo.nextPrayer}
@@ -203,6 +203,17 @@ export default function Home() {
             setIsInfoOpen={setIsInfoOpen}
             setIsScannerOpen={setIsScannerOpen}
             locationName={apiConfig?.alias || "Standort"}
+            footer={
+              <div className="mt-4 mx-4">
+                  <a href="https://app.izaachen.de" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-black text-sm hover:text-accent transition-colors underline">
+                      <span className="text-lg">☪</span>
+                      app.izaachen.de
+                  </a>
+                  <div className="text-right">
+                    <p className="text-xs text-muted-foreground font-bold">{apiConfig?.alias || "Standort"}</p>
+                  </div>
+              </div>
+            }
           />
         </div>
       );
