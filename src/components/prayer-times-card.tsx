@@ -171,75 +171,73 @@ export function PrayerTimesCard({
 
 
   return (
-      <div className="w-full max-w-[20rem] mx-auto">
-          <Card className="w-full shadow-2xl shadow-primary/10 bg-card/40 border-primary/20">
-            <CardHeader className="text-center pb-2 relative">
-              <div className="absolute top-4 left-4 right-4 flex justify-between items-center">
-                   <div className="w-1/3 text-left">
-                      <button onClick={() => setIsInfoOpen(true)} className="p-2 text-custom-blue hover:text-accent transition-colors">
-                          <Info className="w-6 h-6" />
-                      </button>
-                  </div>
-                  <div className="w-1/3 text-center">
-                      <button onClick={() => setIsOptionsOpen(true)} className="p-2 text-custom-blue hover:text-accent transition-colors">
-                          <Settings className="w-6 h-6" />
-                      </button>
-                  </div>
-                  <div className="w-1/3 text-right">
-                      <button onClick={() => setIsScannerOpen(true)} className="p-2 text-custom-blue hover:text-accent transition-colors">
-                          <QrCode className="w-6 h-6" />
-                      </button>
-                  </div>
+      <Card className="w-full shadow-2xl shadow-primary/10 bg-card/40 border-primary/20">
+        <CardHeader className="text-center pb-2 relative">
+          <div className="absolute top-4 left-4 right-4 flex justify-between items-center">
+               <div className="w-1/3 text-left">
+                  <button onClick={() => setIsInfoOpen(true)} className="p-2 text-custom-blue hover:text-accent transition-colors">
+                      <Info className="w-6 h-6" />
+                  </button>
               </div>
-              <div className="flex flex-col items-center space-y-2 pt-12">
-                  <Countdown nextPrayerName={nextPrayer.name} nextPrayerTime={nextPrayer.time} />
-                   <div className="w-full text-left">
-                      <p className="font-bold text-base text-custom-blue pb-2">Gebetszeiten {locationName}</p>
-                  </div>
+              <div className="w-1/3 text-center">
+                  <button onClick={() => setIsOptionsOpen(true)} className="p-2 text-custom-blue hover:text-accent transition-colors">
+                      <Settings className="w-6 h-6" />
+                  </button>
+              </div>
+              <div className="w-1/3 text-right">
+                  <button onClick={() => setIsScannerOpen(true)} className="p-2 text-custom-blue hover:text-accent transition-colors">
+                      <QrCode className="w-6 h-6" />
+                  </button>
+              </div>
+          </div>
+          <div className="flex flex-col items-center space-y-2 pt-12">
+              <Countdown nextPrayerName={nextPrayer.name} nextPrayerTime={nextPrayer.time} />
+               <div className="w-full text-left">
+                  <p className="font-bold text-base text-custom-blue pb-2">Gebetszeiten {locationName}</p>
+              </div>
 
-                  <div className={cn(
-                      "bg-mint-green/30 text-primary-foreground rounded-lg px-2 pt-2 pb-1 border border-black flex flex-col items-center space-y-1 w-[90%]"
-                  )}>
-                      <DateFader gregorian={gregorianDate} hijri={prayerTimes.Hijri_Date} />
-                      <CardDescription className="text-sm font-body tracking-wider text-black font-bold">
-                        {now.toLocaleDateString('de-DE', {day: '2-digit', month: '2-digit', year: 'numeric'})} &nbsp;
-                        {now.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit'})}
-                      </CardDescription>
-                  </div>
+              <div className={cn(
+                  "bg-mint-green/30 text-primary-foreground rounded-lg px-2 pt-2 pb-1 border border-black flex flex-col items-center space-y-1 w-[90%]"
+              )}>
+                  <DateFader gregorian={gregorianDate} hijri={prayerTimes.Hijri_Date} />
+                  <CardDescription className="text-sm font-body tracking-wider text-black font-bold">
+                    {now.toLocaleDateString('de-DE', {day: '2-digit', month: '2-digit', year: 'numeric'})} &nbsp;
+                    {now.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit'})}
+                  </CardDescription>
               </div>
-            </CardHeader>
-            <CardContent className="pt-0">
-              <div className="space-y-2 py-2">
-                  {prayerOrder.map((name) => (
-                      <PrayerTimeRow
-                          key={name}
-                          name={name}
-                          isActive={currentPrayer?.name === name}
-                          isBlinking={blinkingPrayer === name}
-                          offset={getOffsetDisplay(prayerOffsets[name])}
-                          time={prayerTimes[name]}
-                      />
-                  ))}
+          </div>
+        </CardHeader>
+        <CardContent className="pt-0">
+          <div className="space-y-2 py-2">
+              {prayerOrder.map((name) => (
+                  <PrayerTimeRow
+                      key={name}
+                      name={name}
+                      isActive={currentPrayer?.name === name}
+                      isBlinking={blinkingPrayer === name}
+                      offset={getOffsetDisplay(prayerOffsets[name])}
+                      time={prayerTimes[name]}
+                  />
+              ))}
+          </div>
+          <div className="flex justify-between gap-4 mx-4 pt-2">
+              <div className="text-center bg-mint-green/30 text-primary-foreground rounded-lg p-2 border border-black space-y-1 w-[45%]">
+                  <div className="font-bold text-black text-base">Shuruk</div>
+                  <div className="font-body font-bold text-black text-base">{prayerTimes.Shuruk.substring(0, 5)}</div>
               </div>
-              <div className="flex justify-between gap-4 mx-4 pt-2">
-                  <div className="text-center bg-mint-green/30 text-primary-foreground rounded-lg p-2 border border-black space-y-1 w-[45%]">
-                      <div className="font-bold text-black text-base">Shuruk</div>
-                      <div className="font-body font-bold text-black text-base">{prayerTimes.Shuruk.substring(0, 5)}</div>
-                  </div>
-                  <div className="text-center bg-mint-green/30 text-primary-foreground rounded-lg p-2 border border-black space-y-1 w-[45%]">
-                      <div className="font-bold text-black text-base">Jumuah</div>
-                      <div className="font-body font-bold text-black text-base">{jumuahTime}</div>
-                  </div>
+              <div className="text-center bg-mint-green/30 text-primary-foreground rounded-lg p-2 border border-black space-y-1 w-[45%]">
+                  <div className="font-bold text-black text-base">Jumuah</div>
+                  <div className="font-body font-bold text-black text-base">{jumuahTime}</div>
               </div>
-              <div className="flex flex-col items-end mt-4 mx-4">
-                  <a href="https://app.izaachen.de" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-black text-sm hover:text-accent transition-colors underline">
-                      <span className="text-lg">☪</span>
-                      app.izaachen.de
-                  </a>
-                  <p className="text-xs text-muted-foreground font-bold">{locationName}</p>
-              </div>
-            </CardContent>
-          </Card>
-      </div>
+          </div>
+          <div className="flex flex-col items-end mt-4 mx-4">
+              <a href="https://app.izaachen.de" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-black text-sm hover:text-accent transition-colors underline">
+                  <span className="text-lg">☪</span>
+                  app.izaachen.de
+              </a>
+              <p className="text-xs text-muted-foreground font-bold">{locationName}</p>
+          </div>
+        </CardContent>
+      </Card>
   );
 }
