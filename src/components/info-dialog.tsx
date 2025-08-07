@@ -1,5 +1,7 @@
+
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet"
 import { Separator } from "@/components/ui/separator";
+import { QrCode } from "lucide-react";
 
 interface InfoDialogProps {
     isOpen: boolean;
@@ -18,8 +20,11 @@ export function InfoDialog({ isOpen, setIsOpen }: InfoDialogProps) {
                 </SheetHeader>
                 <Separator className="my-4" />
                 <div className="prose prose-sm dark:prose-invert text-card-foreground space-y-4 px-2 pb-6">
-
-                    {/* ÄNDERN SIE DEN TEXT HIER */}
+                    
+                    <h3 className="font-bold text-primary flex items-center gap-2"><QrCode className="w-5 h-5"/>Konfiguration per QR-Code</h3>
+                    <p>
+                        Diese App ist universell einsetzbar. Um die Gebetszeiten für Ihre Moscheegemeinde zu laden, scannen Sie einfach den von Ihrer Gemeinde bereitgestellten QR-Code. Klicken Sie dazu auf das QR-Code-Symbol oben rechts auf der Hauptkarte.
+                    </p>
 
                     <h3 className="font-bold text-primary">1. Countdown & Gebetszeiten</h3>
                     <p>
@@ -49,8 +54,6 @@ export function InfoDialog({ isOpen, setIsOpen }: InfoDialogProps) {
                     <p>
                        Die Gebetszeiten basieren auf den Daten von <a href="https://app.izaachen.de" target="_blank" rel="noopener noreferrer" className="text-primary underline">app.izaachen.de</a>. Ein großer Dank geht an die Betreiber für die Bereitstellung der Daten.
                     </p>
-
-                     {/* ENDE DES EDITIERBAREN BEREICHS */}
 
                 </div>
             </SheetContent>

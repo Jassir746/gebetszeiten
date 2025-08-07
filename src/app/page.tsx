@@ -13,6 +13,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { AlertTriangle, QrCode } from 'lucide-react';
 import { QrScannerDialog } from '@/components/qr-scanner';
 import useLocalStorage from '@/hooks/use-local-storage';
+import { decryptData } from '@/lib/crypto';
 
 interface PrayerInfo {
     nextPrayer: { name: PrayerName; time: Date };
@@ -59,7 +60,7 @@ export default function Home() {
   // Effect to fetch data when apiConfig changes or on initial load
   useEffect(() => {
     const fetchAndStoreTimes = async () => {
-      if (!apiConfig) {
+      if (!apiConfig || !apiConfig.serverUrl || !apiConfig.apiKey) {
           setError("Bitte scannen Sie den QR-Code, um die App zu konfigurieren.");
           setLoading(false);
           return;
@@ -226,15 +227,22 @@ export default function Home() {
         setIsOpen={setIsScannerOpen}
         onScanSuccess={(data) => {
             try {
-                const newConfig = JSON.parse(data);
+                const decryptedText = decryptData(data);
+                const newConfig: ApiConfig = JSON.parse(decryptedText);
+
                 if(newConfig.alias && newConfig.serverUrl && newConfig.apiKey) {
                     setApiConfig(newConfig);
                     toast({ title: "Erfolg", description: `Konfiguration für ${newConfig.alias} geladen.`});
                 } else {
-                    throw new Error("Ungültiges QR-Code-Format.");
+                    throw new Error("Ungültiges Datenformat in QR-Code.");
                 }
             } catch (e) {
-                 toast({ variant: "destructive", title: "Scan-Fehler", description: "Der QR-Code hat ein ungültiges Format." });
+                const message = e instanceof Error ? e.message : "Unbekannter Fehler.";
+                toast({ 
+                    variant: "destructive", 
+                    title: "Scan-Fehler", 
+                    description: `Entschlüsselung oder Parsing fehlgeschlagen: ${message}` 
+                });
             }
         }}
       />
