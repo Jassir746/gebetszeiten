@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useMemo, useRef } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { PrayerTimes, PrayerName } from "@/lib/prayer-times";
@@ -194,7 +195,7 @@ export function PrayerTimesCard({
           <div className="flex flex-col items-center space-y-2 pt-12">
               <Countdown nextPrayerName={nextPrayer.name} nextPrayerTime={nextPrayer.time} />
                <div className="w-full text-left">
-                  <p className="font-bold text-base text-custom-blue pb-2">Gebetszeiten {locationName}</p>
+                  <p className="font-bold text-base text-custom-blue pb-2">Gebetszeiten</p>
               </div>
 
               <div className={cn(
