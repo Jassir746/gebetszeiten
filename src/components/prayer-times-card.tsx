@@ -171,7 +171,8 @@ export function PrayerTimesCard({
 
 
   return (
-    <Card className="w-[20rem] mx-auto shadow-2xl shadow-primary/10 bg-card/40 border-primary/20">
+    <div className="w-[20rem] mx-auto">
+    <Card className="w-full shadow-2xl shadow-primary/10 bg-card/40 border-primary/20">
       <CardHeader className="text-center pb-2 relative">
         <div className="absolute top-4 left-4 right-4 flex justify-between items-center">
              <div className="w-1/3 text-left">
@@ -231,13 +232,14 @@ export function PrayerTimesCard({
             </div>
         </div>
         <div className="flex flex-col items-end mt-4 mx-4">
-             <a href="https://app.izaachen.de" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-black text-sm hover:text-accent transition-colors underline">
+            <a href="https://app.izaachen.de" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-black text-sm hover:text-accent transition-colors underline">
                 <span className="text-lg">☪</span>
                 app.izaachen.de
             </a>
-            <p className="text-xs text-black font-bold mt-1">{locationName}</p>
+            <p className="text-xs text-muted-foreground font-bold">{locationName}</p>
         </div>
       </CardContent>
     </Card>
+    </div>
   );
 }
