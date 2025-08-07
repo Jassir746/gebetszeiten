@@ -204,13 +204,13 @@ export default function Home() {
             setIsScannerOpen={setIsScannerOpen}
             locationName={apiConfig?.alias || "Standort"}
             footer={
-              <div className="mt-4 mx-4 flex flex-col">
+              <div className="mt-4 mx-4">
                   <a href="https://app.izaachen.de" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-black text-sm hover:text-accent transition-colors underline">
                       <span className="text-lg">☪</span>
                       app.izaachen.de
                   </a>
                   <div className="text-right">
-                    <p className="text-xs text-muted-foreground font-bold">{apiConfig?.alias || "Standort"}</p>
+                    <p className="text-xs text-black font-bold">{apiConfig?.alias || "Standort"}</p>
                   </div>
               </div>
             }
