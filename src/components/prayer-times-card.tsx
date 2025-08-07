@@ -236,6 +236,7 @@ export function PrayerTimesCard({
                   <span className="text-lg">☪</span>
                   app.izaachen.de
               </a>
+              <p className="text-xs text-muted-foreground font-bold">{locationName}</p>
           </div>
         </CardContent>
       </Card>
