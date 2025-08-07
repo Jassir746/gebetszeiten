@@ -198,7 +198,7 @@ export function PrayerTimesCard({
               </div>
 
               <div className={cn(
-                  "bg-mint-green/30 text-primary-foreground rounded-lg px-2 pt-2 pb-1 border border-black flex flex-col items-center space-y-1 w-[90%]"
+                  "bg-mint-green/30 text-primary-foreground rounded-lg px-2 pt-2 pb-1 border border-black flex flex-col items-center space-y-1 w-full"
               )}>
                   <DateFader gregorian={gregorianDate} hijri={prayerTimes.Hijri_Date} />
                   <CardDescription className="text-sm font-body tracking-wider text-black font-bold">
@@ -232,8 +232,8 @@ export function PrayerTimesCard({
               </div>
           </div>
           <div className="mt-4 mx-4">
-            <div className="flex justify-between items-center w-full">
-              <a href="https://app.izaachen.de" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-black text-sm hover:text-accent transition-colors underline">
+            <div className="flex flex-col items-end w-full">
+              <a href="https://app.izaachen.de" target="_blank" rel="noopener noreferrer" className="w-full inline-flex items-center gap-2 text-black text-sm hover:text-accent transition-colors underline">
                   <span className="text-lg">☪</span>
                   app.izaachen.de
               </a>
