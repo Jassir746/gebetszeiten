@@ -190,21 +190,19 @@ export default function Home() {
     
     if (prayerTimes && prayerInfo) {
       return (
-        <div className="w-full max-w-[20rem] mx-auto">
-            <PrayerTimesCard
-              prayerTimes={prayerTimes}
-              nextPrayer={prayerInfo.nextPrayer}
-              currentPrayer={prayerInfo.currentPrayer}
-              gregorianDate={getFormattedDate(date)}
-              now={now}
-              jumuahTime={jumuahTime}
-              prayerOffsets={prayerOffsets}
-              setIsOptionsOpen={setIsOptionsOpen}
-              setIsInfoOpen={setIsInfoOpen}
-              setIsScannerOpen={setIsScannerOpen}
-              locationName={apiConfig?.alias ?? "Standort"}
-            />
-        </div>
+        <PrayerTimesCard
+          prayerTimes={prayerTimes}
+          nextPrayer={prayerInfo.nextPrayer}
+          currentPrayer={prayerInfo.currentPrayer}
+          gregorianDate={getFormattedDate(date)}
+          now={now}
+          jumuahTime={jumuahTime}
+          prayerOffsets={prayerOffsets}
+          setIsOptionsOpen={setIsOptionsOpen}
+          setIsInfoOpen={setIsInfoOpen}
+          setIsScannerOpen={setIsScannerOpen}
+          locationName={apiConfig?.alias ?? "Standort"}
+        />
       );
     }
 
