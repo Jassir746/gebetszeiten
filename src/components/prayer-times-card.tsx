@@ -230,17 +230,14 @@ export function PrayerTimesCard({
                 <div className="font-body font-bold text-black text-base">{jumuahTime}</div>
             </div>
         </div>
-        <div className="flex justify-end items-center gap-2 mt-4 mx-4">
-            <span className="text-lg">☪</span>
-            <a href="https://app.izaachen.de" target="_blank" rel="noopener noreferrer" className="text-black text-sm hover:text-accent transition-colors underline">
+        <div className="flex justify-between items-center mt-4 mx-4">
+            <a href="https://app.izaachen.de" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-black text-sm hover:text-accent transition-colors underline">
+                <span className="text-lg">☪</span>
                 app.izaachen.de
             </a>
-        </div>
-        <div className="text-right mt-1 mx-4">
             <p className="text-xs text-muted-foreground font-bold">{locationName}</p>
         </div>
       </CardContent>
     </Card>
   );
 }
-    
