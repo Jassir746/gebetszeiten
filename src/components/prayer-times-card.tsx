@@ -231,7 +231,11 @@ export function PrayerTimesCard({
                 app.izaachen.de
             </a>
         </div>
+        <div className="text-right mt-1 mx-4">
+            <p className="text-xs text-muted-foreground font-bold">{locationName}</p>
+        </div>
       </CardContent>
     </Card>
   );
 }
+
