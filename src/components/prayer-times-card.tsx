@@ -230,7 +230,7 @@ export function PrayerTimesCard({
                 <div className="font-body font-bold text-black text-base">{jumuahTime}</div>
             </div>
         </div>
-        <div className="flex justify-between items-center mt-4 mx-4">
+        <div className="flex flex-col items-end mt-4 mx-4">
             <a href="https://app.izaachen.de" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-black text-sm hover:text-accent transition-colors underline">
                 <span className="text-lg">☪</span>
                 app.izaachen.de
