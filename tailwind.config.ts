@@ -91,6 +91,7 @@ export default {
         },
       },
       animation: {
+        // Force rebuild by adding a space
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
       },
