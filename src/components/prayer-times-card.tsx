@@ -194,7 +194,7 @@ export function PrayerTimesCard({
           <div className="flex flex-col items-center space-y-2 pt-12">
               <Countdown nextPrayerName={nextPrayer.name} nextPrayerTime={nextPrayer.time} />
                <div className="w-full text-left">
-                  <p className="font-bold text-base text-custom-blue pb-2">Gebetszeiten</p>
+                  <p className="font-bold text-base text-custom-blue pb-2">Gebetszeiten {locationName}</p>
               </div>
 
               <div className={cn(
@@ -236,7 +236,6 @@ export function PrayerTimesCard({
                   <span className="text-lg">☪</span>
                   app.izaachen.de
               </a>
-              <p className="text-xs text-muted-foreground font-bold">{locationName}</p>
           </div>
         </CardContent>
       </Card>
