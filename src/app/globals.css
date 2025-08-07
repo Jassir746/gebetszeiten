@@ -98,7 +98,7 @@ body {
 @layer utilities {
   @keyframes blink-bg {
     0%, 100% { background-color: hsl(var(--card)); }
-    50% { background-color: rgba(90, 161, 168, 0.3); } /* #5aa1a8 with 30% opacity */
+    50% { background-color: #5aa1a8; }
   }
   .animate-blink-bg {
     animation: blink-bg 1.5s infinite;
