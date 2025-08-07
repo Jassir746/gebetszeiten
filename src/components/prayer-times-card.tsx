@@ -232,11 +232,13 @@ export function PrayerTimesCard({
               </div>
           </div>
           <div className="mt-4 mx-4">
+            <div className="flex justify-between items-center w-full">
               <a href="https://app.izaachen.de" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-black text-sm hover:text-accent transition-colors underline">
                   <span className="text-lg">☪</span>
                   app.izaachen.de
               </a>
-              <p className="text-xs text-muted-foreground font-bold text-right">{locationName}</p>
+              <p className="text-xs text-muted-foreground font-bold">{locationName}</p>
+            </div>
           </div>
         </CardContent>
       </Card>
