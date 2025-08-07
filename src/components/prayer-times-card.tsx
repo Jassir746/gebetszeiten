@@ -171,7 +171,7 @@ export function PrayerTimesCard({
 
 
   return (
-    <div className="w-[20rem] mx-auto">
+    <div className="w-full max-w-[20rem] mx-auto">
       <Card className="w-full shadow-2xl shadow-primary/10 bg-card/40 border-primary/20">
         <CardHeader className="text-center pb-2 relative">
           <div className="absolute top-4 left-4 right-4 flex justify-between items-center">
