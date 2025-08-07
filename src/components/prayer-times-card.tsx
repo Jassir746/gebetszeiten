@@ -244,3 +244,5 @@ export function PrayerTimesCard({
     </Card>
   );
 }
+
+    
