@@ -6,7 +6,7 @@ import { PrayerTimes, PrayerName, getNextPrayerInfo, getFormattedDate, ApiConfig
 import { PrayerTimesCard } from '@/components/prayer-times-card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useToast } from "@/hooks/use-toast";
-import { OptionsMenu, PrayerOffsets } from '@/components/options-menu';
+import { OptionsMenu } from '@/components/options-menu';
 import { InfoDialog } from '@/components/info-dialog';
 import { fetchPrayerTimesAPI, YearPrayerTimes, fetchGlobalParametersAPI } from './actions';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -240,15 +240,15 @@ export default function Home() {
             setIsScannerOpen={setIsScannerOpen}
             locationName={apiConfig?.alias || "Standort"}
             footer={
-              <div className="mt-4 mx-4">
-                  <a href="https://app.izaachen.de" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-black text-sm hover:text-accent transition-colors underline">
-                      <span className="text-lg">☪</span>
-                      app.izaachen.de
-                  </a>
-                  <div className="text-right">
-                    <p className="text-xs text-black font-bold">{apiConfig?.alias || "Standort"}</p>
-                  </div>
-              </div>
+                <div className="flex flex-col items-center mt-4 mx-4">
+                    <a href="https://app.izaachen.de" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-black text-sm hover:text-accent transition-colors underline">
+                        <span className="text-lg">☪</span>
+                        app.izaachen.de
+                    </a>
+                    <p className="text-xs text-black font-bold text-center w-full mt-1">
+                        {apiConfig?.alias || "Standort"}
+                    </p>
+                </div>
             }
           />
         </div>
