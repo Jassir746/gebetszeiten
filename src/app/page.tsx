@@ -221,8 +221,7 @@ export default function Home() {
        return (
          <div className="w-full max-w-[18.5rem] mx-auto">
              <Card 
-                className="w-full shadow-2xl shadow-destructive/20 border-destructive/50"
-                style={{ backgroundColor: 'hsla(var(--card), 0.7)' }}
+                className="w-full shadow-2xl shadow-destructive/20 border-destructive/50 bg-card/70"
             >
                <CardHeader className="text-center pb-4">
                  <div className="flex flex-col items-center text-destructive">
@@ -277,7 +276,7 @@ export default function Home() {
   };
 
   return (
-    <main className="flex min-h-screen w-full flex-col items-center bg-transparent px-8 py-6 font-body">
+    <main className="flex min-h-screen w-full flex-col items-center bg-transparent px-6 py-6 font-body">
        <OptionsMenu
           isOpen={isOptionsOpen}
           setIsOpen={setIsOptionsOpen}
