@@ -81,7 +81,7 @@ export function OptionsMenu({
                                     {isLocked ? "Einstellungen gesperrt" : "Lokale Bearbeitung aktiv"}
                                 </span>
                                 <span className="font-normal leading-snug text-muted-foreground text-xs">
-                                     {isLocked ? "Globale Werte werden verwendet." : "Individuelle Anpassungen sind möglich."}
+                                     {isLocked ? "Globale Werte werden verwendet." : "Individuelle Anpassungen möglich."}
                                 </span>
                             </Label>
                             <Switch
