@@ -7,6 +7,7 @@ import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
 import { LocalSettings } from "@/lib/prayer-times";
 import { Lock, Unlock, RefreshCcw } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 export type PrayerOffsets = {
     Fadjr: string;
@@ -64,9 +65,9 @@ export function OptionsMenu({
     
     return (
         <Sheet open={isOpen} onOpenChange={setIsOpen}>
-            <SheetContent className="bg-card/95 backdrop-blur-sm overflow-y-auto w-[90vw] sm:w-[400px]">
+            <SheetContent className="bg-card/95 backdrop-blur-sm overflow-y-auto w-[95vw] sm:w-[400px]">
                 <SheetHeader>
-                    <SheetTitle className="text-primary">Einstellungen</SheetTitle>
+                    <SheetTitle className="text-primary text-base">Einstellungen</SheetTitle>
                 </SheetHeader>
                 
                 <div className="space-y-4 px-2 py-4">
@@ -102,7 +103,7 @@ export function OptionsMenu({
 
                     <div className="space-y-3 px-4 pt-4">
                         <div className="grid grid-cols-3 items-center gap-4">
-                            <Label htmlFor="jumuah-time" className="text-left font-bold col-span-2">Jumuah Zeit</Label>
+                            <Label htmlFor="jumuah-time" className="text-sm font-semibold col-span-2">Jumuah Zeit</Label>
                             <Input
                                 id="jumuah-time"
                                 type="text"
@@ -118,7 +119,7 @@ export function OptionsMenu({
                         </p>
                         {prayerOrder.map((prayer) => (
                             <div key={prayer} className="grid grid-cols-3 items-center gap-4">
-                                <Label htmlFor={`${prayer}-offset`} className="text-left col-span-2 pl-4">{prayer}</Label>
+                                <Label htmlFor={`${prayer}-offset`} className="text-sm col-span-2 pl-4">{prayer}</Label>
                                 <Input
                                     id={`${prayer}-offset`}
                                     type="text"
@@ -135,7 +136,7 @@ export function OptionsMenu({
                     <Separator className="my-4" />
 
                     <div>
-                        <h4 className="font-bold text-center text-primary mb-3 text-sm">Regeln für die AKTIV-Kennung der Gebetszeiten</h4>
+                        <h4 className="font-semibold text-center text-primary mb-3 text-xs">Regeln für die AKTIV-Kennung der Gebetszeiten</h4>
                         <div className="space-y-3 px-4">
                             <div className="flex items-center justify-between space-x-2 p-2 rounded-lg border">
                                 <Label htmlFor="assr-makruh-switch" className="flex flex-col space-y-1">
