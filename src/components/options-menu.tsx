@@ -78,10 +78,10 @@ export function OptionsMenu({
                             <Label htmlFor="settings-lock-switch" className="flex flex-col space-y-1">
                                 <span className="font-semibold text-primary flex items-center gap-2">
                                     {isLocked ? <Lock className="w-4 h-4"/> : <Unlock className="w-4 h-4"/>}
-                                    Einstellungen gesperrt
+                                    {isLocked ? "Einstellungen gesperrt" : "Lokale Bearbeitung aktiv"}
                                 </span>
                                 <span className="font-normal leading-snug text-muted-foreground text-xs">
-                                    Globale Werte werden verwendet.
+                                     {isLocked ? "Globale Werte werden verwendet." : "Individuelle Anpassungen sind möglich."}
                                 </span>
                             </Label>
                             <Switch
