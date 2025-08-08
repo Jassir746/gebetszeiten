@@ -35,7 +35,7 @@ function PrayerTimeRow({ name, time, isActive, isBlinking, offset }: { name: str
     const formattedTime = time.substring(0, 5);
     return (
         <div className={cn(
-            "flex items-center justify-between rounded-lg transition-all duration-500 ease-in-out px-4",
+            "flex items-center justify-between rounded-lg transition-all duration-500 ease-in-out px-4 py-0.5",
             isActive && "border-2 border-destructive",
             isBlinking && "animate-blink-bg",
             !isActive && "hover:bg-primary/5"
@@ -57,7 +57,7 @@ const formatGermanDate = (dateString: string) => {
     try {
         const [year, month, day] = dateString.split('-').map(Number);
         const date = new Date(year, month - 1, day);
-        return date.toLocaleDateString('de-DE', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Europe/Berlin' });
+        return date.toLocaleDateString('de-DE', { weekday: 'long', day: 'numeric', month: 'long', timeZone: 'Europe/Berlin' });
     } catch {
         return dateString;
     }
@@ -212,7 +212,7 @@ export function PrayerTimesCard({
                   </Tooltip>
               </div>
           </div>
-          <div className="flex flex-col items-center space-y-1 pt-12">
+          <div className="flex flex-col items-center space-y-1 pt-8">
               <Countdown nextPrayerName={nextPrayer.name} nextPrayerTime={nextPrayer.time} />
                <div className="w-full text-left">
                   
@@ -233,7 +233,7 @@ export function PrayerTimesCard({
         </CardHeader>
         </TooltipProvider>
         <CardContent className="pt-0">
-          <div className="space-y-1 py-2">
+          <div className="py-2">
               {prayerOrder.map((name) => (
                   <PrayerTimeRow
                       key={name}
