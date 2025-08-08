@@ -35,7 +35,7 @@ function PrayerTimeRow({ name, time, isActive, isBlinking, offset }: { name: str
     const formattedTime = time.substring(0, 5);
     return (
         <div className={cn(
-            "flex items-center justify-between rounded-lg transition-all duration-500 ease-in-out py-1 px-4",
+            "flex items-center justify-between rounded-lg transition-all duration-500 ease-in-out px-4",
             isActive && "border-2 border-destructive",
             isBlinking && "animate-blink-bg",
             !isActive && "hover:bg-primary/5"
@@ -212,7 +212,7 @@ export function PrayerTimesCard({
                   </Tooltip>
               </div>
           </div>
-          <div className="flex flex-col items-center space-y-1 pt-10">
+          <div className="flex flex-col items-center space-y-1 pt-12">
               <Countdown nextPrayerName={nextPrayer.name} nextPrayerTime={nextPrayer.time} />
                <div className="w-full text-left">
                   
@@ -233,7 +233,7 @@ export function PrayerTimesCard({
         </CardHeader>
         </TooltipProvider>
         <CardContent className="pt-0">
-          <div className="space-y-2 py-2">
+          <div className="space-y-0 py-2">
               {prayerOrder.map((name) => (
                   <PrayerTimeRow
                       key={name}
