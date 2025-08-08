@@ -1,3 +1,4 @@
+
 import type {Config} from 'tailwindcss';
 
 export default {
@@ -15,6 +16,7 @@ export default {
       },
       colors: {
         'custom-blue': '#006699',
+        'link-blue': '#0044cc',
         'mint-green': '#ccffe5',
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',

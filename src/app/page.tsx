@@ -258,7 +258,7 @@ export default function Home() {
             locationName={apiConfig?.alias || "Standort"}
             footer={
                 <div className="flex flex-col items-end mt-4">
-                    <a href="https://app.izaachen.de" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-custom-blue text-xs transition-colors underline">
+                    <a href="https://app.izaachen.de" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-link-blue text-xs transition-colors underline">
                         <span className="text-sm">☪</span>
                         app.izaachen.de
                     </a>
