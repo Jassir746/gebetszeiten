@@ -1,5 +1,5 @@
 
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetFooter } from "@/components/ui/sheet"
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription, SheetFooter } from "@/components/ui/sheet"
 import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
@@ -26,14 +26,6 @@ interface OptionsMenuProps {
 }
 
 const prayerOrder: (keyof PrayerOffsets)[] = ['Fadjr', 'Duhr', 'Assr', 'Maghrib', 'Ishaa'];
-
-const cleanTimeValue = (time: string | undefined): string => {
-    if (!time) return "00:00";
-    // This regex will find the first occurrence of HH:mm format and return it.
-    const match = time.match(/\d{2}:\d{2}/);
-    return match ? match[0] : "00:00";
-}
-
 
 export function OptionsMenu({ 
     isOpen, 
@@ -105,7 +97,7 @@ export function OptionsMenu({
                             <Input
                                 id="jumuah-time"
                                 type="time"
-                                value={cleanTimeValue(settings.jumuahTime)}
+                                value={settings.jumuahTime}
                                 onChange={(e) => handleJumuahChange(e.target.value)}
                                 className="col-span-1"
                                 disabled={disabled}

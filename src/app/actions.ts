@@ -86,8 +86,14 @@ export async function fetchGlobalParametersAPI(config: ApiConfig): Promise<Globa
             throw new Error(`Parameter API Fehler: Status ${response.status} - ${errorText}`);
         }
         
-        // Ensure the response is properly handled as JSON
         const data: GlobalParameters = await response.json();
+        
+        // Clean the jumuahTime value to ensure it's in HH:mm format
+        if (data.jumuahTime && typeof data.jumuahTime === 'string') {
+            const match = data.jumuahTime.match(/\d{2}:\d{2}/);
+            data.jumuahTime = match ? match[0] : "00:00";
+        }
+        
         return data;
 
     } catch (error) {
