@@ -212,7 +212,7 @@ export function PrayerTimesCard({
                   </Tooltip>
               </div>
           </div>
-          <div className="flex flex-col items-center space-y-2 pt-10">
+          <div className="flex flex-col items-center space-y-1 pt-10">
               <Countdown nextPrayerName={nextPrayer.name} nextPrayerTime={nextPrayer.time} />
                <div className="w-full text-left">
                   
@@ -226,7 +226,7 @@ export function PrayerTimesCard({
                   </div>
                   <CardDescription className="text-sm font-body tracking-wider text-black font-bold">
                     {now.toLocaleDateString('de-DE', {day: '2-digit', month: '2-digit', year: 'numeric'})} &nbsp;
-                    {now.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit'})}
+                    {now.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit', second: '2-digit'})}
                   </CardDescription>
               </div>
           </div>
