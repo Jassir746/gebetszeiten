@@ -221,7 +221,7 @@ export default function Home() {
        return (
          <div className="w-full max-w-[18.5rem] mx-auto">
              <Card 
-                className="w-full shadow-2xl shadow-destructive/20 border-destructive/50 bg-card/60"
+                className="w-full shadow-2xl shadow-destructive/20 border-destructive/50 bg-card/70"
             >
                <CardHeader className="text-center pb-4">
                  <div className="flex flex-col items-center text-destructive">
