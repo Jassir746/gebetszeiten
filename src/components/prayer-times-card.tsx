@@ -179,7 +179,7 @@ export function PrayerTimesCard({
   return (
       <Card 
         className="w-full max-w-[18.5rem] mx-auto shadow-2xl shadow-primary/10 border-primary/20"
-        style={{ backgroundColor: 'hsl(var(--card) / 0.65)' }}
+        style={{ backgroundColor: 'hsl(var(--card) / 0.75)' }}
     >
         <TooltipProvider delayDuration={150}>
         <CardHeader className="text-center pb-2 pt-6 relative px-4">
