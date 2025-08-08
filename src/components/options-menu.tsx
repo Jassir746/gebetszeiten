@@ -96,11 +96,12 @@ export function OptionsMenu({
                             <Label htmlFor="jumuah-time" className="text-left font-bold col-span-2">Jumuah Zeit</Label>
                             <Input
                                 id="jumuah-time"
-                                type="time"
+                                type="text"
                                 value={settings.jumuahTime}
                                 onChange={(e) => handleJumuahChange(e.target.value)}
                                 className="col-span-1"
                                 disabled={disabled}
+                                placeholder="HH:mm"
                             />
                         </div>
                         <p className="text-xs text-muted-foreground px-4 -mb-1">
