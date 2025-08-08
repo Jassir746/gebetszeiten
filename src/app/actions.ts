@@ -23,7 +23,7 @@ export async function fetchPrayerTimesAPI(date: Date, config: ApiConfig): Promis
       method: 'GET',
       headers: {
         'X-API-KEY': apiKey,
-        'Accept': '*/*',
+        'Accept': 'application/json',
         'User-Agent': 'Firebase-Studio-Client'
       },
       cache: 'no-store'

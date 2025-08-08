@@ -91,38 +91,35 @@ export function OptionsMenu({
                     </div>
 
 
-                    <div>
-                        <h4 className="font-bold text-center text-primary mb-3">Jama'a Zeit-Anpassung</h4>
-                        <div className="space-y-3 px-4">
-                            <div className="grid grid-cols-3 items-center gap-4">
-                                <Label htmlFor="jumuah-time" className="text-left font-bold col-span-2">Jumuah Zeit</Label>
+                    <div className="space-y-3 px-4">
+                        <div className="grid grid-cols-3 items-center gap-4">
+                            <Label htmlFor="jumuah-time" className="text-left font-bold col-span-2">Jumuah Zeit</Label>
+                            <Input
+                                id="jumuah-time"
+                                type="time"
+                                value={settings.jumuahTime}
+                                onChange={(e) => handleJumuahChange(e.target.value)}
+                                className="col-span-1"
+                                disabled={disabled}
+                            />
+                        </div>
+                        <p className="text-xs text-muted-foreground px-4 -mb-1">
+                            Offset für Gemeinschaftsgebet<br/>(in Minuten):
+                        </p>
+                        {prayerOrder.map((prayer) => (
+                            <div key={prayer} className="grid grid-cols-3 items-center gap-4">
+                                <Label htmlFor={`${prayer}-offset`} className="text-left col-span-2 pl-4">{prayer}</Label>
                                 <Input
-                                    id="jumuah-time"
-                                    type="time"
-                                    value={settings.jumuahTime}
-                                    onChange={(e) => handleJumuahChange(e.target.value)}
-                                    className="col-span-1"
+                                    id={`${prayer}-offset`}
+                                    type="text"
+                                    value={settings.prayerOffsets[prayer]}
+                                    onChange={(e) => handleOffsetChange(prayer, e.target.value)}
+                                    className="col-span-1 text-center"
+                                    placeholder="+10"
                                     disabled={disabled}
                                 />
                             </div>
-                            <p className="text-xs text-muted-foreground px-4 -mb-1">
-                                Offset für Gemeinschaftsgebet<br/>(in Minuten):
-                            </p>
-                            {prayerOrder.map((prayer) => (
-                                <div key={prayer} className="grid grid-cols-3 items-center gap-4">
-                                    <Label htmlFor={`${prayer}-offset`} className="text-left col-span-2 pl-4">{prayer}</Label>
-                                    <Input
-                                        id={`${prayer}-offset`}
-                                        type="text"
-                                        value={settings.prayerOffsets[prayer]}
-                                        onChange={(e) => handleOffsetChange(prayer, e.target.value)}
-                                        className="col-span-1 text-center"
-                                        placeholder="+10"
-                                        disabled={disabled}
-                                    />
-                                </div>
-                            ))}
-                        </div>
+                        ))}
                     </div>
 
                     <Separator className="my-4" />
