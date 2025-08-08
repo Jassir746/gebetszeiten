@@ -35,7 +35,7 @@ function PrayerTimeRow({ name, time, isActive, isBlinking, offset }: { name: str
     const formattedTime = time.substring(0, 5);
     return (
         <div className={cn(
-            "flex items-center justify-between rounded-lg transition-all duration-500 ease-in-out px-4 py-0.5",
+            "flex items-center justify-between rounded-lg transition-all duration-500 ease-in-out px-4 py-1",
             isActive && "border-2 border-destructive",
             isBlinking && "animate-blink-bg",
             !isActive && "hover:bg-primary/5"
