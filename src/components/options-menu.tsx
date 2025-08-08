@@ -64,7 +64,7 @@ export function OptionsMenu({
     
     return (
         <Sheet open={isOpen} onOpenChange={setIsOpen}>
-            <SheetContent className="bg-card/95 backdrop-blur-sm overflow-y-auto">
+            <SheetContent className="bg-card/95 backdrop-blur-sm overflow-y-auto w-[90vw] sm:w-[400px]">
                 <SheetHeader>
                     <SheetTitle className="text-primary">Einstellungen</SheetTitle>
                 </SheetHeader>
