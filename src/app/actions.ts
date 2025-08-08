@@ -85,7 +85,8 @@ export async function fetchGlobalParametersAPI(config: ApiConfig): Promise<Globa
             const errorText = await response.text();
             throw new Error(`Parameter API Fehler: Status ${response.status} - ${errorText}`);
         }
-
+        
+        // Ensure the response is properly handled as JSON
         const data: GlobalParameters = await response.json();
         return data;
 

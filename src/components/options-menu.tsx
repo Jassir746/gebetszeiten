@@ -69,7 +69,7 @@ export function OptionsMenu({
                 
                 <Separator className="my-4" />
 
-                <div className="space-y-4 px-2 py-4">
+                <div className="space-y-2 px-2 py-4">
 
                      <div>
                         <div className="flex items-center justify-between space-x-2 p-2 rounded-lg border bg-primary/10">
@@ -91,7 +91,7 @@ export function OptionsMenu({
                     </div>
 
 
-                    <div className="space-y-3 px-4">
+                    <div className="space-y-3 px-4 pt-4">
                         <div className="grid grid-cols-3 items-center gap-4">
                             <Label htmlFor="jumuah-time" className="text-left font-bold col-span-2">Jumuah Zeit</Label>
                             <Input
