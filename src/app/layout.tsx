@@ -6,6 +6,7 @@ import { BrowserSupportChecker } from '@/components/browser-support-checker';
 export const metadata: Metadata = {
   title: 'Gebetszeiten Dortmund',
   description: '',
+  manifest: '/manifest.webmanifest',
 };
 
 export default function RootLayout({
