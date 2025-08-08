@@ -233,7 +233,7 @@ export function PrayerTimesCard({
         </CardHeader>
         </TooltipProvider>
         <CardContent className="pt-0">
-          <div className="space-y-0 py-2">
+          <div className="space-y-1 py-2">
               {prayerOrder.map((name) => (
                   <PrayerTimeRow
                       key={name}
