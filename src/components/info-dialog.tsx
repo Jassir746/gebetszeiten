@@ -13,8 +13,8 @@ export function InfoDialog({ isOpen, setIsOpen }: InfoDialogProps) {
         <Sheet open={isOpen} onOpenChange={setIsOpen}>
             <SheetContent className="bg-card/95 backdrop-blur-sm w-[90vw] sm:w-[400px] overflow-y-auto">
                 <SheetHeader>
-                    <SheetTitle className="text-primary text-2xl">Info & Funktionen</SheetTitle>
-                    <SheetDescription>
+                    <SheetTitle className="text-primary text-xl">Info & Funktionen</SheetTitle>
+                    <SheetDescription className="text-sm">
                         Eine Übersicht über die Funktionen dieser App.
                     </SheetDescription>
                 </SheetHeader>
