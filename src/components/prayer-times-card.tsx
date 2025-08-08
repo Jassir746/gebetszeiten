@@ -179,7 +179,7 @@ export function PrayerTimesCard({
   return (
       <Card className="w-full max-w-[18.5rem] mx-auto shadow-2xl shadow-primary/10 bg-card/40 border-primary/20">
         <TooltipProvider delayDuration={150}>
-        <CardHeader className="text-center pb-2 relative">
+        <CardHeader className="text-center pb-2 pt-4 relative">
           <div className="absolute top-4 left-4 right-4 flex justify-between items-center">
                <div className="w-1/3 text-left">
                   <Tooltip>
@@ -232,7 +232,7 @@ export function PrayerTimesCard({
           </div>
         </CardHeader>
         </TooltipProvider>
-        <CardContent className="pt-0">
+        <CardContent className="px-6 pt-0 pb-6">
           <div className="py-2">
               {prayerOrder.map((name) => (
                   <PrayerTimeRow
@@ -245,12 +245,12 @@ export function PrayerTimesCard({
                   />
               ))}
           </div>
-          <div className="flex justify-between gap-4 mx-4 pt-2">
-              <div className="text-center bg-mint-green/30 text-primary-foreground rounded-lg p-2 border border-black space-y-1 w-[45%]">
+          <div className="flex justify-between gap-4 pt-2">
+              <div className="text-center bg-mint-green/30 text-primary-foreground rounded-lg p-2 border border-black space-y-1 w-1/2">
                   <div className="font-bold text-black text-base">Shuruk</div>
                   <div className="font-body font-bold text-black text-base">{prayerTimes.Shuruk.substring(0, 5)}</div>
               </div>
-              <div className="text-center bg-mint-green/30 text-primary-foreground rounded-lg p-2 border border-black space-y-1 w-[45%]">
+              <div className="text-center bg-mint-green/30 text-primary-foreground rounded-lg p-2 border border-black space-y-1 w-1/2">
                   <div className="font-bold text-black text-base">Jumuah</div>
                   <div className="font-body font-bold text-black text-base">{jumuahTime}</div>
               </div>
