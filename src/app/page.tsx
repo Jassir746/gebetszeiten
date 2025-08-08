@@ -258,7 +258,7 @@ export default function Home() {
             locationName={apiConfig?.alias || "Standort"}
             footer={
                 <div className="flex flex-col items-end mt-4">
-                    <a href="https://app.izaachen.de" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-xs transition-colors underline">
+                    <a href="https://app.izaachen.de" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-xs">
                         <span className="text-sm text-black">☪</span>
                         <span className="font-body font-bold text-link-blue">app.izaachen.de</span>
                     </a>
@@ -286,7 +286,7 @@ export default function Home() {
           setIsLocked={setSettingsLocked}
           onRestoreDefaults={handleRestoreDefaults}
       />
-      <InfoDialog isOpen={isInfoOpen} setIsOpen={setIsOpen} />
+      <InfoDialog isOpen={isInfoOpen} setIsOpen={setIsInfoOpen} />
       <QrScannerDialog 
         isOpen={isScannerOpen} 
         setIsOpen={setIsScannerOpen}
