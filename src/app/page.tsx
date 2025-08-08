@@ -276,7 +276,7 @@ export default function Home() {
   };
 
   return (
-    <main className="flex min-h-screen w-full flex-col items-center bg-transparent p-8 font-body">
+    <main className="flex min-h-screen w-full flex-col items-center bg-transparent px-8 py-4 font-body">
        <OptionsMenu
           isOpen={isOptionsOpen}
           setIsOpen={setIsOptionsOpen}
@@ -315,5 +315,3 @@ export default function Home() {
     </main>
   );
 }
-
-    
