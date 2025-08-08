@@ -177,7 +177,7 @@ export function PrayerTimesCard({
 
 
   return (
-      <Card className="w-full max-w-[18.5rem] mx-auto shadow-2xl shadow-primary/10 bg-card/80 border-primary/20">
+      <Card className="w-full max-w-[18.5rem] mx-auto shadow-2xl shadow-primary/10 bg-card/90 border-primary/20">
         <TooltipProvider delayDuration={150}>
         <CardHeader className="text-center pb-2 pt-6 relative px-4">
           <div className="absolute top-4 left-4 right-4 flex justify-between items-center">
