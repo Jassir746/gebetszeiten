@@ -65,9 +65,6 @@ export function OptionsMenu({
             <SheetContent className="bg-card/95 backdrop-blur-sm overflow-y-auto">
                 <SheetHeader>
                     <SheetTitle className="text-primary">Einstellungen</SheetTitle>
-                    <SheetDescription>
-                        Passen Sie hier die Anzeige der Gebetszeiten an.
-                    </SheetDescription>
                 </SheetHeader>
                 
                 <Separator className="my-4" />
