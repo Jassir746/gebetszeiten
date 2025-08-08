@@ -6,6 +6,7 @@ import { Countdown } from "./countdown";
 import { cn } from "@/lib/utils";
 import { PrayerOffsets } from "./options-menu";
 import { Settings, Info, QrCode } from "lucide-react";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 interface PrayerTimesCardProps {
   prayerTimes: PrayerTimes;
@@ -177,22 +178,38 @@ export function PrayerTimesCard({
 
   return (
       <Card className="w-full max-w-[18.5rem] mx-auto shadow-2xl shadow-primary/10 bg-card/40 border-primary/20">
+        <TooltipProvider delayDuration={150}>
         <CardHeader className="text-center pb-2 relative">
           <div className="absolute top-4 left-4 right-4 flex justify-between items-center">
                <div className="w-1/3 text-left">
-                  <button onClick={() => setIsInfoOpen(true)} className="p-2 text-custom-blue hover:text-accent transition-colors">
-                      <Info className="w-6 h-6" />
-                  </button>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <button onClick={() => setIsInfoOpen(true)} className="p-2 text-custom-blue hover:text-accent transition-colors">
+                          <Info className="w-6 h-6" />
+                      </button>
+                    </TooltipTrigger>
+                    <TooltipContent side="bottom"><p>Info anzeigen</p></TooltipContent>
+                  </Tooltip>
               </div>
               <div className="w-1/3 text-center">
-                  <button onClick={() => setIsOptionsOpen(true)} className="p-2 text-custom-blue hover:text-accent transition-colors">
-                      <Settings className="w-6 h-6" />
-                  </button>
+                  <Tooltip>
+                      <TooltipTrigger asChild>
+                        <button onClick={() => setIsOptionsOpen(true)} className="p-2 text-custom-blue hover:text-accent transition-colors">
+                            <Settings className="w-6 h-6" />
+                        </button>
+                      </TooltipTrigger>
+                      <TooltipContent side="bottom"><p>Einstellungen</p></TooltipContent>
+                  </Tooltip>
               </div>
               <div className="w-1/3 text-right">
-                  <button onClick={() => setIsScannerOpen(true)} className="p-2 text-custom-blue hover:text-accent transition-colors">
-                      <QrCode className="w-6 h-6" />
-                  </button>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <button onClick={() => setIsScannerOpen(true)} className="p-2 text-custom-blue hover:text-accent transition-colors">
+                          <QrCode className="w-6 h-6" />
+                      </button>
+                    </TooltipTrigger>
+                    <TooltipContent side="bottom"><p>QR-Code scannen</p></TooltipContent>
+                  </Tooltip>
               </div>
           </div>
           <div className="flex flex-col items-center space-y-2 pt-12">
@@ -214,6 +231,7 @@ export function PrayerTimesCard({
               </div>
           </div>
         </CardHeader>
+        </TooltipProvider>
         <CardContent className="pt-0">
           <div className="space-y-2 py-2">
               {prayerOrder.map((name) => (
