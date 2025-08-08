@@ -14,6 +14,7 @@ import { AlertTriangle, QrCode } from 'lucide-react';
 import { QrScannerDialog } from '@/components/qr-scanner';
 import useLocalStorage from '@/hooks/use-local-storage';
 import { decryptData } from '@/lib/crypto';
+import { cn } from '@/lib/utils';
 
 interface PrayerInfo {
     nextPrayer: { name: PrayerName; time: Date };
@@ -219,7 +220,10 @@ export default function Home() {
     if (error && !prayerTimes) {
        return (
          <div className="w-full max-w-[18.5rem] mx-auto">
-             <Card className="w-full shadow-2xl shadow-destructive/20 bg-card/40 border-destructive/50">
+             <Card 
+                className="w-full shadow-2xl shadow-destructive/20 border-destructive/50"
+                style={{ backgroundColor: 'hsla(var(--card), 0.85)' }}
+            >
                <CardHeader className="text-center pb-4">
                  <div className="flex flex-col items-center text-destructive">
                     <AlertTriangle className="w-12 h-12 mb-4" />
