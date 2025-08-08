@@ -69,8 +69,6 @@ export function OptionsMenu({
                     <SheetTitle className="text-primary">Einstellungen</SheetTitle>
                 </SheetHeader>
                 
-                <Separator className="my-4" />
-
                 <div className="space-y-4 px-2 py-4">
 
                      <div className="space-y-2">
