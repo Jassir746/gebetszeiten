@@ -72,7 +72,7 @@ export function OptionsMenu({
                 
                 <Separator className="my-4" />
 
-                <div className="space-y-6 px-2 py-4">
+                <div className="space-y-4 px-2 py-4">
 
                      <div>
                         <div className="flex items-center justify-between space-x-2 p-2 rounded-lg border bg-primary/10">
@@ -82,7 +82,7 @@ export function OptionsMenu({
                                     Einstellungen gesperrt
                                 </span>
                                 <span className="font-normal leading-snug text-muted-foreground text-xs">
-                                    Globale Werte werden verwendet. Deaktivieren, um lokale Werte zu ändern.
+                                    Globale Werte werden verwendet. Deaktivieren, um Einstellungen lokal zu ändern.
                                 </span>
                             </Label>
                             <Switch
@@ -95,8 +95,8 @@ export function OptionsMenu({
 
 
                     <div>
-                        <h4 className="font-bold text-center text-primary mb-4">Jama'a Zeit-Anpassung</h4>
-                        <div className="grid gap-4 px-4">
+                        <h4 className="font-bold text-center text-primary mb-3">Jama'a Zeit-Anpassung</h4>
+                        <div className="space-y-3 px-4">
                             <div className="grid grid-cols-3 items-center gap-4">
                                 <Label htmlFor="jumuah-time" className="text-left font-bold col-span-2">Jumuah Zeit</Label>
                                 <Input
@@ -108,7 +108,9 @@ export function OptionsMenu({
                                     disabled={disabled}
                                 />
                             </div>
-                            <p className="text-xs text-muted-foreground px-4">Offset für Gemeinschaftsgebet (in Minuten):</p>
+                            <p className="text-xs text-muted-foreground px-4 -mb-1">
+                                Offset für Gemeinschaftsgebet<br/>(in Minuten):
+                            </p>
                             {prayerOrder.map((prayer) => (
                                 <div key={prayer} className="grid grid-cols-3 items-center gap-4">
                                     <Label htmlFor={`${prayer}-offset`} className="text-left col-span-2 pl-4">{prayer}</Label>
@@ -129,8 +131,8 @@ export function OptionsMenu({
                     <Separator className="my-4" />
 
                     <div>
-                        <h4 className="font-bold text-center text-primary mb-4">Regeln für "Aktive Zeit"</h4>
-                        <div className="space-y-4 px-4">
+                        <h4 className="font-bold text-center text-primary mb-3 text-sm">Regeln für die AKTIV-Kennung der Gebetszeiten</h4>
+                        <div className="space-y-3 px-4">
                             <div className="flex items-center justify-between space-x-2 p-2 rounded-lg border">
                                 <Label htmlFor="assr-makruh-switch" className="flex flex-col space-y-1">
                                     <span className="font-semibold">Assr (Makrūh-Zeit)</span>
