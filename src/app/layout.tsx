@@ -1,6 +1,7 @@
 import type {Metadata} from 'next';
 import './globals.css';
 import { Toaster } from "@/components/ui/toaster";
+import { BrowserSupportChecker } from '@/components/browser-support-checker';
 
 export const metadata: Metadata = {
   title: 'Gebetszeiten Dortmund',
@@ -20,8 +21,10 @@ export default function RootLayout({
         <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap" rel="stylesheet" />
       </head>
       <body className="font-body">
-        {children}
-        <Toaster />
+        <BrowserSupportChecker>
+          {children}
+          <Toaster />
+        </BrowserSupportChecker>
       </body>
     </html>
   );
