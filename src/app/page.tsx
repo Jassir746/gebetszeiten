@@ -222,7 +222,7 @@ export default function Home() {
          <div className="w-full max-w-[18.5rem] mx-auto">
              <Card 
                 className="w-full shadow-2xl shadow-destructive/20 border-destructive/50"
-                style={{ backgroundColor: 'hsl(var(--card) / 0.85)' }}
+                style={{ backgroundColor: 'hsl(var(--card) / 0.65)' }}
             >
                <CardHeader className="text-center pb-4">
                  <div className="flex flex-col items-center text-destructive">
@@ -258,7 +258,7 @@ export default function Home() {
             setIsScannerOpen={setIsScannerOpen}
             locationName={apiConfig?.alias || "Standort"}
             footer={
-                <div className="flex flex-col items-end mt-4 mx-4">
+                <div className="flex flex-col items-end mt-4">
                     <a href="https://app.izaachen.de" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-black text-sm hover:text-accent transition-colors underline">
                         <span className="text-lg">☪</span>
                         app.izaachen.de
@@ -316,3 +316,5 @@ export default function Home() {
     </main>
   );
 }
+
+    
