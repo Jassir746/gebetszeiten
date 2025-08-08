@@ -15,16 +15,13 @@ interface PrayerTimesCardProps {
   now: Date;
   jumuahTime: string;
   prayerOffsets: PrayerOffsets;
+  blinkDuration: number; // in minutes
   setIsOptionsOpen: (isOpen: boolean) => void;
   setIsInfoOpen: (isOpen: boolean) => void;
   setIsScannerOpen: (isOpen: boolean) => void;
   locationName: string;
   footer: React.ReactNode;
 }
-
-const PRAYER_START_BLINK_DURATION_MS = 2 * 60 * 1000; // 2 minutes
-
-const prayerOrder: PrayerName[] = ['Fadjr', 'Duhr', 'Assr', 'Maghrib', 'Ishaa'];
 
 function getOffsetDisplay(offsetValue: string): string {
     const num = parseInt(offsetValue, 10);
@@ -137,6 +134,8 @@ function DateFader({ gregorian, hijri }: { gregorian: string, hijri: string }) {
     );
 }
 
+const prayerOrder: PrayerName[] = ['Fadjr', 'Duhr', 'Assr', 'Maghrib', 'Ishaa'];
+
 export function PrayerTimesCard({ 
     prayerTimes, 
     nextPrayer, 
@@ -145,6 +144,7 @@ export function PrayerTimesCard({
     now, 
     jumuahTime, 
     prayerOffsets, 
+    blinkDuration,
     setIsOptionsOpen, 
     setIsInfoOpen, 
     setIsScannerOpen,
@@ -153,6 +153,8 @@ export function PrayerTimesCard({
 }: PrayerTimesCardProps) {
   const [blinkingPrayer, setBlinkingPrayer] = useState<PrayerName | undefined>(undefined);
   const prevPrayer = useRef(currentPrayer);
+
+  const PRAYER_START_BLINK_DURATION_MS = (blinkDuration || 2) * 60 * 1000;
 
   useEffect(() => {
     if (currentPrayer && currentPrayer.name !== prevPrayer.current?.name) {
@@ -170,7 +172,7 @@ export function PrayerTimesCard({
     }
     
     prevPrayer.current = currentPrayer;
-  }, [currentPrayer, now]);
+  }, [currentPrayer, now, PRAYER_START_BLINK_DURATION_MS]);
 
 
   return (

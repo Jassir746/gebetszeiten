@@ -1,14 +1,14 @@
 
 'use client';
 
-import { useState, useEffect } from 'react';
-import { PrayerTimes, PrayerName, getNextPrayerInfo, getFormattedDate, ApiConfig } from '@/lib/prayer-times';
+import { useState, useEffect, useCallback } from 'react';
+import { PrayerTimes, PrayerName, getNextPrayerInfo, getFormattedDate, ApiConfig, GlobalParameters, LocalSettings } from '@/lib/prayer-times';
 import { PrayerTimesCard } from '@/components/prayer-times-card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useToast } from "@/hooks/use-toast";
 import { OptionsMenu, PrayerOffsets } from '@/components/options-menu';
 import { InfoDialog } from '@/components/info-dialog';
-import { fetchPrayerTimesAPI, YearPrayerTimes } from './actions';
+import { fetchPrayerTimesAPI, YearPrayerTimes, fetchGlobalParametersAPI } from './actions';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { AlertTriangle, QrCode } from 'lucide-react';
 import { QrScannerDialog } from '@/components/qr-scanner';
@@ -24,7 +24,6 @@ const PRAYER_TIMES_STORAGE_KEY = 'prayerTimesData';
 const SETTINGS_STORAGE_KEY = 'prayerAppSettings';
 const API_CONFIG_STORAGE_KEY = 'prayerApiConfig';
 
-// Fallback/Default Config, if nothing is scanned
 const defaultConfig: ApiConfig = {
     alias: "Dortmund-1",
     serverUrl: "https://zero-clue.de/as-salah/",
@@ -41,100 +40,135 @@ export default function Home() {
   const [now, setNow] = useState(new Date());
   const { toast } = useToast();
   
-  // Dialog states
   const [isOptionsOpen, setIsOptionsOpen] = useState(false);
   const [isInfoOpen, setIsInfoOpen] = useState(false);
   const [isScannerOpen, setIsScannerOpen] = useState(false);
 
-  // App settings with localStorage hook
-  const [jumuahTime, setJumuahTime] = useLocalStorage(`${SETTINGS_STORAGE_KEY}:jumuahTime`, '14:00');
-  const [prayerOffsets, setPrayerOffsets] = useLocalStorage<PrayerOffsets>(`${SETTINGS_STORAGE_KEY}:prayerOffsets`, {
-    Fadjr: '+30', Duhr: '+10', Assr: '+10', Maghrib: '+5', Ishaa: '+10',
-  });
-  const [deactivateAssrEarly, setDeactivateAssrEarly] = useLocalStorage(`${SETTINGS_STORAGE_KEY}:deactivateAssrEarly`, true);
-  const [deactivateIshaaAtMidnight, setDeactivateIshaaAtMidnight] = useLocalStorage(`${SETTINGS_STORAGE_KEY}:deactivateIshaaAtMidnight`, true);
-  
-  // API Config with localStorage hook
   const [apiConfig, setApiConfig] = useLocalStorage<ApiConfig>(API_CONFIG_STORAGE_KEY, defaultConfig);
 
-  // Effect to fetch data when apiConfig changes or on initial load
-  useEffect(() => {
-    const fetchAndStoreTimes = async () => {
-      if (!apiConfig || !apiConfig.serverUrl || !apiConfig.apiKey) {
-          setError("Bitte scannen Sie den QR-Code, um die App zu konfigurieren.");
-          setLoading(false);
-          return;
-      }
+  // Global settings fetched from API
+  const [globalSettings, setGlobalSettings] = useState<GlobalParameters | null>(null);
 
-      setLoading(true);
-      const today = new Date();
-      const tomorrow = new Date(today);
-      tomorrow.setDate(today.getDate() + 1);
-      
-      const year = today.getFullYear().toString();
-      const todayFormatted = getFormattedDate(today);
-      const tomorrowFormatted = getFormattedDate(tomorrow);
+  // Local settings with overrides
+  const [localSettings, setLocalSettings] = useLocalStorage<LocalSettings>(`${SETTINGS_STORAGE_KEY}:${apiConfig.alias}`, {
+    jumuahTime: '14:00',
+    prayerOffsets: { Fadjr: '+30', Duhr: '+10', Assr: '+10', Maghrib: '+5', Ishaa: '+10' },
+    deactivateAssrEarly: true,
+    deactivateIshaaAtMidnight: true,
+    blinkDuration: 2,
+    activePrayerOffset: 10,
+  });
+  
+  const [settingsLocked, setSettingsLocked] = useLocalStorage<boolean>(`${SETTINGS_STORAGE_KEY}:${apiConfig.alias}:locked`, true);
 
-      let loadedFromStorage = false;
-
-      try {
-        const storedData = localStorage.getItem(`${PRAYER_TIMES_STORAGE_KEY}:${apiConfig.alias}`);
-        if (storedData) {
-          const parsedData: YearPrayerTimes = JSON.parse(storedData);
-          const yearData = parsedData[year];
-          if (yearData && yearData[todayFormatted]) {
-            setPrayerTimes(yearData[todayFormatted]);
-            if (yearData[tomorrowFormatted]) setTomorrowPrayerTimes(yearData[tomorrowFormatted]);
-            setLoading(false);
-            loadedFromStorage = true;
-          }
-        }
-      } catch (e) { console.error("Failed to read from localStorage", e); }
-      
-      try {
-        setError(null);
-        let yearlyData = await fetchPrayerTimesAPI(today, apiConfig);
-        
-        if (today.getMonth() === 11 && today.getDate() === 31) {
-            const nextYearData = await fetchPrayerTimesAPI(tomorrow, apiConfig);
-            yearlyData = {...yearlyData, ...nextYearData};
-        }
-
-        localStorage.setItem(`${PRAYER_TIMES_STORAGE_KEY}:${apiConfig.alias}`, JSON.stringify(yearlyData));
-
-        const todayYearData = yearlyData[year];
-        const tomorrowYear = tomorrow.getFullYear().toString();
-        const tomorrowYearData = yearlyData[tomorrowYear];
-
-        if (todayYearData && todayYearData[todayFormatted]) {
-           setPrayerTimes(todayYearData[todayFormatted]);
-        } else {
-            throw new Error(`Keine Gebetszeiten für heute (${todayFormatted}) in den API-Daten gefunden.`);
-        }
-        
-        if (tomorrowYearData && tomorrowYearData[tomorrowFormatted]) {
-            setTomorrowPrayerTimes(tomorrowYearData[tomorrowFormatted]);
-        } else {
-             if (!loadedFromStorage) {
-                console.warn(`Keine morgigen Gebetszeiten (${tomorrowFormatted}) gefunden.`);
-             }
-        }
-
-      } catch (err) {
-        const errorMessage = err instanceof Error ? err.message : "Ein unbekannter Fehler ist aufgetreten.";
-        if (!loadedFromStorage) {
-            setError(errorMessage);
-            toast({ variant: "destructive", title: "Fehler beim Laden", description: errorMessage });
-        }
-        console.error("API Fetch failed", err);
-      } finally {
+  const fetchAndSetData = useCallback(async () => {
+    if (!apiConfig || !apiConfig.serverUrl || !apiConfig.apiKey) {
+        setError("Bitte scannen Sie den QR-Code, um die App zu konfigurieren.");
         setLoading(false);
-      }
-    };
+        return;
+    }
 
-    fetchAndStoreTimes();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [apiConfig]);
+    setLoading(true);
+    setError(null);
+    let loadedFromStorage = false;
+
+    // --- Step 1: Fetch Global Parameters ---
+    let fetchedGlobalSettings: GlobalParameters | null = null;
+    try {
+        fetchedGlobalSettings = await fetchGlobalParametersAPI(apiConfig);
+        setGlobalSettings(fetchedGlobalSettings);
+
+        // If settings are locked, update local settings with global ones
+        if (settingsLocked && fetchedGlobalSettings) {
+            setLocalSettings(prev => ({
+                ...prev, // keep other local settings if any
+                jumuahTime: fetchedGlobalSettings.jumuahTime,
+                prayerOffsets: {
+                    Fadjr: String(fetchedGlobalSettings.offsetFadjr),
+                    Duhr: String(fetchedGlobalSettings.offsetDuhr),
+                    Assr: String(fetchedGlobalSettings.offsetAssr),
+                    Maghrib: String(fetchedGlobalSettings.offsetMaghrib),
+                    Ishaa: String(fetchedGlobalSettings.offsetIshaa),
+                },
+                deactivateAssrEarly: fetchedGlobalSettings.assrOneHour,
+                deactivateIshaaAtMidnight: fetchedGlobalSettings.middleNight,
+                blinkDuration: fetchedGlobalSettings.blinkDuration,
+                activePrayerOffset: fetchedGlobalSettings.activeAus,
+            }));
+        }
+    } catch (err) {
+        const errorMessage = err instanceof Error ? err.message : "Globale Parameter konnten nicht geladen werden.";
+        setError(errorMessage);
+        toast({ variant: "destructive", title: "Fehler bei Parametern", description: errorMessage });
+        // Don't stop here, try to load prayer times anyway
+    }
+
+
+    // --- Step 2: Load Prayer Times (from cache or API) ---
+    const today = new Date();
+    const tomorrow = new Date(today);
+    tomorrow.setDate(today.getDate() + 1);
+    
+    const year = today.getFullYear().toString();
+    const todayFormatted = getFormattedDate(today);
+    const tomorrowFormatted = getFormattedDate(tomorrow);
+
+    try {
+      const storedData = localStorage.getItem(`${PRAYER_TIMES_STORAGE_KEY}:${apiConfig.alias}`);
+      if (storedData) {
+        const parsedData: YearPrayerTimes = JSON.parse(storedData);
+        const yearData = parsedData[year];
+        if (yearData && yearData[todayFormatted]) {
+          setPrayerTimes(yearData[todayFormatted]);
+          if (yearData[tomorrowFormatted]) setTomorrowPrayerTimes(yearData[tomorrowFormatted]);
+          loadedFromStorage = true;
+        }
+      }
+    } catch (e) { console.error("Failed to read from localStorage", e); }
+    
+    try {
+      let yearlyData = await fetchPrayerTimesAPI(today, apiConfig);
+      
+      if (today.getMonth() === 11 && today.getDate() === 31) {
+          const nextYearData = await fetchPrayerTimesAPI(tomorrow, apiConfig);
+          yearlyData = {...yearlyData, ...nextYearData};
+      }
+
+      localStorage.setItem(`${PRAYER_TIMES_STORAGE_KEY}:${apiConfig.alias}`, JSON.stringify(yearlyData));
+
+      const todayYearData = yearlyData[year];
+      const tomorrowYear = tomorrow.getFullYear().toString();
+      const tomorrowYearData = yearlyData[tomorrowYear];
+
+      if (todayYearData && todayYearData[todayFormatted]) {
+         setPrayerTimes(todayYearData[todayFormatted]);
+      } else {
+          throw new Error(`Keine Gebetszeiten für heute (${todayFormatted}) in den API-Daten gefunden.`);
+      }
+      
+      if (tomorrowYearData && tomorrowYearData[tomorrowFormatted]) {
+          setTomorrowPrayerTimes(tomorrowYearData[tomorrowFormatted]);
+      } else {
+           if (!loadedFromStorage) {
+              console.warn(`Keine morgigen Gebetszeiten (${tomorrowFormatted}) gefunden.`);
+           }
+      }
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : "Ein unbekannter Fehler ist aufgetreten.";
+      if (!loadedFromStorage) {
+          setError(prevError => prevError ? `${prevError}\n${errorMessage}` : errorMessage);
+          toast({ variant: "destructive", title: "Fehler beim Laden", description: errorMessage });
+      }
+      console.error("API Fetch failed", err);
+    } finally {
+      setLoading(false);
+    }
+  }, [apiConfig, setLocalSettings, settingsLocked, toast]);
+
+
+  useEffect(() => {
+    fetchAndSetData();
+  }, [apiConfig, fetchAndSetData]);
   
 
   useEffect(() => {
@@ -148,20 +182,21 @@ export default function Home() {
             prayerTimes,
             now,
             {
-              deactivateAssrEarly,
-              deactivateIshaaAtMidnight,
-              tomorrowFadjr: tomorrowPrayerTimes?.Fadjr ?? '05:30'
+              deactivateAssrEarly: localSettings.deactivateAssrEarly,
+              deactivateIshaaAtMidnight: localSettings.deactivateIshaaAtMidnight,
+              tomorrowFadjr: tomorrowPrayerTimes?.Fadjr ?? '05:30',
+              activePrayerOffset: localSettings.activePrayerOffset,
             }
         );
         setPrayerInfo(currentPrayerInfo);
     }
-  }, [prayerTimes, tomorrowPrayerTimes, deactivateAssrEarly, deactivateIshaaAtMidnight, now]);
+  }, [prayerTimes, tomorrowPrayerTimes, localSettings, now]);
 
 
   const renderContent = () => {
-    if (loading) {
+    if (loading && !prayerTimes) {
       return (
-        <div className="w-full max-w-[20rem] mx-auto">
+        <div className="w-full max-w-[18.5rem] mx-auto">
           <Skeleton className="h-[600px] w-full rounded-xl bg-primary/10" />
         </div>
       );
@@ -169,7 +204,7 @@ export default function Home() {
 
     if (error && !prayerTimes) {
        return (
-         <div className="w-full max-w-[20rem] mx-auto">
+         <div className="w-full max-w-[18.5rem] mx-auto">
              <Card className="w-full shadow-2xl shadow-destructive/20 bg-card/40 border-destructive/50">
                <CardHeader className="text-center pb-4">
                  <div className="flex flex-col items-center text-destructive">
@@ -178,7 +213,7 @@ export default function Home() {
                  </div>
                </CardHeader>
                <CardContent className="text-center">
-                 <p>{error}</p>
+                 <p className="whitespace-pre-wrap">{error}</p>
                  <button onClick={() => setIsScannerOpen(true)} className="mt-4 inline-flex items-center gap-2 text-primary underline">
                     <QrCode className="w-4 h-4" /> QR-Code scannen
                  </button>
@@ -190,15 +225,16 @@ export default function Home() {
     
     if (prayerTimes && prayerInfo) {
       return (
-        <div className="w-full max-w-[20rem] mx-auto">
+        <div className="w-full max-w-[18.5rem] mx-auto">
           <PrayerTimesCard
             prayerTimes={prayerTimes}
             nextPrayer={prayerInfo.nextPrayer}
             currentPrayer={prayerInfo.currentPrayer}
             gregorianDate={getFormattedDate(date)}
             now={now}
-            jumuahTime={jumuahTime}
-            prayerOffsets={prayerOffsets}
+            jumuahTime={localSettings.jumuahTime}
+            prayerOffsets={localSettings.prayerOffsets}
+            blinkDuration={localSettings.blinkDuration}
             setIsOptionsOpen={setIsOptionsOpen}
             setIsInfoOpen={setIsInfoOpen}
             setIsScannerOpen={setIsScannerOpen}
@@ -225,16 +261,12 @@ export default function Home() {
   return (
     <main className="flex min-h-screen w-full flex-col items-center bg-transparent p-8 font-body">
        <OptionsMenu
-        isOpen={isOptionsOpen}
-        setIsOpen={setIsOptionsOpen}
-        jumuahTime={jumuahTime}
-        setJumuahTime={setJumuahTime}
-        prayerOffsets={prayerOffsets}
-        setPrayerOffsets={setPrayerOffsets}
-        deactivateAssrEarly={deactivateAssrEarly}
-        setDeactivateAssrEarly={setDeactivateAssrEarly}
-        deactivateIshaaAtMidnight={deactivateIshaaAtMidnight}
-        setDeactivateIshaaAtMidnight={setDeactivateIshaaAtMidnight}
+          isOpen={isOptionsOpen}
+          setIsOpen={setIsOptionsOpen}
+          settings={localSettings}
+          setSettings={setLocalSettings}
+          isLocked={settingsLocked}
+          setIsLocked={setSettingsLocked}
       />
       <InfoDialog isOpen={isInfoOpen} setIsOpen={setIsInfoOpen} />
       <QrScannerDialog 

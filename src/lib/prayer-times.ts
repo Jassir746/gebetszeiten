@@ -11,6 +11,36 @@ export interface PrayerTimes {
     Hijri_Date: string;
 };
 
+export interface GlobalParameters {
+    jumuahTime: string;
+    blinkDuration: number;
+    activeAus: number;
+    assrOneHour: boolean;
+    middleNight: boolean;
+    offsetFadjr: number;
+    offsetDuhr: number;
+    offsetAssr: number;
+    offsetMaghrib: number;
+    offsetIshaa: number;
+}
+
+export interface LocalSettings {
+    jumuahTime: string;
+    prayerOffsets: {
+        Fadjr: string;
+        Duhr: string;
+        Assr: string;
+        Maghrib: string;
+        Ishaa: string;
+    };
+    deactivateAssrEarly: boolean;
+    deactivateIshaaAtMidnight: boolean;
+    // Neu für serverseitige Parameter
+    blinkDuration: number;
+    activePrayerOffset: number;
+}
+
+
 export interface ApiConfig {
     alias: string;
     serverUrl: string;
@@ -21,6 +51,7 @@ export interface PrayerTimeOptions {
     deactivateAssrEarly: boolean;
     deactivateIshaaAtMidnight: boolean;
     tomorrowFadjr: string;
+    activePrayerOffset: number;
 }
 
 export const mockPrayerTimes: PrayerTimes = {
@@ -59,7 +90,7 @@ export function getNextPrayerInfo(
     options: PrayerTimeOptions
 ) {
   const prayerSchedule: { name: PrayerName; time: Date }[] = (Object.keys(prayerTimes) as (keyof PrayerTimes)[])
-    .filter(name => name !== 'Hijri_Date') // Include Shuruk for calculations
+    .filter(name => name !== 'Hijri_Date') 
     .map(name => ({
       name: name as PrayerName,
       time: parseTime(prayerTimes[name as Exclude<keyof PrayerTimes, 'Hijri_Date'>], now),
@@ -92,21 +123,20 @@ export function getNextPrayerInfo(
       let prayerEndTime: Date;
       const prayerIndex = prayerSchedule.findIndex(p => p.name === prayer.name);
       
+      const activeOffsetMs = options.activePrayerOffset * 60 * 1000;
+
       switch(prayer.name) {
           case 'Fadjr':
               const shurukTime = prayerSchedule.find(p => p.name === 'Shuruk')?.time;
-              // End Fadjr 10 minutes before Shuruk
-              prayerEndTime = new Date(shurukTime!.getTime() - 10 * 60 * 1000);
+              prayerEndTime = new Date(shurukTime!.getTime() - activeOffsetMs);
               break;
           
           case 'Assr':
               const maghribTime = prayerSchedule.find(p => p.name === 'Maghrib')?.time;
               if (options.deactivateAssrEarly) {
-                  // End Assr 1 hour before Maghrib
                   prayerEndTime = new Date(maghribTime!.getTime() - 60 * 60 * 1000);
               } else {
-                  // Default: End 10 mins before Maghrib
-                  prayerEndTime = new Date(maghribTime!.getTime() - 10 * 60 * 1000);
+                  prayerEndTime = new Date(maghribTime!.getTime() - activeOffsetMs);
               }
               break;
 
@@ -119,8 +149,7 @@ export function getNextPrayerInfo(
                   const maghribTodayTime = prayerSchedule.find(p => p.name === 'Maghrib')?.time;
                   prayerEndTime = getIslamicMidnight(maghribTodayTime!, fajrTomorrowTime);
               } else {
-                   // End 10 mins before Fajr tomorrow
-                  prayerEndTime = new Date(fajrTomorrowTime.getTime() - 10 * 60 * 1000);
+                  prayerEndTime = new Date(fajrTomorrowTime.getTime() - activeOffsetMs);
               }
               break;
 
@@ -128,21 +157,19 @@ export function getNextPrayerInfo(
               // Default for Duhr, Maghrib
               const nextPrayerInSchedule = prayerSchedule[prayerIndex + 1];
               if (nextPrayerInSchedule) {
-                // End 10 minutes before the next prayer
-                prayerEndTime = new Date(nextPrayerInSchedule.time.getTime() - 10 * 60 * 1000);
+                prayerEndTime = new Date(nextPrayerInSchedule.time.getTime() - activeOffsetMs);
               } else {
-                 // Fallback for Ishaa if it's the last prayer of the day
-                 const tomorrowFajrDate = new Date(now);
-                 tomorrowFajrDate.setDate(now.getDate() + 1);
-                 const fajrTomorrowTime = parseTime(options.tomorrowFadjr, tomorrowFajrDate);
-                 prayerEndTime = new Date(fajrTomorrowTime.getTime() - 10 * 60 * 1000);
+                 const tomorrowFajrDateDef = new Date(now);
+                 tomorrowFajrDateDef.setDate(now.getDate() + 1);
+                 const fajrTomorrowTimeDef = parseTime(options.tomorrowFadjr, tomorrowFajrDateDef);
+                 prayerEndTime = new Date(fajrTomorrowTimeDef.getTime() - activeOffsetMs);
               }
               break;
       }
       
       if (now >= prayerStartTime && now < prayerEndTime) {
           currentPrayer = prayer;
-          break; // Found the active prayer, no need to check further
+          break; 
       }
   }
   

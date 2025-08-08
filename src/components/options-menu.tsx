@@ -5,6 +5,8 @@ import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
+import { LocalSettings } from "@/lib/prayer-times";
+import { Lock, Unlock } from "lucide-react";
 
 export type PrayerOffsets = {
     Fadjr: string;
@@ -17,14 +19,10 @@ export type PrayerOffsets = {
 interface OptionsMenuProps {
     isOpen: boolean;
     setIsOpen: (isOpen: boolean) => void;
-    jumuahTime: string;
-    setJumuahTime: (time: string) => void;
-    prayerOffsets: PrayerOffsets;
-    setPrayerOffsets: (offsets: PrayerOffsets) => void;
-    deactivateAssrEarly: boolean;
-    setDeactivateAssrEarly: (value: boolean) => void;
-    deactivateIshaaAtMidnight: boolean;
-    setDeactivateIshaaAtMidnight: (value: boolean) => void;
+    settings: LocalSettings;
+    setSettings: (settings: LocalSettings) => void;
+    isLocked: boolean;
+    setIsLocked: (isLocked: boolean) => void;
 }
 
 const prayerOrder: (keyof PrayerOffsets)[] = ['Fadjr', 'Duhr', 'Assr', 'Maghrib', 'Ishaa'];
@@ -32,22 +30,35 @@ const prayerOrder: (keyof PrayerOffsets)[] = ['Fadjr', 'Duhr', 'Assr', 'Maghrib'
 export function OptionsMenu({ 
     isOpen, 
     setIsOpen, 
-    jumuahTime, 
-    setJumuahTime, 
-    prayerOffsets, 
-    setPrayerOffsets,
-    deactivateAssrEarly,
-    setDeactivateAssrEarly,
-    deactivateIshaaAtMidnight,
-    setDeactivateIshaaAtMidnight
+    settings,
+    setSettings,
+    isLocked,
+    setIsLocked
 }: OptionsMenuProps) {
 
     const handleOffsetChange = (prayer: keyof PrayerOffsets, value: string) => {
-        setPrayerOffsets({
-            ...prayerOffsets,
-            [prayer]: value
+        setSettings({
+            ...settings,
+            prayerOffsets: {
+                ...settings.prayerOffsets,
+                [prayer]: value
+            }
         });
     };
+
+    const handleJumuahChange = (value: string) => {
+        setSettings({ ...settings, jumuahTime: value });
+    }
+
+    const handleAssrRuleChange = (value: boolean) => {
+        setSettings({ ...settings, deactivateAssrEarly: value });
+    }
+    
+    const handleIshaaRuleChange = (value: boolean) => {
+        setSettings({ ...settings, deactivateIshaaAtMidnight: value });
+    }
+
+    const disabled = isLocked;
     
     return (
         <Sheet open={isOpen} onOpenChange={setIsOpen}>
@@ -62,6 +73,27 @@ export function OptionsMenu({
                 <Separator className="my-4" />
 
                 <div className="space-y-6 px-2 py-4">
+
+                     <div>
+                        <div className="flex items-center justify-between space-x-2 p-2 rounded-lg border bg-primary/10">
+                            <Label htmlFor="settings-lock-switch" className="flex flex-col space-y-1">
+                                <span className="font-semibold text-primary flex items-center gap-2">
+                                    {isLocked ? <Lock className="w-4 h-4"/> : <Unlock className="w-4 h-4"/>}
+                                    Einstellungen gesperrt
+                                </span>
+                                <span className="font-normal leading-snug text-muted-foreground text-xs">
+                                    Globale Werte werden verwendet. Deaktivieren, um lokale Werte zu ändern.
+                                </span>
+                            </Label>
+                            <Switch
+                                id="settings-lock-switch"
+                                checked={isLocked}
+                                onCheckedChange={setIsLocked}
+                            />
+                        </div>
+                    </div>
+
+
                     <div>
                         <h4 className="font-bold text-center text-primary mb-4">Jama'a Zeit-Anpassung</h4>
                         <div className="grid gap-4 px-4">
@@ -70,9 +102,10 @@ export function OptionsMenu({
                                 <Input
                                     id="jumuah-time"
                                     type="time"
-                                    value={jumuahTime}
-                                    onChange={(e) => setJumuahTime(e.target.value)}
+                                    value={settings.jumuahTime}
+                                    onChange={(e) => handleJumuahChange(e.target.value)}
                                     className="col-span-1"
+                                    disabled={disabled}
                                 />
                             </div>
                             <p className="text-xs text-muted-foreground px-4">Offset für Gemeinschaftsgebet (in Minuten):</p>
@@ -82,10 +115,11 @@ export function OptionsMenu({
                                     <Input
                                         id={`${prayer}-offset`}
                                         type="text"
-                                        value={prayerOffsets[prayer]}
+                                        value={settings.prayerOffsets[prayer]}
                                         onChange={(e) => handleOffsetChange(prayer, e.target.value)}
                                         className="col-span-1 text-center"
                                         placeholder="+10"
+                                        disabled={disabled}
                                     />
                                 </div>
                             ))}
@@ -106,8 +140,9 @@ export function OptionsMenu({
                                 </Label>
                                 <Switch
                                     id="assr-makruh-switch"
-                                    checked={deactivateAssrEarly}
-                                    onCheckedChange={setDeactivateAssrEarly}
+                                    checked={settings.deactivateAssrEarly}
+                                    onCheckedChange={handleAssrRuleChange}
+                                    disabled={disabled}
                                 />
                             </div>
                              <div className="flex items-center justify-between space-x-2 p-2 rounded-lg border">
@@ -119,8 +154,9 @@ export function OptionsMenu({
                                 </Label>
                                 <Switch
                                     id="ishaa-midnight-switch"
-                                    checked={deactivateIshaaAtMidnight}
-                                    onCheckedChange={setDeactivateIshaaAtMidnight}
+                                    checked={settings.deactivateIshaaAtMidnight}
+                                    onCheckedChange={handleIshaaRuleChange}
+                                    disabled={disabled}
                                 />
                             </div>
                         </div>
