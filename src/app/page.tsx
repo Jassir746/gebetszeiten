@@ -61,7 +61,26 @@ export default function Home() {
   
   const [settingsLocked, setSettingsLocked] = useLocalStorage<boolean>(`${SETTINGS_STORAGE_KEY}:${apiConfig.alias}:locked`, true);
 
-  const fetchAndSetData = useCallback(async () => {
+  const updateLocalSettingsFromGlobal = useCallback((global: GlobalParameters) => {
+       setLocalSettings(prev => ({
+            ...prev,
+            jumuahTime: global.jumuahTime,
+            prayerOffsets: {
+                Fadjr: String(global.offsetFadjr),
+                Duhr: String(global.offsetDuhr),
+                Assr: String(global.offsetAssr),
+                Maghrib: String(global.offsetMaghrib),
+                Ishaa: String(global.offsetIshaa),
+            },
+            deactivateAssrEarly: global.assrOneHour,
+            deactivateIshaaAtMidnight: global.middleNight,
+            blinkDuration: global.blinkDuration,
+            activePrayerOffset: global.activeAus,
+        }));
+  }, [setLocalSettings]);
+
+
+  const fetchAndSetData = useCallback(async (forceApiFetch = false) => {
     if (!apiConfig || !apiConfig.serverUrl || !apiConfig.apiKey) {
         setError("Bitte scannen Sie den QR-Code, um die App zu konfigurieren.");
         setLoading(false);
@@ -73,34 +92,17 @@ export default function Home() {
     let loadedFromStorage = false;
 
     // --- Step 1: Fetch Global Parameters ---
-    let fetchedGlobalSettings: GlobalParameters | null = null;
     try {
-        fetchedGlobalSettings = await fetchGlobalParametersAPI(apiConfig);
+        const fetchedGlobalSettings = await fetchGlobalParametersAPI(apiConfig);
         setGlobalSettings(fetchedGlobalSettings);
 
-        // If settings are locked, update local settings with global ones
-        if (settingsLocked && fetchedGlobalSettings) {
-            setLocalSettings(prev => ({
-                ...prev, // keep other local settings if any
-                jumuahTime: fetchedGlobalSettings.jumuahTime,
-                prayerOffsets: {
-                    Fadjr: String(fetchedGlobalSettings.offsetFadjr),
-                    Duhr: String(fetchedGlobalSettings.offsetDuhr),
-                    Assr: String(fetchedGlobalSettings.offsetAssr),
-                    Maghrib: String(fetchedGlobalSettings.offsetMaghrib),
-                    Ishaa: String(fetchedGlobalSettings.offsetIshaa),
-                },
-                deactivateAssrEarly: fetchedGlobalSettings.assrOneHour,
-                deactivateIshaaAtMidnight: fetchedGlobalSettings.middleNight,
-                blinkDuration: fetchedGlobalSettings.blinkDuration,
-                activePrayerOffset: fetchedGlobalSettings.activeAus,
-            }));
+        if (settingsLocked) {
+             updateLocalSettingsFromGlobal(fetchedGlobalSettings);
         }
     } catch (err) {
         const errorMessage = err instanceof Error ? err.message : "Globale Parameter konnten nicht geladen werden.";
         setError(errorMessage);
         toast({ variant: "destructive", title: "Fehler bei Parametern", description: errorMessage });
-        // Don't stop here, try to load prayer times anyway
     }
 
 
@@ -115,7 +117,7 @@ export default function Home() {
 
     try {
       const storedData = localStorage.getItem(`${PRAYER_TIMES_STORAGE_KEY}:${apiConfig.alias}`);
-      if (storedData) {
+      if (storedData && !forceApiFetch) {
         const parsedData: YearPrayerTimes = JSON.parse(storedData);
         const yearData = parsedData[year];
         if (yearData && yearData[todayFormatted]) {
@@ -163,7 +165,19 @@ export default function Home() {
     } finally {
       setLoading(false);
     }
-  }, [apiConfig, setLocalSettings, settingsLocked, toast]);
+  }, [apiConfig, settingsLocked, toast, updateLocalSettingsFromGlobal]);
+
+  const handleRestoreDefaults = useCallback(async () => {
+    if (!apiConfig) return;
+    try {
+        const fetchedGlobalSettings = await fetchGlobalParametersAPI(apiConfig);
+        updateLocalSettingsFromGlobal(fetchedGlobalSettings);
+        toast({ title: "Erfolg", description: "Die globalen Einstellungen wurden wiederhergestellt." });
+    } catch (err) {
+        const errorMessage = err instanceof Error ? err.message : "Standardeinstellungen konnten nicht geladen werden.";
+        toast({ variant: "destructive", title: "Fehler", description: errorMessage });
+    }
+  }, [apiConfig, updateLocalSettingsFromGlobal, toast]);
 
 
   useEffect(() => {
@@ -267,6 +281,7 @@ export default function Home() {
           setSettings={setLocalSettings}
           isLocked={settingsLocked}
           setIsLocked={setSettingsLocked}
+          onRestoreDefaults={handleRestoreDefaults}
       />
       <InfoDialog isOpen={isInfoOpen} setIsOpen={setIsInfoOpen} />
       <QrScannerDialog 

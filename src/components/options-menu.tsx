@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
 import { LocalSettings } from "@/lib/prayer-times";
-import { Lock, Unlock } from "lucide-react";
+import { Lock, Unlock, RefreshCcw } from "lucide-react";
 
 export type PrayerOffsets = {
     Fadjr: string;
@@ -23,6 +23,7 @@ interface OptionsMenuProps {
     setSettings: (settings: LocalSettings) => void;
     isLocked: boolean;
     setIsLocked: (isLocked: boolean) => void;
+    onRestoreDefaults: () => void;
 }
 
 const prayerOrder: (keyof PrayerOffsets)[] = ['Fadjr', 'Duhr', 'Assr', 'Maghrib', 'Ishaa'];
@@ -33,7 +34,8 @@ export function OptionsMenu({
     settings,
     setSettings,
     isLocked,
-    setIsLocked
+    setIsLocked,
+    onRestoreDefaults
 }: OptionsMenuProps) {
 
     const handleOffsetChange = (prayer: keyof PrayerOffsets, value: string) => {
@@ -69,9 +71,9 @@ export function OptionsMenu({
                 
                 <Separator className="my-4" />
 
-                <div className="space-y-2 px-2 py-4">
+                <div className="space-y-4 px-2 py-4">
 
-                     <div>
+                     <div className="space-y-2">
                         <div className="flex items-center justify-between space-x-2 p-2 rounded-lg border bg-primary/10">
                             <Label htmlFor="settings-lock-switch" className="flex flex-col space-y-1">
                                 <span className="font-semibold text-primary flex items-center gap-2">
@@ -79,7 +81,7 @@ export function OptionsMenu({
                                     Einstellungen gesperrt
                                 </span>
                                 <span className="font-normal leading-snug text-muted-foreground text-xs">
-                                    Globale Werte werden verwendet. Deaktivieren, um Einstellungen lokal zu ändern.
+                                    Globale Werte werden verwendet.
                                 </span>
                             </Label>
                             <Switch
@@ -88,6 +90,15 @@ export function OptionsMenu({
                                 onCheckedChange={setIsLocked}
                             />
                         </div>
+                         <Button 
+                            variant="outline" 
+                            className="w-full"
+                            onClick={onRestoreDefaults}
+                            disabled={isLocked}
+                        >
+                            <RefreshCcw className="w-4 h-4 mr-2" />
+                            Globale Werte wiederherstellen
+                        </Button>
                     </div>
 
 
