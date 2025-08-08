@@ -27,6 +27,14 @@ interface OptionsMenuProps {
 
 const prayerOrder: (keyof PrayerOffsets)[] = ['Fadjr', 'Duhr', 'Assr', 'Maghrib', 'Ishaa'];
 
+const cleanTimeValue = (time: string | undefined): string => {
+    if (!time) return "00:00";
+    // This regex will find the first occurrence of HH:mm format and return it.
+    const match = time.match(/\d{2}:\d{2}/);
+    return match ? match[0] : "00:00";
+}
+
+
 export function OptionsMenu({ 
     isOpen, 
     setIsOpen, 
@@ -97,7 +105,7 @@ export function OptionsMenu({
                             <Input
                                 id="jumuah-time"
                                 type="time"
-                                value={settings.jumuahTime}
+                                value={cleanTimeValue(settings.jumuahTime)}
                                 onChange={(e) => handleJumuahChange(e.target.value)}
                                 className="col-span-1"
                                 disabled={disabled}
