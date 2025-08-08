@@ -212,7 +212,7 @@ export function PrayerTimesCard({
                   </Tooltip>
               </div>
           </div>
-          <div className="flex flex-col items-center space-y-2 pt-12">
+          <div className="flex flex-col items-center space-y-2 pt-10">
               <Countdown nextPrayerName={nextPrayer.name} nextPrayerTime={nextPrayer.time} />
                <div className="w-full text-left">
                   
