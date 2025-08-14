@@ -1,0 +1,24 @@
+
+NEU in Version 1.2.1
+====================
+
+Für Anwender:
+
+Assr kann optional 1 Stunde vor Maghrib optisch deaktiviert werden (makrūh-Zeit).
+Ishaa kann optional zur islamischen Mitternacht deaktiviert werden.
+
+
+Für Administratoren:
+
+Neue Optionen in db_config.php:
+
+Die AKTIV-Kennungen für alle Gebetszeiten werden per Parameter
+eine einstellbare Zeit vor Eintreffen der nächsten Gebetszeit ausgeschaltet.
+$activeAus (Min)          // default (10)
+
+Optional kannn zusätzlich gewählt werden:
+$assrOneHourAus = true;   // Assr endet 1 Std vor Maghrib
+$middleNight    = true;   // Ishaa endet zur islamischen Mitternacht
+
+Die Deaktivierung erfolgt über eine neue Countdown-Steuerung 
+vor der nächsten Gebetszeit.

@@ -1,0 +1,664 @@
+
+/* --- Utility-Klasse: Element verstecken --- */
+.hidden {
+  display: none !important;
+}
+
+/* --------------------------- Styles verschiedener Elemente --------------- */
+body {
+  font-family: Arial, sans-serif;
+
+  background-image: url('https://zero-clue.de/WEB_CONTENT/as-salah/al-mesjid-al-haram.jpg'); /* Pfad zum Bild anpassen */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+
+  display: flex;
+  justify-content: center;
+  margin: 0;
+
+  min-height: 100vh;  /* Der graue Rand sollte verschwinden – auch auf kleinen Displays. */
+}
+
+/* --- Für: Container Tagesansicht und Datumsauswahl --- */
+.tagesansicht-container,
+.datumsauswahl-container {
+  width: 100%;                  /* nutzt die gesamte Breite, mit 0% Rand links und rechts              */
+  margin-top: 0.8cm;            /* Formular 0.8 cm nach unten verschieben, wegen Lesbarkeit am Handy   */
+}
+
+/* --- Für: Container Tagesansicht: Überblend-Effekt Datumsausgabe Gregorian <=> Hijri --- */
+.date-switcher-static {
+  font-weight: bold;
+  font-size: 1.2rem;
+  text-align: center;
+  line-height: 1.5;
+}
+
+.outer-conversion-wrapper-tagesansicht {
+  display: inline-block;         /* Box nur so breit wie nötig */
+  border: 1px solid #888;
+  border-radius: 12px;
+  padding: 0.3rem 0.6rem 0.4rem; /* oben | seitlich | unten */
+  background-color: rgba(204, 255, 229, 0.30); /* mintgrün */
+  text-align: center;
+}
+
+.conversion-content {
+  text-align: center;
+  font-size: 0.85em; /* etwas kleiner als Gebetszeiten */
+}
+
+.conversion-line {
+  margin-top: 0.4em;
+}
+.conversion-line:first-child {
+  margin-top: 0;
+}
+
+		
+/* Tabelle und Tabellenzellen gestalten */
+table {
+  border-collapse: separate;
+  border-spacing: 4px; /* Abstand zwischen Zellen */
+}
+th, td {
+  /* border: 1px solid #ccc; */
+  border: none;
+  padding: 5px;           /* 10px */
+  font-size: 1.0rem;
+}
+th {
+  /* background-color: #e0f0ff; */
+  background: rgba(255, 255, 255, 0.1); /* Weiß mit 10 % Deckkraft = 90 % transparent */
+}
+td {
+  /* background-color: #f9f9f9; */
+  background: rgba(255, 255, 255, 0.1); /* Weiß mit 10 % Deckkraft = 90 % transparent */
+  font-weight: bold;
+}
+
+
+/*    Schritt 1b: Anpassung der Tabellen     */
+/* --- Container Tagesansicht: Schritte 1a und 1b END --- */
+/* Wrapper für vertikale Anordnung der Tabellen */
+.prayer-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  max-width: 300px; /* NEU: maximale Breite fixieren */
+  margin: 0 auto;
+}
+
+/* --- Haupttabelle: 5 Pflichtgebete + Offsets  --- */
+/* NEU: Wieder umbenannt von: prayer-time-table --- */
+.table-vertical {
+  width: 90%;        /* exakt gleich für alle drei Spalten */
+  margin-top: 0.0rem;
+  margin-left: 1rem;
+  border-collapse: collapse;
+  table-layout: fixed; /* für gleichmäßige Spaltenbreiten */
+  text-align: center;
+  font-size: 1rem;
+}
+
+/* DEBUG AKTIV: Für die Analyse 
+.table-vertical th,
+.table-vertical td {
+  outline: 1px dashed rgba(0,0,0,0.95); 
+}
+*/ 
+
+/* --- Diese Tables und DIV's werden visible umgeschalten --- */
+.table-vertical th,
+.table-vertical td {
+  padding: 0;	
+}
+
+.table-vertical th,
+.table-vertical td {
+  padding: 0.5rem 0.6rem;
+  border: none;
+  font-weight: bold;
+  horizontal-align: middle;
+  width: 33.33%;      /* exakt gleich für alle drei Spalten */
+}
+
+/*  ################### */
+
+.table-vertical .col-label {
+  text-align: right;
+  padding-right: 0.2rem;
+  padding-left: 0.8rem;
+  font-size: 1.0rem;
+}
+
+.table-vertical .col-time {
+  text-align: center;
+  font-family: monospace;
+  padding-left: 0.8rem;
+  font-size: 1.0rem;
+}
+
+.table-vertical .col-offset {
+  text-align: right;
+  padding-left: 0.3rem;
+  padding-right: 1.5rem;   /* optional: Rand zum rechten Boxrand */
+  font-size: 0.9rem;
+  color: #006699;
+}
+
+.table-horizontal th {
+  padding: 0;	
+}
+
+.table-horizontal .col-offset {
+  text-align: center;
+  padding-left: 0.3rem;
+  padding-right: 1.1rem;   /* zur mittigen Positionierung */
+  font-size: 0.9rem;
+  color: #006699;
+}
+
+/*  ################### */
+
+.sec-table-horizontal {
+  margin-left: 1.4rem;
+  width: 88%
+}
+.sec-table-horizontal:first-child td {
+  padding: 0.4rem 0.6rem;
+  padding-left: 0.7rem;
+  border: none;
+  width: 33.33%;      /* exakt gleich für alle drei Spalten */
+}
+.sec-table-horizontal td:last-child {
+  padding: 0.4rem 0.6rem;
+  padding-left: 1.5rem;
+  border: none;
+  width: 33.33%;      /* exakt gleich für alle drei Spalten */
+}
+
+/*  ################### */
+
+.sec-table-vertical td:first-child {
+  padding: 0.4rem 0.6rem;
+  padding-left: 1.7rem;
+  border: none;
+  width: 33.33%;      /* exakt gleich für alle drei Spalten */
+}
+.sec-table-vertical td:last-child {
+  padding: 0.4rem 0.6rem;
+  padding-right: 1.75rem;
+  border: none;
+  width: 33.33%;      /* exakt gleich für alle drei Spalten */
+}
+
+
+/* Layoutregeln für jede Box (Shuruk oder Jumuah) */
+.secondary-prayer-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  
+  background-color: rgba(204, 255, 229, 0.30);  /* mintgrün mit Transparenz */
+  border: 1px solid #888;
+  border-radius: 10px;
+  padding: 0.3rem 1.2rem;
+  margin-top: 0.2rem;
+  text-align: center;
+  
+  min-width: 60px;              /* sicherer als 50px */
+  max-width: 80px;              /* vermeidet Überbreite */
+  flex-shrink: 0;               /* verhindert Schrumpfen bei kleinem Viewport */
+  box-sizing: border-box;
+}
+
+/* --- END Diese Tables und DIV's werden visible umgeschalten --- */
+
+
+/* Styles für den Überblend-Effekt in der content-Box in der Tagesansicht */
+.fading-text-wrapper {
+  background-color: #5aa1a8;
+  color: white;
+  padding: 0.2rem 0.8rem;
+  border-radius: 8px;
+  /* font-weight: bold; */
+  font-weight: normal;
+  font-size: 0.80rem;
+  display: inline-block;
+  transition: opacity 1s ease-in-out;
+  opacity: 1;
+  width: 210px;           /* Breite fixiert auf längsten Hijri-Datum resp. längstes Gregorian-Datum */
+  text-align: center;
+  white-space: nowrap;
+}
+
+.fade-out {
+  opacity: 0;
+}
+
+.fade-in {
+  opacity: 1;
+}
+/* Styles END für den Überblend-Effekt in der content-Box in der Tagesansicht */
+
+/* --- Für: Container Monatsansicht --- */
+.monatsansicht-container {
+  width: 96%;                   /* nutzt fast die ganze Breite, mit 2% Rand links und rechts             */
+  margin-top: 0.2cm;            /* Formular 0,2 cm nach unten verschieben, wegen Lesbarkeit am Handy     */
+}
+
+
+/* --- Für: Container Tagesansicht, Datumsauswahl, Monatsansicht und info-section code--- */
+#monthPickerView,
+.tagesansicht-container,
+.datumsauswahl-container,
+.outer-conversion-wrapper .cover,
+.result-display,
+.monatsansicht-container,
+.conversion-box h4,
+.conversion-box .result-display,
+.info-section code,
+.info-section th  {
+  font-family: 'Roboto Mono', monospace;
+  /* Font-Rendering-Boost: optisch sauberer, systemübergreifend besser */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.tagesansicht-container,
+.datumsauswahl-container,
+.monatsansicht-container {
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 0;
+  padding: 0.5em 0.6em;         /* sorgt für gleichmäßige Innenabstände, ohne das Grid zu verzerren       */
+  box-sizing: border-box;       /* verhindert, dass Padding die Breite sprengt                            */
+  max-width: 480px;             /* auf großen Bildschirmen bleibt das Layout angenehm schmal              */
+  
+  /* Damit nur der Hintergrund des Containers 40% transparent ist */
+  background: rgba(255, 255, 255, 0.6);                     /* Weiß mit 60 % Deckkraft = 40 % transparent */
+  border-radius: 10px;
+  box-shadow: 0 0 12px rgba(0,0,0,0.1);
+  text-align: center;
+  color: #111;                  /* Textfarbe dunkelgrau */
+  /* Minimaler Textschatten für leichte Tiefe */
+  text-shadow: 0 0 1px rgba(255,255,255,0.25);   /* minimaler Schatten */
+}
+
+
+h3 {                     /* für den vorderen HTML-Teil (ohne modal-Text) */
+  color: #006699;
+  font-size: 1.1em;
+}
+.info {
+  margin-top: 20px;
+  font-size: 0.8em;
+  color: #555;
+}
+
+.flex-start {
+  margin: 0; 
+  font-size: 0.9em;
+  color: #006699;
+  font-weight: bold;
+  width: auto;
+}
+
+
+.flex-ende {
+  margin: 0; 
+  font-size: 0.8em;
+  font-weight: normal;
+  width: auto;
+}
+
+
+button {
+  font-family: 'Roboto', 'material-symbols-outlined', sans-serif;
+  font-size: 0.80em;
+  font-weight: bold;
+  display: inline-flex;
+  align-items: center;      /* Vertikale Zentrierung          */
+  justify-content: center;  /* Horizontale Zentrierung        */
+  gap: 0.3em;               /* Abstand zwischen Icon und Text */
+  padding: 0.4em 0.8em;
+}
+
+/* Für Buttons die font-family auf den Systemfont 'Material Icons' mit guter Symbol-Unterstützung setzen */
+.material-symbols-outlined {
+  position: relative;       /* optional ergänzend: */
+  font-size: 1.1em;
+  font-variation-settings: 'wght' 700;
+  line-height: 1;
+  vertical-align: middle;
+  display: inline-flex;
+  align-items: center;
+}
+
+/* --- Basiszustand: beide Tabellen+Nebentabellen sind unsichtbar – JavaScript aktiviert eine davon --- */
+.table-horizontal, 
+.table-vertical,
+.sec-table-vertical,
+.sec-table-horizontal
+ {
+  display: none;
+}
+
+/* Standard: Desktop-Tabelle anzeigen */
+@media (min-width: 600px) {
+ .table-horizontal,
+ .sec-table-horizontal { display: table; }
+
+ .tagesansicht-container { 
+    max-height: none;   /* TEST OK, damit Button nicht ausserhalb steht */ 
+  }
+}
+/* Mobil: Mobile-Tabelle anzeigen */
+@media (max-width: 599px) {
+ .table-vertical,
+ .sec-table-vertical { display: table; }
+
+ .tagesansicht-container {
+    max-height: none;   /* TEST OK, damit Button nicht ausserhalb steht */
+    min-width:  300px;  /* TEST OK */
+  }
+}
+
+/* Sanftes Einblenden der Tabelle beim Laden und bei Größenwechsel */
+.table-horizontal,
+.table-vertical {
+  opacity: 0;
+  transform: scale(0.97);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+.table-horizontal.show,
+.table-vertical.show {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.sw-version {
+  font-size: 0.7em;
+  font-weight: bold;
+  width: auto;
+}
+
+/* NEU: ### --- Verwaltung für Countdown --- 25.05.2025 ### */
+#countdown {
+   font-size: 1.0em;
+   font-weight: bold;
+   text-align: right;
+   margin: 5px auto;
+}
+/* ---  ### --- für Countdown END        -------------- ### */
+
+
+/* Dauerlicht für die aktive Gebetszeit */
+td.aktiv {
+  border: 2px solid red;  /* Roter Rahmen */
+  font-weight: bold;       /* Fettdruck für Text */
+}
+
+/* Blinken der aktiven Gebetszeit */
+.blinking {
+  animation: blink 1s ease-in-out infinite; /* Blinken-Effekt */
+}
+
+@keyframes blink {
+  0% { background-color: #5aa1a8; }
+  50% { background-color: transparent; }
+  100% { background-color: #5aa1a8; }
+}
+
+
+.datumsauswahl-container label,
+.datumsauswahl-container select {
+  font-family: 'Roboto', sans-serif;
+  font-weight: bold;
+  font-size: 0.9em;
+}
+
+/* NEU: ### --- Verwaltung für modal Hinweistexte --- ### */
+
+.modal {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: #fefefe;
+  padding: 1.5em;
+  border-radius: 10px;
+  width: 90%;
+  max-width: 500px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.3);
+  font-size: 0.85em;
+}
+
+.modal-content h3 {
+  margin-top: 0;
+  font-size: 1.2em;
+  color: #004488;
+}
+
+.modal-content button {
+  margin-top: 1em;
+  padding: 0.5em 1.2em;
+  background: #444;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+/* --- Styles für den INFO-Text --------- */
+
+.info-section {
+  /* Hintergrundfarbe bleibt wie vorhanden */
+  border-left: 4px solid #ccc;
+  padding: 1em;
+  margin-bottom: 1.5em;
+  font-size: 1.0em;
+  border-radius: 6px;
+  line-height: 1.5;
+}
+
+.info-section code {
+  background: #eee;
+  padding: 0.2em 0.4em;
+  border-radius: 3px;
+}
+
+.info-section h4 {
+  margin-top: 0;
+  font-size: 1.1em;
+  color: inherit; /* übernimmt deine bestehende Textfarbe */
+}
+
+.info-section.user,
+.info-section.admin {
+  /* Ein leicht hellgrauer Rahmen links für die Textbereiche im Info-Text */
+  border-left-color: #d3d3d3;
+}
+
+
+/* --- Feinkorrektur für den Button in der Tagesansicht --------- */
+#tagesansicht-wrapper .material-symbols-outlined {
+  top: -1px;
+}
+
+
+/* --- Feinkorrektur nur für den rechten Button in der Datumsauswahl ------- */
+.right-align-fix {
+  position: relative;
+  padding-top: 6px;
+  padding-bottom:5px;
+  top: -2px; /* hebt den Button minimal an */
+}
+
+
+/* --- Feinkorrektur nur für den Button unten rechts in der Monatsansicht ------- */
+#toMonthPickerBtn .material-symbols-outlined {
+  top: -1px;
+}
+/* --- Feinkorrektur für Buttons END ---------------------------- */
+
+/* --- Neue Styles für den Zwischenlayer, Umrechnung Gregorian/Hijri ------------ */
+/* ✅ Gemeinsamer Rahmen für beide Umrechnungsbereiche */
+
+#monthPickerView > hr {
+  all: unset; /* reset all browser defaults */
+  display: block;
+  height: 0;                   /* verhindert Doppellinien-Effekt */
+  border: none;
+  width: calc(100% - 2.1rem);  /* exakt wie outer-conversion-wrapper mit margin */
+  margin: 1.5rem auto;         /* zentriert + vertikaler Abstand */
+  border-top: 1px solid #888;      /* kräftigeres Grau, wie vorher besprochen */
+}
+
+  
+/* ⬛ Rahmen um beide Umrechnungsbereiche */
+.outer-conversion-wrapper {
+  position: relative;
+  border: 1px solid #888;           /* dezente Rahmenlinie wie <hr> */
+  border-radius: 12px;              /* elegante Rundung */
+  padding: 0.6rem 1.2rem 2.2rem;
+  margin: 1.6rem 1rem 1rem;         /* oben, rechts und links, unten */
+  background-color: rgba(204, 255, 229, 0.30); /* mintgrün mit 30% Deckkraft */
+  box-shadow: none;
+}
+.outer-conversion-wrapper .cover {  /* Überschrift unter der oberen Rahmenliinie */
+  position: absolute;
+  height: 20px;
+  width: 55%;
+  top: 0.2rem;
+  right: 0;
+  bottom: 0;
+  padding: 0;
+  margin: 0;
+  left: 4.5rem;
+  display: block;
+  text-align: center;
+  background-color: rgba(204, 255, 229, 0.10);     /* mintgrün mit 10% zusätzlicher Deckkraft */
+  font-size: 0.9rem;
+  font-weight: bold;                      /* FETT-druck wichtig für Lesbarkeit */
+  border: none;
+  z-index: 999;                           /* Overlay */
+}
+
+/* gemeinsame Style-Klasse ein, .select-unified, für alle <select>-Felder im oberen Bereich */
+.select-unified {
+  font-size: 1.05rem;
+  line-height: 1.4;
+  padding: 0.4em 0.6em;
+  border: 1px solid #888;
+  border-radius: 2px;
+  appearance: none;
+  background-color: #eee;
+  box-sizing: border-box;
+  white-space: nowrap;
+  height: 2.4em;          /* NEU: Einheitliche Höhe fixieren */
+}
+
+.select-day {
+  height: 2.4em;          /* exakt wie .select-unified */
+  line-height: 1.4;
+  min-width: 3.4em;
+  padding: 0.4em 0.6em;   /* exakt gleich wie andere */
+  box-sizing: border-box;
+}
+
+
+/* 🔷 Überschriften-Stil für Umrechnungsblöcke */
+.conversion-box h4 {
+  font-size: 1.1rem;
+  color: #1976d2; /* gleich wie "Monat auswählen" */
+                  /* margin-bottom: 8px; */
+}
+/* Für saubere Ausrichtung in den conversion-boxen */
+.conversion-box h4,
+.conversion-box .result-display {
+  text-align: left;
+  padding-left: 0.0rem;
+  margin-bottom: 0.5rem;
+}
+
+/* 🎯 Einheitliche, gut bedienbare Select-Größe */
+.conversion-box select {
+  height: 2.4em;            /* wie .select-day und .select-unified */
+  padding: 0.4em 0.6em;     /* NEU: vertikales Padding vereinheitlichen */
+  line-height: 1.4;         /* NEU: dieser Wert */
+  min-height: 1.4em;        /* absolute Mindesthöhe für Touchgeräte */
+  box-sizing: border-box;
+  background-color: #eee;   /* HINTERGRUND FARBE ERGÄNZEN */
+}
+
+
+/* ⬛ Neue Regel für saubere Dreier-Verteilung */
+.date-select-group {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;                  /* Gesamtbox stabil */
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+/* Mittlerer Bereich: Monatsname – absolut fixiert */
+.date-select-group select:nth-child(2) {
+  width: 10.3em;       /* unterer Grenzwert 10.3rem für "ruckelfrei" ( gilt für alle 3 Werte! ) */
+  min-width: 10.3em;    
+  max-width: 10.3em;
+  flex: 0 0 auto;               /* keine Schrumpfung */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  box-sizing: border-box;
+  appearance: none;
+}
+
+/* Linker Rand: Tagesnummer */
+.date-select-group select:first-child {
+  flex: 0 1 auto;
+  width: auto;
+  text-align: center;
+}
+
+/* Rechter Rand: Jahreszahl */
+.date-select-group select:last-child {
+  flex: 0 1 auto;
+  width: auto;
+  text-align: right;
+}
+
+
+/* 🖋 Ergebnis-Text im Monospace-Stil */
+.result-display {
+  max-width: 280px;      /* oder z.B. 90% – je nach Layoutbreite */
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  white-space: normal;
+  text-align: left;
+  margin-top: 0.3em;
+  font-size: 0.85rem;  /* unterer Grenzwert 0.86rem  für Lesbarkeit */
+  font-weight: bold;   /* FETT-druck wichtig für Lesbarkeit */
+  color: #333;
+  opacity: 0.85;
+}
+
+
+
+
+
+
+
